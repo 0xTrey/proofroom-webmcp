@@ -1,0 +1,10 @@
+# ProofRoom response headers.
+#
+# Origin-Agent-Cluster keeps this origin in its own agent cluster.
+# Permissions-Policy is deliberately not used to restrict `tools`, because a
+# restrictive tools policy disables WebMCP tool registration for this page.
+
+/*
+  Origin-Agent-Cluster: ?1
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff

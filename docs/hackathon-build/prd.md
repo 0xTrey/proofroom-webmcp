@@ -200,7 +200,10 @@ Acceptance criteria:
 
 - Allowed statuses are `ready`, `ready_with_conditions`, and `not_ready`.
 - The proposal includes rationale, supporting requirement IDs, blocking requirement IDs, risks, and next step.
-- A hard unknown requirement prevents a `ready` proposal.
+- A `must` requirement or any non-negotiable requirement prevents a `ready` proposal unless its status is exactly `supported`.
+- Supporting and blocking requirement IDs are unique and disjoint.
+- A supported requirement cannot be listed as blocking.
+- A conditional or not-ready proposal lists every current hard blocker.
 - Creating a proposal does not change approved decision state.
 - The proposal records base revision and expiry.
 

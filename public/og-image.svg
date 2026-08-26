@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="ProofRoom, an agent-native evaluation room">
+  <rect width="1200" height="630" fill="#f1ecdf" />
+  <rect x="0" y="0" width="1200" height="14" fill="#111820" />
+  <rect x="72" y="120" width="640" height="3" fill="rgba(17, 24, 32, 0.16)" />
+  <text x="72" y="104" font-family="Georgia, serif" font-size="62" fill="#111820">ProofRoom</text>
+  <text x="72" y="196" font-family="Helvetica, Arial, sans-serif" font-size="30" fill="#29333c">
+    An agent-native evaluation room for a fictional vendor
+  </text>
+  <text x="72" y="244" font-family="Helvetica, Arial, sans-serif" font-size="30" fill="#29333c">
+    and a fictional buyer, built on WebMCP.
+  </text>
+  <rect x="72" y="320" width="336" height="180" fill="#111820" />
+  <text x="104" y="380" font-family="Courier New, monospace" font-size="22" fill="#b8f229">supported</text>
+  <text x="104" y="420" font-family="Courier New, monospace" font-size="22" fill="#2667ff">agent staged</text>
+  <text x="104" y="460" font-family="Courier New, monospace" font-size="22" fill="#c7532f">unknown gap</text>
+  <rect x="456" y="320" width="672" height="180" fill="#faf7ef" stroke="rgba(17, 24, 32, 0.16)" stroke-width="2" />
+  <text x="488" y="380" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#111820">Nine WebMCP tools</text>
+  <text x="488" y="420" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#111820">Two human-only approvals</text>
+  <text x="488" y="460" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#111820">Evidence-enforced status</text>
+  <text x="72" y="580" font-family="Courier New, monospace" font-size="20" fill="#29333c">
+    Fictional demo content. No real company data.
+  </text>
+</svg>

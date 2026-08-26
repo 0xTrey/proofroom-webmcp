@@ -11,25 +11,25 @@
 
 ## Checklist
 
-- [ ] **1. Establish repository and implementation skeleton**
+- [x] **1. Establish repository and implementation skeleton**
   Spec ref: `spec.md > Stack`, `spec.md > File Structure`, `spec.md > Cloudflare Deployment`
   What to build: Scaffold the React, TypeScript, Vite, testing, linting, Cloudflare, fonts, and design-token foundation. Add MIT license, AGENTS.md, package scripts, local app shell, and WebMCP declaration placeholder.
   Acceptance: The project installs on Node 22, starts locally, builds, lints, typechecks, and runs one smoke test. The initial page is not a generic starter screen.
   Verify: `npm install`, `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`.
 
-- [ ] **2. Build canonical fixtures and domain model**
+- [x] **2. Build canonical fixtures and domain model**
   Spec ref: `spec.md > Domain Model`, `spec.md > Invariants`, `spec.md > ROI Formula`
   What to build: Implement vendor, buyer, six requirements, twelve evidence records, state types, strict Zod schemas, typed errors, evidence rules, proposal rules, ROI formula, receipts, and canonical reset fixture.
   Acceptance: Domain tests prove all invariants, including EU residency unknown, testimonial evidence ineligible for compliance, stale approval rejection, atomic failure, and deterministic reset.
   Verify: `npm run test -- domain` and `npm run typecheck`.
 
-- [ ] **3. Build shared state and action layer**
+- [x] **3. Build shared state and action layer**
   Spec ref: `spec.md > Architecture`, `spec.md > Data Flow`, `spec.md > Persistence`
   What to build: Implement Zustand store, `RoomActions`, selectors, local persistence adapter, in-memory test adapter, migration/recovery behavior, revisioning, and real activity events.
   Acceptance: UI and future tools can use the same actions; every successful mutation increments once; failed actions do not mutate; reload and reset tests pass.
   Verify: `npm run test -- state domain` and `npm run typecheck`.
 
-- [ ] **4. Implement and test all WebMCP tools**
+- [x] **4. Implement and test all WebMCP tools**
   Spec ref: `spec.md > WebMCP Tool Contracts`, `spec.md > Tool Registration Lifecycle`
   What to build: Implement nine tool schemas and definitions, native registration with abort cleanup, supported/unavailable/error state, partial registration handling, and a test shim.
   Acceptance: Nine tools register with correct annotations; strict inputs reject invalid calls; UI-only approvals are absent; real actions and events run through the shim.
@@ -56,7 +56,7 @@
 - [ ] **8. Build ROI, stakeholder briefs, and decision approval**
   Spec ref: `prd.md > Epic 4`, `prd.md > Epic 5`, `prd.md > Epic 6`
   What to build: Implement bounded ROI inputs and results, calculation review, CFO/CISO briefs, decision proposal, human approval/rejection, blocker visibility, and receipt.
-  Acceptance: Budget changes cause deterministic re-evaluation; hard unknown blocks ready; briefs cannot contradict requirement state; stale decision approval fails.
+  Acceptance: Budget changes cause deterministic re-evaluation; every hard requirement must be fully supported for ready; briefs cannot contradict requirement state; stale decision approval fails.
   Verify: Unit, component, shim tool, and canonical Playwright journey tests.
 
 - [ ] **9. Build the activity ledger, reset, and recovery states**

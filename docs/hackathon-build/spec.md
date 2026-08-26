@@ -225,7 +225,8 @@ type Requirement = {
 - Every action appends exactly one ledger event, including read-only WebMCP actions.
 - `supported` requires active eligible evidence for every hard condition.
 - Testimonial evidence alone cannot satisfy security or compliance requirements.
-- A hard unknown or unsupported requirement prevents a `ready` decision.
+- Every `must` or non-negotiable requirement must be exactly `supported` for a `ready` decision. Partial, unsupported, and unknown hard requirements block ready.
+- Decision supporting and blocking IDs are unique and disjoint. Supported requirements cannot block, and conditional or not-ready proposals cannot omit current hard blockers.
 - Approval requires a pending, unexpired proposal with a valid base revision and digest.
 - Agent tools cannot approve buyer context or decision state.
 - Reset reproduces the canonical fixture except for a new reset event timestamp.
@@ -312,6 +313,7 @@ Tool names use snake case. Descriptions state exactly what the tool reads or sta
 - Type: staged mutation
 - Input: status, rationale, supporting requirement IDs, blocking requirement IDs, risks, next step
 - Output: proposal ID, base revision, digest, expiry, blockers, approval instruction
+- Rejects duplicate or overlapping IDs, supported blockers, omitted current hard blockers, and ready proposals with any blocker
 - Cannot approve the decision
 
 ## Tool Registration Lifecycle

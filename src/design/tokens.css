@@ -1,0 +1,72 @@
+/*
+ * ProofRoom design tokens, preliminary layer.
+ *
+ * The base palette comes from the spec. The `-ink` variants exist because the
+ * raw accent values do not reach WCAG AA as small text on the paper surface.
+ * Measured contrast against --paper (#f1ecdf):
+ *   --agent    #2667ff  4.04:1  accent, marks, borders, large type only
+ *   --agent-ink #1b4fd0 5.81:1  body and small text
+ *   --gap      #c7532f  3.77:1  accent, marks, borders, large type only
+ *   --gap-ink  #9c3c1d  5.78:1  body and small text
+ *   --ink-soft #29333c 10.9:1   secondary body text
+ * Acid green is never used as text on paper. It is a fill behind ink text or a
+ * mark on the deep ink panel.
+ */
+
+:root {
+  /* Surfaces */
+  --paper: #f1ecdf;
+  --paper-light: #faf7ef;
+  --paper-sunk: #e7e0cd;
+  --ink: #111820;
+  --ink-soft: #29333c;
+  --ink-panel: #111820;
+
+  /* Semantic accents */
+  --verified: #b8f229;
+  --agent: #2667ff;
+  --agent-ink: #1b4fd0;
+  --gap: #c7532f;
+  --gap-ink: #9c3c1d;
+
+  /* Lines and elevation */
+  --line: rgba(17, 24, 32, 0.16);
+  --line-strong: rgba(17, 24, 32, 0.42);
+  --line-inverse: rgba(241, 236, 223, 0.22);
+  --focus: #1b4fd0;
+
+  /* Type */
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-ui: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step-0: clamp(0.95rem, 0.92rem + 0.15vw, 1.02rem);
+  --step-1: clamp(1.12rem, 1.05rem + 0.35vw, 1.32rem);
+  --step-2: clamp(1.4rem, 1.24rem + 0.8vw, 1.85rem);
+  --step-3: clamp(1.85rem, 1.5rem + 1.7vw, 2.9rem);
+  --step-4: clamp(2.4rem, 1.6rem + 3.6vw, 4.6rem);
+
+  /* Space */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  /* Geometry */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --measure: 68ch;
+  --shell-max: 1600px;
+  --rail-width: 20rem;
+
+  /* Motion, consumed through motion.css */
+  --duration-fast: 120ms;
+  --duration-base: 240ms;
+  --duration-fold: 420ms;
+  --ease-editorial: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

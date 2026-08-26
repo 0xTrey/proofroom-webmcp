@@ -1,0 +1,445 @@
+/*
+ * Global structured CSS layer. ProofRoom uses one authored stylesheet with
+ * tokens instead of a component kit, so the editorial due-diligence look stays
+ * under direct control.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  font-synthesis-weight: none;
+  background-image:
+    linear-gradient(to right, var(--line) 0 1px, transparent 1px 100%),
+    linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 100%);
+  background-size: 96px 96px;
+  background-position: -1px -1px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  max-width: var(--measure);
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--agent-ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-variant-ligatures: none;
+  letter-spacing: 0.01em;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -3rem;
+  z-index: 20;
+  padding: var(--space-2) var(--space-4);
+  background: var(--ink);
+  color: var(--paper-light);
+  font-weight: 600;
+}
+
+.skip-link:focus-visible {
+  top: var(--space-3);
+}
+
+/* Shell ------------------------------------------------------------------ */
+
+.shell {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  min-height: 100vh;
+  max-width: var(--shell-max);
+  margin-inline: auto;
+  border-inline: 1px solid var(--line);
+  background-color: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.masthead__wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1;
+}
+
+.masthead__wordmark span.mono {
+  color: var(--ink-soft);
+}
+
+.masthead__nav {
+  display: flex;
+  gap: var(--space-1);
+  margin-inline-start: auto;
+}
+
+.navlink {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: var(--space-2) var(--space-3);
+  text-transform: uppercase;
+}
+
+.navlink:hover {
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.navlink[aria-current="page"] {
+  background: var(--ink);
+  color: var(--paper-light);
+}
+
+/* Status strip ----------------------------------------------------------- */
+
+.statusstrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper-light);
+}
+
+.statusstrip__detail {
+  color: var(--ink-soft);
+}
+
+.statusmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  text-transform: lowercase;
+}
+
+.statusmark__glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1px solid currentColor;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.statusmark--verified {
+  color: var(--ink);
+}
+
+.statusmark--verified .statusmark__glyph {
+  background: var(--verified);
+  border-color: var(--ink);
+}
+
+.statusmark--agent {
+  color: var(--agent-ink);
+}
+
+.statusmark--gap {
+  color: var(--gap-ink);
+}
+
+.statusmark--neutral {
+  color: var(--ink-soft);
+}
+
+/* Editorial main --------------------------------------------------------- */
+
+.main {
+  display: grid;
+  gap: var(--space-7);
+  padding: var(--space-7) var(--space-5) var(--space-8);
+}
+
+.opening {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.opening__headline {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  line-height: 1.02;
+  max-width: 26ch;
+}
+
+.opening__lede {
+  margin-top: var(--space-5);
+  font-size: var(--step-1);
+  color: var(--ink-soft);
+}
+
+.opening__panel {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--ink-panel);
+  color: var(--paper-light);
+  border-radius: var(--radius-md);
+}
+
+.opening__panel h2 {
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--verified);
+}
+
+.opening__panel dl {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.opening__panel div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--line-inverse);
+}
+
+.opening__panel dt {
+  color: color-mix(in srgb, var(--paper-light) 74%, transparent);
+}
+
+.opening__panel dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  text-align: right;
+}
+
+.notice {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  border-left: 3px solid var(--gap);
+  background: var(--paper-light);
+}
+
+.notice__title {
+  font-size: var(--step-0);
+  font-weight: 700;
+}
+
+.notice p {
+  color: var(--ink-soft);
+}
+
+.section {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.section__head h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+}
+
+.records {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+}
+
+.record {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  padding: var(--space-4);
+  background: var(--paper-light);
+  border: 1px solid var(--line);
+}
+
+.record__label {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.record h3 {
+  font-size: var(--step-0);
+  font-weight: 700;
+}
+
+.record p {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.record__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  color: var(--ink-soft);
+}
+
+.toollist {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+
+.toollist li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  justify-content: space-between;
+  padding: var(--space-5);
+  border-top: 1px solid var(--line-strong);
+  color: var(--ink-soft);
+}
+
+.errorpanel {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 44rem;
+  margin: var(--space-8) auto;
+  padding: var(--space-6);
+  border: 1px solid var(--gap);
+  background: var(--paper-light);
+}
+
+.errorpanel h1 {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+}
+
+.button {
+  appearance: none;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--paper-light);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: var(--space-2) var(--space-4);
+}
+
+.button--quiet {
+  background: transparent;
+  color: var(--ink);
+}
+
+.button:hover {
+  border-color: var(--focus);
+}
+
+@media (max-width: 900px) {
+  .opening {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .masthead__nav {
+    margin-inline-start: 0;
+    width: 100%;
+  }
+
+  .main {
+    padding-inline: var(--space-4);
+  }
+}

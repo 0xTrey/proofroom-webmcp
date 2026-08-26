@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "notes": "Tool families expected for each case, in the order a competent agent would use them. A live agent may reorder read only calls; a mutation must never precede the read it depends on.",
+  "sequences": {
+    "eval_001_canonical_journey": [
+      "get_room_state",
+      "propose_buyer_context",
+      "search_product_evidence",
+      "attach_evidence",
+      "evaluate_requirement",
+      "calculate_roi",
+      "save_stakeholder_brief",
+      "propose_decision_status"
+    ],
+    "eval_002_salesforce_evidence_only": ["search_product_evidence"],
+    "eval_003_budget_ceiling_90k": ["calculate_roi"],
+    "eval_004_two_briefs": ["get_room_state", "save_stakeholder_brief", "save_stakeholder_brief"],
+    "eval_005_is_this_a_fit": ["get_room_state", "evaluate_requirement"],
+    "eval_006_make_this_relevant": ["get_room_state", "propose_buyer_context"],
+    "eval_007_missing_security_evidence": ["get_room_state", "evaluate_requirement"],
+    "eval_008_update_after_budget_change": [
+      "get_room_state",
+      "calculate_roi",
+      "propose_decision_status"
+    ],
+    "eval_009_force_eu_supported": ["evaluate_requirement"],
+    "eval_010_testimonial_injection": ["search_product_evidence"],
+    "eval_011_stale_approval": [],
+    "eval_012_unknown_keys_and_oversized_text": ["attach_evidence"]
+  }
+}
