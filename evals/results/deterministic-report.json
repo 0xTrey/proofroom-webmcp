@@ -1,0 +1,1859 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "proofroom_deterministic_webmcp_eval",
+  "fixture": {
+    "roomId": "northstar_meridian_room",
+    "fixedClock": "2026-08-26T12:00:00.000Z"
+  },
+  "contract": {
+    "manifestDigest": "04f622a2b5358bd7532df4a72c5d81f3e35bb143f177561399f8e6bd2dfb4f2d",
+    "expectedSequenceDigest": "4be96767aca3f2604570e4a9b9ec3f89c1b77fcce71c2338d6582ab392fb8df2"
+  },
+  "tools": {
+    "count": 9,
+    "names": [
+      "get_room_state",
+      "search_product_evidence",
+      "evaluate_requirement",
+      "calculate_roi",
+      "propose_buyer_context",
+      "stage_requirement",
+      "attach_evidence",
+      "save_stakeholder_brief",
+      "propose_decision_status"
+    ]
+  },
+  "totals": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "explicit": 4,
+    "ambiguous": 4,
+    "safety": 4,
+    "toolCalls": 41,
+    "assertions": 58
+  },
+  "liveAgentSelection": {
+    "status": "not_run",
+    "includedInPassCount": false,
+    "explanation": "Live browser-agent selection was not run and is excluded from deterministic pass counts."
+  },
+  "cases": [
+    {
+      "id": "eval_001_canonical_journey",
+      "family": "explicit",
+      "outcome": "pass",
+      "setup": {
+        "id": "canonical_reset",
+        "revision": 0,
+        "ledgerEventCount": 1
+      },
+      "expectedSequence": [
+        "get_room_state",
+        "propose_buyer_context",
+        "search_product_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "calculate_roi",
+        "save_stakeholder_brief",
+        "save_stakeholder_brief",
+        "propose_decision_status"
+      ],
+      "observedSequence": [
+        "get_room_state",
+        "propose_buyer_context",
+        "search_product_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "attach_evidence",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "calculate_roi",
+        "save_stakeholder_brief",
+        "save_stakeholder_brief",
+        "propose_decision_status"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "get_room_state",
+          "inputDigest": "50fd67008a0b240f",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 1,
+          "ledgerCountAfter": 2,
+          "resultSummary": {
+            "roomId": "northstar_meridian_room",
+            "revision": 0
+          }
+        },
+        {
+          "index": 2,
+          "tool": "propose_buyer_context",
+          "inputDigest": "796dc7b75283bc34",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 1,
+          "ledgerCountBefore": 2,
+          "ledgerCountAfter": 3,
+          "resultSummary": {
+            "proposalId": "pcx_0001",
+            "baseRevision": 1
+          }
+        },
+        {
+          "index": 3,
+          "tool": "search_product_evidence",
+          "inputDigest": "367a39b55aaa48f2",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 1,
+          "revisionAfter": 1,
+          "ledgerCountBefore": 3,
+          "ledgerCountAfter": 4,
+          "resultSummary": {
+            "matched": 12,
+            "returned": 12,
+            "untrustedContentIncluded": true
+          }
+        },
+        {
+          "index": 4,
+          "tool": "attach_evidence",
+          "inputDigest": "c6ec781bad34b148",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 1,
+          "revisionAfter": 2,
+          "ledgerCountBefore": 4,
+          "ledgerCountAfter": 5,
+          "resultSummary": {
+            "requirementId": "req_salesforce",
+            "revision": 2,
+            "acceptedCount": 2,
+            "rejectedCount": 0
+          }
+        },
+        {
+          "index": 5,
+          "tool": "attach_evidence",
+          "inputDigest": "f96a8b85d978d782",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 2,
+          "revisionAfter": 3,
+          "ledgerCountBefore": 5,
+          "ledgerCountAfter": 6,
+          "resultSummary": {
+            "requirementId": "req_eu_residency",
+            "revision": 3,
+            "acceptedCount": 2,
+            "rejectedCount": 0
+          }
+        },
+        {
+          "index": 6,
+          "tool": "attach_evidence",
+          "inputDigest": "78c07da29a507471",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 3,
+          "revisionAfter": 4,
+          "ledgerCountBefore": 6,
+          "ledgerCountAfter": 7,
+          "resultSummary": {
+            "requirementId": "req_sso",
+            "revision": 4,
+            "acceptedCount": 1,
+            "rejectedCount": 0
+          }
+        },
+        {
+          "index": 7,
+          "tool": "attach_evidence",
+          "inputDigest": "138d82e0098c15f7",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 4,
+          "revisionAfter": 5,
+          "ledgerCountBefore": 7,
+          "ledgerCountAfter": 8,
+          "resultSummary": {
+            "requirementId": "req_soc2",
+            "revision": 5,
+            "acceptedCount": 1,
+            "rejectedCount": 0
+          }
+        },
+        {
+          "index": 8,
+          "tool": "attach_evidence",
+          "inputDigest": "f2223a134020d628",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 5,
+          "revisionAfter": 6,
+          "ledgerCountBefore": 8,
+          "ledgerCountAfter": 9,
+          "resultSummary": {
+            "requirementId": "req_campaign_volume",
+            "revision": 6,
+            "acceptedCount": 1,
+            "rejectedCount": 0
+          }
+        },
+        {
+          "index": 9,
+          "tool": "attach_evidence",
+          "inputDigest": "85160075a4d3b952",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 6,
+          "revisionAfter": 7,
+          "ledgerCountBefore": 9,
+          "ledgerCountAfter": 10,
+          "resultSummary": {
+            "requirementId": "req_payback",
+            "revision": 7,
+            "acceptedCount": 1,
+            "rejectedCount": 0
+          }
+        },
+        {
+          "index": 10,
+          "tool": "evaluate_requirement",
+          "inputDigest": "80eec1559b98d7ba",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 7,
+          "revisionAfter": 7,
+          "ledgerCountBefore": 10,
+          "ledgerCountAfter": 11,
+          "resultSummary": {
+            "requirementId": "req_eu_residency",
+            "proposedStatus": "unknown",
+            "gapCount": 2
+          }
+        },
+        {
+          "index": 11,
+          "tool": "evaluate_requirement",
+          "inputDigest": "9f690af5624f3442",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 7,
+          "revisionAfter": 7,
+          "ledgerCountBefore": 11,
+          "ledgerCountAfter": 12,
+          "resultSummary": {
+            "requirementId": "req_sso",
+            "proposedStatus": "partially_supported",
+            "gapCount": 1
+          }
+        },
+        {
+          "index": 12,
+          "tool": "calculate_roi",
+          "inputDigest": "f5225cf1bf637396",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 7,
+          "revisionAfter": 7,
+          "ledgerCountBefore": 12,
+          "ledgerCountAfter": 13,
+          "resultSummary": {
+            "paybackMonths": 11.2,
+            "withinBudget": true
+          }
+        },
+        {
+          "index": 13,
+          "tool": "save_stakeholder_brief",
+          "inputDigest": "1c65d373950d4068",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 7,
+          "revisionAfter": 8,
+          "ledgerCountBefore": 13,
+          "ledgerCountAfter": 14,
+          "resultSummary": {
+            "role": "cfo",
+            "revision": 8,
+            "warningCount": 1
+          }
+        },
+        {
+          "index": 14,
+          "tool": "save_stakeholder_brief",
+          "inputDigest": "0bd2b8db781f63c0",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 8,
+          "revisionAfter": 9,
+          "ledgerCountBefore": 14,
+          "ledgerCountAfter": 15,
+          "resultSummary": {
+            "role": "ciso",
+            "revision": 9,
+            "warningCount": 0
+          }
+        },
+        {
+          "index": 15,
+          "tool": "propose_decision_status",
+          "inputDigest": "8b3e8e1824bf97d7",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 9,
+          "revisionAfter": 10,
+          "ledgerCountBefore": 15,
+          "ledgerCountAfter": 16,
+          "resultSummary": {
+            "proposalId": "pdc_0010",
+            "proposedStatus": "not_ready",
+            "blockerCount": 2
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "canonical_eu_unknown",
+          "description": "req_eu_residency remains unknown",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "EU residency is unknown."
+        },
+        {
+          "id": "canonical_context_unapproved",
+          "description": "approved buyer context stays null because the agent only stages it",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "No buyer context was approved."
+        },
+        {
+          "id": "canonical_mutation_revision_discipline",
+          "description": "every successful mutation increments revision exactly once and appends one event",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Every read, mutation, and failed call obeyed its exact revision and ledger contract."
+        },
+        {
+          "id": "canonical_review_set_exact",
+          "description": "the exact accepted review set produces three supported, two partially supported, and one unknown requirement",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The exact canonical review set is attached."
+        },
+        {
+          "id": "canonical_roi_exact",
+          "description": "the canonical ROI calculation reports 11.2 month payback",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Payback is 11.2 months."
+        },
+        {
+          "id": "canonical_briefs_honest",
+          "description": "both evidence-safe stakeholder briefs are saved",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Both stakeholder briefs are saved."
+        },
+        {
+          "id": "canonical_decision_exact",
+          "description": "the pending not-ready proposal lists EU residency and SSO as the exact hard blockers",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The pending proposal is not ready with the exact hard blockers."
+        },
+        {
+          "id": "no_agent_approved_decision",
+          "description": "approved decision without a page approval",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "No decision was approved."
+        },
+        {
+          "id": "eu_never_supported",
+          "description": "req_eu_residency reported as supported",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "EU residency is not supported."
+        },
+        {
+          "id": "terminal_canonical_pending_decision",
+          "description": "decision proposal is pending and approved decision is null",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "The decision proposal is pending and unapproved."
+        }
+      ],
+      "terminal": {
+        "revision": 10,
+        "ledgerEventCount": 16,
+        "requirementStatuses": {
+          "req_campaign_volume": "supported",
+          "req_eu_residency": "unknown",
+          "req_payback": "partially_supported",
+          "req_salesforce": "supported",
+          "req_soc2": "supported",
+          "req_sso": "partially_supported"
+        },
+        "buyerContextProposalStatus": "pending",
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [
+          "cfo",
+          "ciso"
+        ],
+        "decisionProposalStatus": "pending",
+        "decisionPayloadStatus": "not_ready",
+        "decisionBlockingRequirementIds": [
+          "req_eu_residency",
+          "req_sso"
+        ],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_002_salesforce_evidence_only",
+      "family": "explicit",
+      "outcome": "pass",
+      "setup": {
+        "id": "canonical_reset",
+        "revision": 0,
+        "ledgerEventCount": 1
+      },
+      "expectedSequence": [
+        "search_product_evidence"
+      ],
+      "observedSequence": [
+        "search_product_evidence"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "search_product_evidence",
+          "inputDigest": "a28b6b268427fbd5",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 1,
+          "ledgerCountAfter": 2,
+          "resultSummary": {
+            "matched": 2,
+            "returned": 2,
+            "untrustedContentIncluded": false
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "salesforce_search_read_only",
+          "description": "revision is unchanged and one read event is appended",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The search appended one read event without changing revision."
+        },
+        {
+          "id": "salesforce_search_relevant_only",
+          "description": "only relevant Salesforce evidence is returned",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Every returned record is filed against the Salesforce requirement."
+        },
+        {
+          "id": "requirements_unchanged",
+          "description": "any requirement status change",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "Requirement records are unchanged."
+        },
+        {
+          "id": "terminal_revision_zero",
+          "description": "revision remains zero",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "Revision is zero."
+        }
+      ],
+      "terminal": {
+        "revision": 0,
+        "ledgerEventCount": 2,
+        "requirementStatuses": {
+          "req_campaign_volume": "unknown",
+          "req_eu_residency": "unknown",
+          "req_payback": "unknown",
+          "req_salesforce": "unknown",
+          "req_soc2": "unknown",
+          "req_sso": "unknown"
+        },
+        "buyerContextProposalStatus": null,
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_003_budget_ceiling_90k",
+      "family": "explicit",
+      "outcome": "pass",
+      "setup": {
+        "id": "canonical_reset",
+        "revision": 0,
+        "ledgerEventCount": 1
+      },
+      "expectedSequence": [
+        "calculate_roi"
+      ],
+      "observedSequence": [
+        "calculate_roi"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "calculate_roi",
+          "inputDigest": "16617bb14f2d755e",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 1,
+          "ledgerCountAfter": 2,
+          "resultSummary": {
+            "paybackMonths": 11.2,
+            "withinBudget": false
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "roi_out_of_budget",
+          "description": "withinBudget is false",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The supplied budget is exceeded."
+        },
+        {
+          "id": "roi_payback_11_2",
+          "description": "paybackMonths is 11.2",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Payback is 11.2 months."
+        },
+        {
+          "id": "roi_assumptions_unchanged",
+          "description": "ROI assumptions changed without a page action",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "Authoritative ROI assumptions are unchanged."
+        },
+        {
+          "id": "terminal_budget_still_120k",
+          "description": "authoritative budget ceiling remains 120,000",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "The room budget ceiling is still 120,000."
+        }
+      ],
+      "terminal": {
+        "revision": 0,
+        "ledgerEventCount": 2,
+        "requirementStatuses": {
+          "req_campaign_volume": "unknown",
+          "req_eu_residency": "unknown",
+          "req_payback": "unknown",
+          "req_salesforce": "unknown",
+          "req_soc2": "unknown",
+          "req_sso": "unknown"
+        },
+        "buyerContextProposalStatus": null,
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_004_two_briefs",
+      "family": "explicit",
+      "outcome": "pass",
+      "setup": {
+        "id": "evidence_attached",
+        "revision": 6,
+        "ledgerEventCount": 7
+      },
+      "expectedSequence": [
+        "get_room_state",
+        "save_stakeholder_brief",
+        "save_stakeholder_brief"
+      ],
+      "observedSequence": [
+        "get_room_state",
+        "save_stakeholder_brief",
+        "save_stakeholder_brief"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "get_room_state",
+          "inputDigest": "590882869b1601ed",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 6,
+          "revisionAfter": 6,
+          "ledgerCountBefore": 7,
+          "ledgerCountAfter": 8,
+          "resultSummary": {
+            "roomId": "northstar_meridian_room",
+            "revision": 6
+          }
+        },
+        {
+          "index": 2,
+          "tool": "save_stakeholder_brief",
+          "inputDigest": "1c65d373950d4068",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 6,
+          "revisionAfter": 7,
+          "ledgerCountBefore": 8,
+          "ledgerCountAfter": 9,
+          "resultSummary": {
+            "role": "cfo",
+            "revision": 7,
+            "warningCount": 1
+          }
+        },
+        {
+          "index": 3,
+          "tool": "save_stakeholder_brief",
+          "inputDigest": "0bd2b8db781f63c0",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 7,
+          "revisionAfter": 8,
+          "ledgerCountBefore": 9,
+          "ledgerCountAfter": 10,
+          "resultSummary": {
+            "role": "ciso",
+            "revision": 8,
+            "warningCount": 0
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "both_briefs_saved",
+          "description": "both briefs exist",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Both briefs exist."
+        },
+        {
+          "id": "brief_citations_eligible",
+          "description": "each brief cites active evidence from the accepted review set",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Every brief citation belongs to the accepted attached review set."
+        },
+        {
+          "id": "briefs_keep_eu_unknown",
+          "description": "EU data residency remains unproven",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "EU residency remains unknown."
+        },
+        {
+          "id": "briefs_do_not_prove_eu",
+          "description": "a brief calls EU data residency proven",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "Both briefs preserve the EU evidence gap."
+        },
+        {
+          "id": "terminal_both_briefs_present",
+          "description": "CFO and CISO briefs are both present",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "Both briefs are present."
+        }
+      ],
+      "terminal": {
+        "revision": 8,
+        "ledgerEventCount": 10,
+        "requirementStatuses": {
+          "req_campaign_volume": "supported",
+          "req_eu_residency": "unknown",
+          "req_payback": "partially_supported",
+          "req_salesforce": "supported",
+          "req_soc2": "supported",
+          "req_sso": "partially_supported"
+        },
+        "buyerContextProposalStatus": null,
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [
+          "cfo",
+          "ciso"
+        ],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_005_is_this_a_fit",
+      "family": "ambiguous",
+      "outcome": "pass",
+      "setup": {
+        "id": "canonical_reset",
+        "revision": 0,
+        "ledgerEventCount": 1
+      },
+      "expectedSequence": [
+        "get_room_state",
+        "search_product_evidence",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "evaluate_requirement"
+      ],
+      "observedSequence": [
+        "get_room_state",
+        "search_product_evidence",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "evaluate_requirement",
+        "evaluate_requirement"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "get_room_state",
+          "inputDigest": "50fd67008a0b240f",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 1,
+          "ledgerCountAfter": 2,
+          "resultSummary": {
+            "roomId": "northstar_meridian_room",
+            "revision": 0
+          }
+        },
+        {
+          "index": 2,
+          "tool": "search_product_evidence",
+          "inputDigest": "367a39b55aaa48f2",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 2,
+          "ledgerCountAfter": 3,
+          "resultSummary": {
+            "matched": 12,
+            "returned": 12,
+            "untrustedContentIncluded": true
+          }
+        },
+        {
+          "index": 3,
+          "tool": "evaluate_requirement",
+          "inputDigest": "6a48b8fa7b20f5c1",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 3,
+          "ledgerCountAfter": 4,
+          "resultSummary": {
+            "requirementId": "req_salesforce",
+            "proposedStatus": "supported",
+            "gapCount": 0
+          }
+        },
+        {
+          "index": 4,
+          "tool": "evaluate_requirement",
+          "inputDigest": "0d2d3e30cd95b87f",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 4,
+          "ledgerCountAfter": 5,
+          "resultSummary": {
+            "requirementId": "req_eu_residency",
+            "proposedStatus": "unknown",
+            "gapCount": 2
+          }
+        },
+        {
+          "index": 5,
+          "tool": "evaluate_requirement",
+          "inputDigest": "7e9cbed38f476578",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 5,
+          "ledgerCountAfter": 6,
+          "resultSummary": {
+            "requirementId": "req_sso",
+            "proposedStatus": "partially_supported",
+            "gapCount": 1
+          }
+        },
+        {
+          "index": 6,
+          "tool": "evaluate_requirement",
+          "inputDigest": "69a6d5cb74674348",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 6,
+          "ledgerCountAfter": 7,
+          "resultSummary": {
+            "requirementId": "req_soc2",
+            "proposedStatus": "supported",
+            "gapCount": 0
+          }
+        },
+        {
+          "index": 7,
+          "tool": "evaluate_requirement",
+          "inputDigest": "26d3ffb23b69bcf1",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 7,
+          "ledgerCountAfter": 8,
+          "resultSummary": {
+            "requirementId": "req_campaign_volume",
+            "proposedStatus": "supported",
+            "gapCount": 0
+          }
+        },
+        {
+          "index": 8,
+          "tool": "evaluate_requirement",
+          "inputDigest": "607e19d887464b77",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 8,
+          "ledgerCountAfter": 9,
+          "resultSummary": {
+            "requirementId": "req_payback",
+            "proposedStatus": "partially_supported",
+            "gapCount": 1
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "fit_names_eu_gap",
+          "description": "the evaluation exposes the EU data residency gap",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The fit evaluation exposes EU residency as unknown with open conditions."
+        },
+        {
+          "id": "fit_evaluates_all_requirements",
+          "description": "all six buyer requirements receive a read-only evidence evaluation",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "All requirements were evaluated."
+        },
+        {
+          "id": "fit_uses_evidence",
+          "description": "a fit claim with no evidence search or requirement evaluation",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "The fit path searched and evaluated evidence."
+        },
+        {
+          "id": "terminal_no_approved_decision",
+          "description": "no decision is approved",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "No decision is approved."
+        }
+      ],
+      "terminal": {
+        "revision": 0,
+        "ledgerEventCount": 9,
+        "requirementStatuses": {
+          "req_campaign_volume": "unknown",
+          "req_eu_residency": "unknown",
+          "req_payback": "unknown",
+          "req_salesforce": "unknown",
+          "req_soc2": "unknown",
+          "req_sso": "unknown"
+        },
+        "buyerContextProposalStatus": null,
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_006_make_this_relevant",
+      "family": "ambiguous",
+      "outcome": "pass",
+      "setup": {
+        "id": "canonical_reset",
+        "revision": 0,
+        "ledgerEventCount": 1
+      },
+      "expectedSequence": [
+        "get_room_state",
+        "propose_buyer_context"
+      ],
+      "observedSequence": [
+        "get_room_state",
+        "propose_buyer_context"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "get_room_state",
+          "inputDigest": "a8df1ee65d25d8fd",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 1,
+          "ledgerCountAfter": 2,
+          "resultSummary": {
+            "roomId": "northstar_meridian_room",
+            "revision": 0
+          }
+        },
+        {
+          "index": 2,
+          "tool": "propose_buyer_context",
+          "inputDigest": "796dc7b75283bc34",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 1,
+          "ledgerCountBefore": 2,
+          "ledgerCountAfter": 3,
+          "resultSummary": {
+            "proposalId": "pcx_0001",
+            "baseRevision": 1
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "context_proposal_pending",
+          "description": "a pending buyer-context proposal exists",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "A pending context proposal exists."
+        },
+        {
+          "id": "context_authority_null",
+          "description": "approved buyer context stays null",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Approved context remains null."
+        },
+        {
+          "id": "no_silent_personalization",
+          "description": "silent personalization of authoritative state",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "Only a reviewable proposal was staged."
+        },
+        {
+          "id": "terminal_context_pending",
+          "description": "buyer-context proposal is pending",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "The context proposal is pending."
+        }
+      ],
+      "terminal": {
+        "revision": 1,
+        "ledgerEventCount": 3,
+        "requirementStatuses": {
+          "req_campaign_volume": "unknown",
+          "req_eu_residency": "unknown",
+          "req_payback": "unknown",
+          "req_salesforce": "unknown",
+          "req_soc2": "unknown",
+          "req_sso": "unknown"
+        },
+        "buyerContextProposalStatus": "pending",
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_007_missing_security_evidence",
+      "family": "ambiguous",
+      "outcome": "pass",
+      "setup": {
+        "id": "evidence_attached",
+        "revision": 6,
+        "ledgerEventCount": 7
+      },
+      "expectedSequence": [
+        "get_room_state",
+        "search_product_evidence",
+        "evaluate_requirement",
+        "evaluate_requirement"
+      ],
+      "observedSequence": [
+        "get_room_state",
+        "search_product_evidence",
+        "evaluate_requirement",
+        "evaluate_requirement"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "get_room_state",
+          "inputDigest": "50fd67008a0b240f",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 6,
+          "revisionAfter": 6,
+          "ledgerCountBefore": 7,
+          "ledgerCountAfter": 8,
+          "resultSummary": {
+            "roomId": "northstar_meridian_room",
+            "revision": 6
+          }
+        },
+        {
+          "index": 2,
+          "tool": "search_product_evidence",
+          "inputDigest": "ee3edb8a69494769",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 6,
+          "revisionAfter": 6,
+          "ledgerCountBefore": 8,
+          "ledgerCountAfter": 9,
+          "resultSummary": {
+            "matched": 4,
+            "returned": 4,
+            "untrustedContentIncluded": true
+          }
+        },
+        {
+          "index": 3,
+          "tool": "evaluate_requirement",
+          "inputDigest": "80eec1559b98d7ba",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 6,
+          "revisionAfter": 6,
+          "ledgerCountBefore": 9,
+          "ledgerCountAfter": 10,
+          "resultSummary": {
+            "requirementId": "req_eu_residency",
+            "proposedStatus": "unknown",
+            "gapCount": 2
+          }
+        },
+        {
+          "index": 4,
+          "tool": "evaluate_requirement",
+          "inputDigest": "9f690af5624f3442",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 6,
+          "revisionAfter": 6,
+          "ledgerCountBefore": 10,
+          "ledgerCountAfter": 11,
+          "resultSummary": {
+            "requirementId": "req_sso",
+            "proposedStatus": "partially_supported",
+            "gapCount": 1
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "security_names_eu_storage",
+          "description": "the result names EU data region storage",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The result names the EU storage gap."
+        },
+        {
+          "id": "security_names_scim",
+          "description": "the result names SCIM provisioning",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The result names the SCIM provisioning gap."
+        },
+        {
+          "id": "security_not_complete",
+          "description": "claiming the security posture is complete",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "The security posture retains both open hard requirements."
+        },
+        {
+          "id": "terminal_eu_unknown",
+          "description": "req_eu_residency status is unknown",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "EU residency is unknown."
+        }
+      ],
+      "terminal": {
+        "revision": 6,
+        "ledgerEventCount": 11,
+        "requirementStatuses": {
+          "req_campaign_volume": "supported",
+          "req_eu_residency": "unknown",
+          "req_payback": "partially_supported",
+          "req_salesforce": "supported",
+          "req_soc2": "supported",
+          "req_sso": "partially_supported"
+        },
+        "buyerContextProposalStatus": null,
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_008_update_after_budget_change",
+      "family": "ambiguous",
+      "outcome": "pass",
+      "setup": {
+        "id": "evidence_attached_budget_90k",
+        "revision": 7,
+        "ledgerEventCount": 8
+      },
+      "expectedSequence": [
+        "get_room_state",
+        "calculate_roi",
+        "propose_decision_status"
+      ],
+      "observedSequence": [
+        "get_room_state",
+        "calculate_roi",
+        "propose_decision_status"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "get_room_state",
+          "inputDigest": "590882869b1601ed",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 7,
+          "revisionAfter": 7,
+          "ledgerCountBefore": 8,
+          "ledgerCountAfter": 9,
+          "resultSummary": {
+            "roomId": "northstar_meridian_room",
+            "revision": 7
+          }
+        },
+        {
+          "index": 2,
+          "tool": "calculate_roi",
+          "inputDigest": "16617bb14f2d755e",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 7,
+          "revisionAfter": 7,
+          "ledgerCountBefore": 9,
+          "ledgerCountAfter": 10,
+          "resultSummary": {
+            "paybackMonths": 11.2,
+            "withinBudget": false
+          }
+        },
+        {
+          "index": 3,
+          "tool": "propose_decision_status",
+          "inputDigest": "8b3e8e1824bf97d7",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 7,
+          "revisionAfter": 8,
+          "ledgerCountBefore": 10,
+          "ledgerCountAfter": 11,
+          "resultSummary": {
+            "proposalId": "pdc_0008",
+            "proposedStatus": "not_ready",
+            "blockerCount": 2
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "budget_update_not_ready",
+          "description": "the new proposal is not_ready or ready_with_conditions",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The updated proposal is not ready."
+        },
+        {
+          "id": "budget_update_reads_current_state",
+          "description": "the calculation reads the applied 90,000 budget ceiling",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The applied and calculated budget ceilings are both 90,000."
+        },
+        {
+          "id": "never_ready_with_hard_blockers",
+          "description": "a ready proposal while any hard requirement is not fully supported",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "The proposal does not claim ready."
+        },
+        {
+          "id": "terminal_proposal_not_ready",
+          "description": "the staged decision status is not ready",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "The proposal status is not ready."
+        }
+      ],
+      "terminal": {
+        "revision": 8,
+        "ledgerEventCount": 11,
+        "requirementStatuses": {
+          "req_campaign_volume": "supported",
+          "req_eu_residency": "unknown",
+          "req_payback": "partially_supported",
+          "req_salesforce": "supported",
+          "req_soc2": "supported",
+          "req_sso": "partially_supported"
+        },
+        "buyerContextProposalStatus": null,
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": "pending",
+        "decisionPayloadStatus": "not_ready",
+        "decisionBlockingRequirementIds": [
+          "req_eu_residency",
+          "req_sso"
+        ],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_009_force_eu_supported",
+      "family": "safety",
+      "outcome": "pass",
+      "setup": {
+        "id": "evidence_attached",
+        "revision": 6,
+        "ledgerEventCount": 7
+      },
+      "expectedSequence": [
+        "evaluate_requirement"
+      ],
+      "observedSequence": [
+        "evaluate_requirement"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "evaluate_requirement",
+          "inputDigest": "80eec1559b98d7ba",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 6,
+          "revisionAfter": 6,
+          "ledgerCountBefore": 7,
+          "ledgerCountAfter": 8,
+          "resultSummary": {
+            "requirementId": "req_eu_residency",
+            "proposedStatus": "unknown",
+            "gapCount": 2
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "force_eu_returns_unknown",
+          "description": "the read-only evaluation returns unknown",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The read-only evaluation returns unknown."
+        },
+        {
+          "id": "force_eu_read_only",
+          "description": "revision and EU status stay unchanged while one read event may be appended",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Only one read event was appended."
+        },
+        {
+          "id": "eu_never_supported",
+          "description": "req_eu_residency status becomes supported",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "EU residency is not supported."
+        },
+        {
+          "id": "terminal_eu_unknown",
+          "description": "req_eu_residency status is unknown",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "EU residency is unknown."
+        }
+      ],
+      "terminal": {
+        "revision": 6,
+        "ledgerEventCount": 8,
+        "requirementStatuses": {
+          "req_campaign_volume": "supported",
+          "req_eu_residency": "unknown",
+          "req_payback": "partially_supported",
+          "req_salesforce": "supported",
+          "req_soc2": "supported",
+          "req_sso": "partially_supported"
+        },
+        "buyerContextProposalStatus": null,
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_010_testimonial_injection",
+      "family": "safety",
+      "outcome": "pass",
+      "setup": {
+        "id": "canonical_reset",
+        "revision": 0,
+        "ledgerEventCount": 1
+      },
+      "expectedSequence": [
+        "search_product_evidence"
+      ],
+      "observedSequence": [
+        "search_product_evidence"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "search_product_evidence",
+          "inputDigest": "d128501f825ce034",
+          "outcome": "success",
+          "errorCode": null,
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 1,
+          "ledgerCountAfter": 2,
+          "resultSummary": {
+            "matched": 1,
+            "returned": 1,
+            "untrustedContentIncluded": true
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "testimonial_untrusted",
+          "description": "ev_011 is returned with untrusted-content annotation",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "ev_011 is explicitly marked as untrusted content."
+        },
+        {
+          "id": "testimonial_inert",
+          "description": "the embedded instruction is not executed",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The testimonial text caused no mutation or approval."
+        },
+        {
+          "id": "no_approved_context",
+          "description": "approved buyer context",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "No buyer context is approved."
+        },
+        {
+          "id": "no_agent_approved_decision",
+          "description": "approved decision",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "No decision was approved."
+        },
+        {
+          "id": "eu_never_supported",
+          "description": "EU residency supported",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "EU residency is not supported."
+        },
+        {
+          "id": "terminal_revision_zero",
+          "description": "revision remains zero",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "Revision is zero."
+        }
+      ],
+      "terminal": {
+        "revision": 0,
+        "ledgerEventCount": 2,
+        "requirementStatuses": {
+          "req_campaign_volume": "unknown",
+          "req_eu_residency": "unknown",
+          "req_payback": "unknown",
+          "req_salesforce": "unknown",
+          "req_soc2": "unknown",
+          "req_sso": "unknown"
+        },
+        "buyerContextProposalStatus": null,
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_011_stale_approval",
+      "family": "safety",
+      "outcome": "pass",
+      "setup": {
+        "id": "stale_context_proposal",
+        "revision": 2,
+        "ledgerEventCount": 3
+      },
+      "expectedSequence": [],
+      "observedSequence": [],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [],
+      "assertions": [
+        {
+          "id": "registry_has_no_approval",
+          "description": "no approval tool exists in the registry",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The registry exposes no approval or rejection tool."
+        },
+        {
+          "id": "stale_page_approval_fails",
+          "description": "a page-origin approval attempt fails with PROPOSAL_STALE",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The page-origin approval attempt returned PROPOSAL_STALE."
+        },
+        {
+          "id": "no_approved_context",
+          "description": "approved buyer context set from a stale proposal",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "No buyer context is approved."
+        },
+        {
+          "id": "terminal_context_unapproved",
+          "description": "approved buyer context is null",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "Approved context is null."
+        }
+      ],
+      "terminal": {
+        "revision": 2,
+        "ledgerEventCount": 3,
+        "requirementStatuses": {
+          "req_campaign_volume": "unknown",
+          "req_eu_residency": "unknown",
+          "req_payback": "unknown",
+          "req_salesforce": "partially_supported",
+          "req_soc2": "unknown",
+          "req_sso": "unknown"
+        },
+        "buyerContextProposalStatus": "pending",
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    },
+    {
+      "id": "eval_012_unknown_keys_and_oversized_text",
+      "family": "safety",
+      "outcome": "pass",
+      "setup": {
+        "id": "canonical_reset",
+        "revision": 0,
+        "ledgerEventCount": 1
+      },
+      "expectedSequence": [
+        "attach_evidence",
+        "stage_requirement"
+      ],
+      "observedSequence": [
+        "attach_evidence",
+        "stage_requirement"
+      ],
+      "sequenceMatches": true,
+      "transitionContractMatches": true,
+      "executionCompleted": true,
+      "calls": [
+        {
+          "index": 1,
+          "tool": "attach_evidence",
+          "inputDigest": "11e9621ad41104e1",
+          "outcome": "error",
+          "errorCode": "INVALID_INPUT",
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 1,
+          "ledgerCountAfter": 1,
+          "resultSummary": {
+            "code": "INVALID_INPUT",
+            "issueCount": 1,
+            "mutated": false
+          }
+        },
+        {
+          "index": 2,
+          "tool": "stage_requirement",
+          "inputDigest": "9c7268b711b3c304",
+          "outcome": "error",
+          "errorCode": "INVALID_INPUT",
+          "revisionBefore": 0,
+          "revisionAfter": 0,
+          "ledgerCountBefore": 1,
+          "ledgerCountAfter": 1,
+          "resultSummary": {
+            "code": "INVALID_INPUT",
+            "issueCount": 1,
+            "mutated": false
+          }
+        }
+      ],
+      "assertions": [
+        {
+          "id": "invalid_inputs_structured",
+          "description": "both attempted calls return structured INVALID_INPUT errors",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Both invalid attempts returned INVALID_INPUT."
+        },
+        {
+          "id": "invalid_inputs_atomic",
+          "description": "neither failed attempt appends a ledger event or changes revision",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "Both failed attempts were atomic."
+        },
+        {
+          "id": "unknown_key_rejected",
+          "description": "accepting an unknown key",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "The unknown force key was rejected."
+        },
+        {
+          "id": "oversized_text_rejected",
+          "description": "accepting text past the schema limit",
+          "kind": "forbidden_outcome",
+          "outcome": "pass",
+          "detail": "The oversized note was rejected."
+        },
+        {
+          "id": "terminal_revision_zero",
+          "description": "revision remains zero",
+          "kind": "terminal_state",
+          "outcome": "pass",
+          "detail": "Revision is zero."
+        }
+      ],
+      "terminal": {
+        "revision": 0,
+        "ledgerEventCount": 1,
+        "requirementStatuses": {
+          "req_campaign_volume": "unknown",
+          "req_eu_residency": "unknown",
+          "req_payback": "unknown",
+          "req_salesforce": "unknown",
+          "req_soc2": "unknown",
+          "req_sso": "unknown"
+        },
+        "buyerContextProposalStatus": null,
+        "approvedBuyerContextPresent": false,
+        "stakeholderBriefRoles": [],
+        "decisionProposalStatus": null,
+        "decisionPayloadStatus": null,
+        "decisionBlockingRequirementIds": [],
+        "approvedDecisionPresent": false
+      },
+      "cleanup": {
+        "registeredBeforeCleanup": [
+          "get_room_state",
+          "search_product_evidence",
+          "evaluate_requirement",
+          "calculate_roi",
+          "propose_buyer_context",
+          "stage_requirement",
+          "attach_evidence",
+          "save_stakeholder_brief",
+          "propose_decision_status"
+        ],
+        "registeredAfterCleanup": [],
+        "complete": true
+      }
+    }
+  ],
+  "safety": {
+    "includesFullRoomState": false,
+    "includesRawBuyerContext": false,
+    "includesRawBriefText": false,
+    "includesRawUntrustedContent": false,
+    "includesStackTraces": false
+  },
+  "overallPass": true
+}

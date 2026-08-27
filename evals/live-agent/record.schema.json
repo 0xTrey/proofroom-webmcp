@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proofroom.local/evals/live-agent/record.schema.json",
+  "title": "ProofRoom live browser-agent evidence",
+  "oneOf": [
+    { "$ref": "#/$defs/notRun" },
+    { "$ref": "#/$defs/completed" }
+  ],
+  "$defs": {
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "browserAgentName",
+        "browserVersion",
+        "testedUrl",
+        "appBuildIdentifier"
+      ],
+      "properties": {
+        "browserAgentName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "browserVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "[0-9]"
+        },
+        "testedUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        "appBuildIdentifier": { "type": "string", "minLength": 1, "maxLength": 120 }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promptId",
+        "promptTextSha256",
+        "outcome",
+        "observedToolSequence",
+        "resultEvidencePath"
+      ],
+      "properties": {
+        "promptId": {
+          "enum": [
+            "eval_001_canonical_journey",
+            "eval_002_salesforce_evidence_only",
+            "eval_003_budget_ceiling_90k",
+            "eval_004_two_briefs",
+            "eval_005_is_this_a_fit",
+            "eval_006_make_this_relevant",
+            "eval_007_missing_security_evidence",
+            "eval_008_update_after_budget_change",
+            "eval_009_force_eu_supported",
+            "eval_010_testimonial_injection",
+            "eval_011_stale_approval",
+            "eval_012_unknown_keys_and_oversized_text"
+          ]
+        },
+        "promptTextSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "outcome": { "enum": ["pass", "fail"] },
+        "observedToolSequence": {
+          "type": "array",
+          "maxItems": 24,
+          "items": {
+            "enum": [
+              "get_room_state",
+              "search_product_evidence",
+              "evaluate_requirement",
+              "calculate_roi",
+              "propose_buyer_context",
+              "stage_requirement",
+              "attach_evidence",
+              "save_stakeholder_brief",
+              "propose_decision_status"
+            ]
+          }
+        },
+        "resultEvidencePath": { "type": "string", "minLength": 1, "maxLength": 240 }
+      }
+    },
+    "notRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "status",
+        "reason",
+        "environment",
+        "toolDiscoveryEvidencePath",
+        "verifiedAt",
+        "verifierLabel",
+        "knownDeviations",
+        "cases"
+      ],
+      "properties": {
+        "schemaVersion": { "const": 2 },
+        "status": { "const": "not_run" },
+        "reason": { "type": "string", "minLength": 20, "maxLength": 500 },
+        "environment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "browserAgentName",
+            "browserVersion",
+            "testedUrl",
+            "appBuildIdentifier"
+          ],
+          "properties": {
+            "browserAgentName": { "type": "null" },
+            "browserVersion": { "type": "null" },
+            "testedUrl": { "type": "null" },
+            "appBuildIdentifier": { "type": "null" }
+          }
+        },
+        "toolDiscoveryEvidencePath": { "type": "null" },
+        "verifiedAt": { "type": "null" },
+        "verifierLabel": { "type": "null" },
+        "knownDeviations": { "type": "array", "maxItems": 0 },
+        "cases": { "type": "array", "maxItems": 0 }
+      }
+    },
+    "completed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "status",
+        "reason",
+        "environment",
+        "toolDiscoveryEvidencePath",
+        "verifiedAt",
+        "verifierLabel",
+        "knownDeviations",
+        "cases"
+      ],
+      "properties": {
+        "schemaVersion": { "const": 2 },
+        "status": { "enum": ["verified", "failed"] },
+        "reason": { "type": "string", "minLength": 20, "maxLength": 500 },
+        "environment": { "$ref": "#/$defs/environment" },
+        "toolDiscoveryEvidencePath": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "verifiedAt": { "type": "string", "format": "date-time" },
+        "verifierLabel": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "knownDeviations": {
+          "type": "array",
+          "maxItems": 24,
+          "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+        },
+        "cases": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": { "$ref": "#/$defs/case" }
+        }
+      }
+    }
+  }
+}

@@ -113,3 +113,37 @@
 - The full visual artifact tree remained byte-identical across normal E2E, with SHA-256 digest `4548b3889caff22fdde72ad8efdd340c1d42fc97c8ee2c906b6ba52cfe1f4d42` before and after the run.
 - Eight final visual artifacts and their audit index live in `artifacts/visual-audit/007-recovery/`: populated ledger, reset confirmation, invalid-state recovery, and successful reset receipt at 390 and 1600 pixels.
 - Checklist item 9 is accepted. Items 10 through 12 remain open.
+
+### Executable eval and release-candidate QA implementation
+
+- Cursor work order 008 reconciled all twelve manifest cases with exact repeated calls and added a
+  strict Zod-backed manifest, expected-sequence, executor, and assertion contract.
+- Every case creates a fresh fixed-clock room, applies only its named setup, registers the nine
+  production WebMCP definitions through the model-context shim, invokes the real shared actions,
+  checks every required invariant and forbidden outcome, and proves complete registry cleanup.
+- Work order 008a added explicit read-before-mutation dependencies, exact read and mutation revision
+  discipline, complete negative contract coverage, and the required machine-report fields.
+- The deterministic receipt at `evals/results/deterministic-report.json` passed 12 of 12 cases, 41
+  real shim tool calls, and 58 executable assertions. Manifest SHA-256 is
+  `04f622a2b5358bd7532df4a72c5d81f3e35bb143f177561399f8e6bd2dfb4f2d`; expected-sequence SHA-256
+  is `4be96767aca3f2604570e4a9b9ec3f89c1b77fcce71c2338d6582ab392fb8df2`; receipt SHA-256 is
+  `0edab70eaf1a9899bbeb426b0b5dfdc4896e49d207b5a32bff2c53c6ca010b06`.
+- The receipt is byte-identical across repeat runs and excludes full room state, raw buyer-context
+  payloads, raw brief text, raw untrusted testimonial content, and stack traces.
+- Live browser-agent tool selection remains explicitly `not_run`. Its separate schema and validator
+  accept the honest unverified record but do not count it as a pass.
+- `npm run qa` passed lint and the writing guard, typecheck, 325 Vitest tests, production build,
+  exact bundle budgets, 38 Chromium end-to-end tests, 48 axe checks, the deterministic eval suite,
+  live-agent record validation, and `git diff --check`.
+- Production output is 125,030 bytes gzip for total client JavaScript, 23,219 bytes gzip for total
+  CSS, and 441,935 bytes raw for the largest client JavaScript asset. The exact limits are 153,600,
+  40,960, and 614,400 bytes respectively.
+- Production source maps are enabled. Two maps totaling 1,840,277 raw bytes and 64 self-hosted fonts
+  totaling 660,040 raw bytes are reported and excluded from application-code gzip totals.
+- All 49 accepted visual-audit files, totaling 13,924,973 bytes, remained byte-identical before and
+  after the aggregate QA matrix. The tree SHA-256 was
+  `3ae653285619e5977c69f5ad472866da40b1eaa026911946d0b77e1ef00110fe` both times.
+- Codex independently reproduced the full aggregate QA matrix, both deterministic report hashes,
+  bundle measurements, source-map handling, negative contract coverage, and byte-identical visual
+  artifact digest after source review of the runner, schemas, orchestration, and tests.
+- Checklist item 10 is accepted. Items 11 and 12 remain open.

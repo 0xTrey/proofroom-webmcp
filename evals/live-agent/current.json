@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 2,
+  "status": "not_run",
+  "reason": "No eligible live browser agent was available in this work order, so tool selection remains explicitly unverified.",
+  "environment": {
+    "browserAgentName": null,
+    "browserVersion": null,
+    "testedUrl": null,
+    "appBuildIdentifier": null
+  },
+  "toolDiscoveryEvidencePath": null,
+  "verifiedAt": null,
+  "verifierLabel": null,
+  "knownDeviations": [],
+  "cases": []
+}

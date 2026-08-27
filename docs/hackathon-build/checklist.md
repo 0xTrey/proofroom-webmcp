@@ -65,7 +65,7 @@
   Acceptance: Ledger uses real domain events only; reset restores fixture; corrupted state recovers safely; no raw sensitive context is stored in events.
   Verify: Unit, component, reload, reset, persistence-corruption, and Playwright tests.
 
-- [ ] **10. Implement the eval suite and full QA matrix**
+- [x] **10. Implement the eval suite and full QA matrix**
   Spec ref: `spec.md > Evals`, `spec.md > Testing`
   What to build: Create twelve eval cases, expected sequences, deterministic runner, all target-width tests, accessibility suite, console-error gate, and reduced-motion checks.
   Acceptance: All automated commands pass; forbidden outcomes are tested; agent-selection results have a separate evidence slot for live browser execution.

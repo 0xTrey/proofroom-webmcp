@@ -30,6 +30,8 @@
   "include": [
     "src",
     "tests",
+    "evals",
+    "scripts",
     "worker",
     "vite.config.ts",
     "vitest.config.ts",
