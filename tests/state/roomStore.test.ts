@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { MERIDIAN_CONTEXT_DRAFT } from "../../src/fixtures/buyer.ts";
-import { CANONICAL_ROI_ASSUMPTIONS } from "../../src/fixtures/demoScenario.ts";
+import {
+  CANONICAL_ROI_ASSUMPTIONS,
+  createCanonicalRoom,
+} from "../../src/fixtures/demoScenario.ts";
 import { PROPOSAL_TTL_MS } from "../../src/domain/invariants.ts";
 import type { ProposeDecisionStatusInput } from "../../src/domain/actions/inputs.ts";
-import { attachCanonicalEvidence, createTestRoom, FIXED_NOW } from "../support/room.ts";
+import { createMemoryRoomStorage } from "../../src/state/persistence.ts";
+import { attachCanonicalEvidence, createTestRoom } from "../support/room.ts";
 
 describe("revision and ledger discipline", () => {
   it("starts at revision zero with the single canonical system event", () => {
@@ -464,25 +468,77 @@ describe("commercial model application", () => {
 });
 
 describe("reset", () => {
-  it("reproduces the canonical room except for the reset event timestamp", () => {
-    const handle = createTestRoom();
+  it("returns the exact receipt, replaces mutable state, persists, and reloads with fixture parity", () => {
+    const storage = createMemoryRoomStorage();
+    const handle = createTestRoom({ storage });
     attachCanonicalEvidence(handle);
-    handle.agentActions.proposeBuyerContext(MERIDIAN_CONTEXT_DRAFT);
+    const context = handle.agentActions.proposeBuyerContext(MERIDIAN_CONTEXT_DRAFT);
+    expect(context.ok).toBe(true);
+    if (context.ok) {
+      expect(handle.actions.approveBuyerContext({ proposalId: context.value.proposalId }).ok).toBe(
+        true,
+      );
+    }
+    expect(
+      handle.actions.applyRoiAssumptions({
+        ...handle.room().roiAssumptions,
+        budgetCeiling: 100000,
+      }).ok,
+    ).toBe(true);
+    expect(
+      handle.actions.saveStakeholderBrief({
+        role: "cfo",
+        summary: "The fictional committee is reviewing explicit commercial assumptions.",
+        evidenceIds: [],
+        risks: [],
+        openQuestions: [],
+        nextStep: "Review the model with the fictional finance committee.",
+      }).ok,
+    ).toBe(true);
     handle.clock.advance(5000);
+    const resetAt = "2026-08-26T12:00:05.000Z";
 
     const result = handle.actions.resetRoom();
     expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
 
     const room = handle.room();
-    const canonical = createTestRoom().room();
+    const canonical = createCanonicalRoom(resetAt);
 
-    expect(room.revision).toBe(0);
-    expect(room.requirements).toEqual(canonical.requirements);
-    expect(room.evidenceCatalog).toEqual(canonical.evidenceCatalog);
-    expect(room.buyerContextProposal).toBeNull();
-    expect(room.approvedBuyerContext).toBeNull();
-    expect(room.activityLedger).toHaveLength(1);
-    expect(room.activityLedger[0]?.createdAt).not.toBe(FIXED_NOW);
-    expect({ ...room.activityLedger[0], createdAt: FIXED_NOW }).toEqual(canonical.activityLedger[0]);
+    expect(room).toEqual(canonical);
+    expect(result.value).toMatchObject({
+      roomId: canonical.roomId,
+      revision: 0,
+      requirementCount: 6,
+      evidenceCount: 12,
+      resetAt,
+      receipt: {
+        id: "rcp_0001",
+        kind: "reset",
+        proposalId: null,
+        revision: 0,
+        issuedAt: resetAt,
+      },
+    });
+    expect(result.value.receipt.inputDigest).toMatch(/^[0-9a-f]{16}$/);
+
+    const reloaded = createTestRoom({ storage, startIso: resetAt });
+    expect(reloaded.hydration.source).toBe("persisted");
+    expect(reloaded.room()).toEqual(canonical);
+  });
+
+  it("keeps a noncanonical existing room ID through reset", () => {
+    const handle = createTestRoom();
+    handle.store.setState((value) => ({
+      room: { ...value.room, roomId: "stable_test_room" },
+    }));
+
+    const result = handle.actions.resetRoom();
+    expect(result.ok).toBe(true);
+    expect(handle.room().roomId).toBe("stable_test_room");
+    expect(handle.room().activityLedger[0]?.affectedIds).toEqual(["stable_test_room"]);
+    expect(result.ok && result.value.roomId).toBe("stable_test_room");
   });
 });

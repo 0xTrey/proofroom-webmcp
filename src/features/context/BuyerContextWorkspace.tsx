@@ -21,6 +21,7 @@ export type BuyerContextWorkspaceProps = {
   room: RoomState;
   actions: RoomActions;
   lastError: DomainError | null;
+  onDismissError?: () => void;
 };
 
 function formatUsd(value: number): string {
@@ -347,13 +348,27 @@ export function BuyerContextWorkspace(props: BuyerContextWorkspaceProps) {
         ) : null}
       </div>
 
-      <p
-        className={`context-feedback ${visibleFeedback?.kind === "error" ? "context-feedback--error" : ""}`}
-        aria-live="polite"
-        aria-atomic="true"
+      <div
+        className={`context-feedback feedback-with-dismiss ${
+          visibleFeedback?.kind === "error" ? "context-feedback--error" : ""
+        }`}
       >
-        {visibleFeedback?.message ?? "Context actions will be reported here."}
-      </p>
+        <p aria-live="polite" aria-atomic="true">
+          {visibleFeedback?.message ?? "Context actions will be reported here."}
+        </p>
+        {visibleFeedback?.kind === "error" ? (
+          <button
+            className="button button--quiet"
+            type="button"
+            onClick={() => {
+              setFeedback(null);
+              props.onDismissError?.();
+            }}
+          >
+            Dismiss error
+          </button>
+        ) : null}
+      </div>
 
       {proposal && proposal.status !== "approved" ? (
         <ProposalReview

@@ -7,10 +7,10 @@
 import type { ReactNode } from "react";
 import { RevisionTag } from "../components/RevisionTag.tsx";
 import { StatusMark, type StatusTone } from "../components/StatusMark.tsx";
-import type { WebMcpStatus } from "../webmcp/useWebMCPTools.ts";
+import type { WebMcpController } from "../webmcp/useWebMCPTools.ts";
 import { ROUTES, type RouteId } from "./routes.ts";
 
-const PHASE_MARKS: Record<WebMcpStatus["phase"], { tone: StatusTone; glyph: string; label: string }> = {
+const PHASE_MARKS: Record<WebMcpController["phase"], { tone: StatusTone; glyph: string; label: string }> = {
   idle: { tone: "neutral", glyph: "\u25CB", label: "agent tools idle" },
   registering: { tone: "agent", glyph: "\u25D4", label: "agent tools registering" },
   registered: { tone: "verified", glyph: "\u2713", label: "agent tools registered" },
@@ -22,9 +22,10 @@ const PHASE_MARKS: Record<WebMcpStatus["phase"], { tone: StatusTone; glyph: stri
 export type AppShellProps = {
   route: RouteId;
   onNavigate: (route: RouteId) => void;
-  status: WebMcpStatus;
+  status: WebMcpController;
   revision: number;
   storageStatus: "ok" | "unavailable";
+  onRequestReset: (trigger: HTMLElement) => void;
   children: ReactNode;
 };
 
@@ -74,6 +75,15 @@ export function AppShell(props: AppShellProps) {
               ? ` Failed: ${props.status.failures.map((failure) => failure.name).join(", ")}.`
               : ""}
           </p>
+          {props.status.phase === "partial" || props.status.phase === "error" ? (
+            <button
+              className="button button--quiet registration-retry"
+              type="button"
+              onClick={props.status.retry}
+            >
+              Retry agent tools
+            </button>
+          ) : null}
         </div>
         <div className="statusstrip__room mono">
           <span>{props.status.expectedToolCount} WebMCP tools</span>
@@ -83,6 +93,13 @@ export function AppShell(props: AppShellProps) {
               ? "browser persistence unavailable"
               : "saved in this browser"}
           </span>
+          <button
+            className="reset-trigger"
+            type="button"
+            onClick={(event) => props.onRequestReset(event.currentTarget)}
+          >
+            Reset demo
+          </button>
         </div>
       </div>
 

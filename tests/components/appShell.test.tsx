@@ -23,6 +23,8 @@ describe("application shell", () => {
     render(<App />);
     expect(screen.getByText(/Agent tools are not available in this browser/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Evaluation" })).toBeEnabled();
+    expect(screen.queryByRole("button", { name: "Retry agent tools" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Reset demo" })).toBeEnabled();
   });
 
   it("moves between the three surfaces", async () => {
@@ -91,9 +93,11 @@ describe("application shell", () => {
           registeredToolNames: ["get_room_state"],
           failures: [{ name: "attach_evidence", message: "rejected" }],
           message: "1 of 9 agent tools registered.",
+          retry: () => undefined,
         }}
         revision={4}
         storageStatus="ok"
+        onRequestReset={() => undefined}
       >
         <p>room</p>
       </AppShell>,
@@ -102,5 +106,6 @@ describe("application shell", () => {
     expect(screen.getByText(/1 of 9 agent tools registered/)).toBeInTheDocument();
     expect(screen.getByText("agent tools partial")).toBeInTheDocument();
     expect(screen.getByText(/revision 004/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Retry agent tools" })).toBeEnabled();
   });
 });

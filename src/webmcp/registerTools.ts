@@ -32,13 +32,7 @@ export function isWebMcpSupported(target: Document | undefined = globalThis.docu
 }
 
 function safeMessage(error: unknown): string {
-  if (error instanceof Error) {
-    // Message only. A raw stack trace must never reach the status surface.
-    return error.message.slice(0, 200);
-  }
-  if (typeof error === "string") {
-    return error.slice(0, 200);
-  }
+  void error;
   return "The browser rejected this tool registration.";
 }
 

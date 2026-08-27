@@ -112,7 +112,7 @@ export const applyRoiAssumptionsAction = defineAction({
         roiResult: result,
       }),
       affectedIds: [state.roomId],
-      inputSummary: `Applied ${changedFields.length} assumption changes to the room model.`,
+      inputSummary: `Updated the room model across ${changedFields.length} reviewed assumptions.`,
     });
   },
 });

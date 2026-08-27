@@ -152,10 +152,23 @@ describe("persistence round trip", () => {
     const second = createTestRoom({ storage });
 
     expect(second.hydration.source).toBe("persisted");
-    expect(second.hydration.notice).toBeNull();
-    expect(second.room().recoveryNotice).toBeNull();
+    expect(second.hydration.notice?.code).toBe("persisted_state_migrated");
+    expect(second.room().recoveryNotice?.code).toBe("persisted_state_migrated");
     expect(second.room().approvedBuyerContextReceipt).toEqual(approved.value.receipt);
     expect(buyerContextReceipt(second.room())).toEqual(approved.value.receipt);
+
+    const beforeDismiss = structuredClone(second.room());
+    const dismissed = second.actions.dismissRecoveryNotice();
+    expect(dismissed.ok).toBe(true);
+    expect(second.room().revision).toBe(beforeDismiss.revision + 1);
+    expect(second.room().activityLedger).toHaveLength(beforeDismiss.activityLedger.length + 1);
+    expect(second.room().activityLedger.at(-1)?.action).toBe("dismiss_recovery_notice");
+
+    const third = createTestRoom({ storage });
+    expect(third.hydration.source).toBe("persisted");
+    expect(third.hydration.notice).toBeNull();
+    expect(third.room().recoveryNotice).toBeNull();
+    expect(third.room().approvedBuyerContextReceipt).toEqual(approved.value.receipt);
   });
 
   it("keeps the exact buyer-context receipt after its approval event leaves the ledger", () => {
@@ -201,6 +214,12 @@ describe("persistence round trip", () => {
     expect(handle.hydration.source).toBe("fixture");
     expect(handle.room().recoveryNotice?.code).toBe("invalid_persisted_state");
     expect(handle.room().requirements).toHaveLength(6);
+
+    expect(handle.actions.dismissRecoveryNotice().ok).toBe(true);
+    const reloaded = createTestRoom({ storage });
+    expect(reloaded.hydration.source).toBe("persisted");
+    expect(reloaded.room().recoveryNotice).toBeNull();
+    expect(reloaded.room().requirements).toHaveLength(6);
   });
 
   it("recovers from an unsupported schema version", () => {
@@ -211,6 +230,12 @@ describe("persistence round trip", () => {
 
     expect(handle.room().recoveryNotice?.code).toBe("unsupported_schema_version");
     expect(handle.room().recoveryNotice?.message).toContain("99");
+
+    expect(handle.actions.dismissRecoveryNotice().ok).toBe(true);
+    const reloaded = createTestRoom({ storage });
+    expect(reloaded.hydration.source).toBe("persisted");
+    expect(reloaded.room().recoveryNotice).toBeNull();
+    expect(reloaded.room().schemaVersion).toBe(1);
   });
 
   it("keeps working when storage is unavailable", () => {
@@ -231,6 +256,50 @@ describe("persistence round trip", () => {
     const retried = handle.retryPersist();
     expect(retried.ok).toBe(false);
     expect(retried.ok === false && retried.error.code).toBe("PERSISTENCE_UNAVAILABLE");
+  });
+
+  it("retries persistence without changing revision or activity history", () => {
+    const options = { failWrites: true };
+    const storage = createMemoryRoomStorage(options);
+    const handle = createTestRoom({ storage });
+    expect(
+      handle.actions.applyRoiAssumptions({
+        ...handle.room().roiAssumptions,
+        budgetCeiling: 100000,
+      }).ok,
+    ).toBe(true);
+    expect(handle.store.getState().storageStatus).toBe("unavailable");
+    const beforeRetry = structuredClone(handle.room());
+
+    const failed = handle.retryPersist();
+    expect(failed.ok).toBe(false);
+    expect(handle.room()).toEqual(beforeRetry);
+
+    options.failWrites = false;
+    const succeeded = handle.retryPersist();
+    expect(succeeded.ok).toBe(true);
+    expect(handle.room()).toEqual(beforeRetry);
+    expect(handle.store.getState().storageStatus).toBe("ok");
+  });
+
+  it("clears a storage-unavailable recovery warning on successful infrastructure retry", () => {
+    const options = { failReads: true, failWrites: true };
+    const storage = createMemoryRoomStorage(options);
+    const handle = createTestRoom({ storage });
+    const before = structuredClone(handle.room());
+
+    options.failReads = false;
+    options.failWrites = false;
+    const retried = handle.retryPersist();
+
+    expect(retried.ok).toBe(true);
+    expect(handle.room().revision).toBe(before.revision);
+    expect(handle.room().activityLedger).toEqual(before.activityLedger);
+    expect(handle.room().recoveryNotice).toBeNull();
+    expect(handle.store.getState().storageStatus).toBe("ok");
+
+    const reloaded = createTestRoom({ storage });
+    expect(reloaded.room().recoveryNotice).toBeNull();
   });
 
   it("lets a person dismiss the recovery notice", () => {

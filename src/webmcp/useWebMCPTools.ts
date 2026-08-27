@@ -5,7 +5,7 @@
  * returns a status the page can announce. Every state the spec asks for is
  * representable: supported, registered, unavailable, partial, and error.
  */
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AgentActions } from "../domain/actions/index.ts";
 import { createToolDefinitions, TOOL_NAMES } from "./toolDefinitions.ts";
 import {
@@ -32,6 +32,10 @@ export type WebMcpStatus = {
   message: string;
 };
 
+export type WebMcpController = WebMcpStatus & {
+  retry(): void;
+};
+
 export const UNAVAILABLE_MESSAGE =
   "Agent tools are not available in this browser. Every part of this evaluation still works with the page controls.";
 
@@ -48,11 +52,13 @@ export function initialStatus(supported: boolean): WebMcpStatus {
   };
 }
 
-export function useWebMcpTools(actions: AgentActions): WebMcpStatus {
+export function useWebMcpTools(actions: AgentActions): WebMcpController {
   const definitions = useMemo(() => createToolDefinitions(actions), [actions]);
+  const [attempt, setAttempt] = useState(0);
   const [status, setStatus] = useState<WebMcpStatus>(() =>
     initialStatus(getModelContext() !== null),
   );
+  const retry = useCallback(() => setAttempt((current) => current + 1), []);
 
   useEffect(() => {
     const modelContext = getModelContext();
@@ -69,6 +75,8 @@ export function useWebMcpTools(actions: AgentActions): WebMcpStatus {
       ...current,
       support: "supported",
       phase: "registering",
+      registeredToolNames: [],
+      failures: [],
       message: "Registering agent tools.",
     }));
 
@@ -126,7 +134,7 @@ export function useWebMcpTools(actions: AgentActions): WebMcpStatus {
       controller.abort();
       unregisterRoomTools(modelContext, definitions.map((definition) => definition.name));
     };
-  }, [definitions]);
+  }, [attempt, definitions]);
 
-  return status;
+  return { ...status, retry };
 }

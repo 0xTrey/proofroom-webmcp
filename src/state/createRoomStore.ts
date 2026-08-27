@@ -108,12 +108,22 @@ export function createRoomStore(options: CreateRoomStoreOptions = {}): RoomStore
     storage,
     hydration,
     retryPersist() {
-      const write = storage.save(store.getState().room);
+      const current = store.getState().room;
+      const roomToPersist =
+        current.recoveryNotice?.code === "storage_unavailable"
+          ? { ...current, recoveryNotice: null }
+          : current;
+      const write = storage.save(roomToPersist);
       applyWrite(write);
       if (write.status !== "saved") {
         return failure("PERSISTENCE_UNAVAILABLE", "The room could not be saved in this browser.", {
           issues: [{ path: "storage", message: write.detail }],
         });
+      }
+      if (roomToPersist !== current) {
+        // Storage availability is infrastructure metadata. Clearing this warning
+        // changes no authoritative field, revision, or activity event.
+        store.setState({ room: roomToPersist });
       }
       return success({ persisted: true as const });
     },

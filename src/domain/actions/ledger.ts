@@ -13,6 +13,8 @@ export type LedgerFilter = {
   panel?: ActivityEvent["panel"] | "all";
 };
 
+export const LEDGER_PAGE_SIZE = 25;
+
 export function filterLedger(
   events: readonly ActivityEvent[],
   filter: LedgerFilter = {},
@@ -21,21 +23,47 @@ export function filterLedger(
   const kind = filter.kind ?? "all";
   const panel = filter.panel ?? "all";
 
-  return events.filter((event) => {
-    if (origin !== "all" && event.origin !== origin) {
-      return false;
-    }
-    if (panel !== "all" && event.panel !== panel) {
-      return false;
-    }
-    if (kind === "read" && event.mutating) {
-      return false;
-    }
-    if (kind === "mutate" && !event.mutating) {
-      return false;
-    }
-    return true;
-  });
+  return events
+    .filter((event) => {
+      if (origin !== "all" && event.origin !== origin) {
+        return false;
+      }
+      if (panel !== "all" && event.panel !== panel) {
+        return false;
+      }
+      if (kind === "read" && (event.mutating || event.origin === "system")) {
+        return false;
+      }
+      if (kind === "mutate" && !event.mutating) {
+        return false;
+      }
+      return true;
+    })
+    .toReversed();
+}
+
+export function ledgerPage(
+  events: readonly ActivityEvent[],
+  filter: LedgerFilter = {},
+  visibleCount = LEDGER_PAGE_SIZE,
+): {
+  events: ActivityEvent[];
+  filteredTotal: number;
+  allTotal: number;
+  visibleCount: number;
+  hasMore: boolean;
+} {
+  const filtered = filterLedger(events, filter);
+  const boundedVisibleCount = Math.max(0, visibleCount);
+  const visible = filtered.slice(0, boundedVisibleCount);
+
+  return {
+    events: visible,
+    filteredTotal: filtered.length,
+    allTotal: events.length,
+    visibleCount: visible.length,
+    hasMore: visible.length < filtered.length,
+  };
 }
 
 export type LedgerTotals = {

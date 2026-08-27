@@ -17,7 +17,12 @@ function EvaluationHarness({
   const room = useStore(handle.store, (value) => value.room);
   const lastError = useStore(handle.store, (value) => value.lastError);
   const context = includeContext ? (
-    <BuyerContextWorkspace room={room} actions={handle.actions} lastError={lastError} />
+    <BuyerContextWorkspace
+      room={room}
+      actions={handle.actions}
+      lastError={lastError}
+      onDismissError={handle.clearError}
+    />
   ) : undefined;
 
   return (
@@ -26,6 +31,7 @@ function EvaluationHarness({
       actions={handle.actions}
       lastError={lastError}
       context={context}
+      onDismissError={handle.clearError}
     />
   );
 }
@@ -210,6 +216,28 @@ describe("requirement and evidence workspace", () => {
     expect(
       handle.room().requirements.find((entry) => entry.id === "req_soc2")?.attachedEvidenceIds,
     ).toEqual([]);
+  });
+
+  it("dismisses only the evaluation error and preserves the notes draft", async () => {
+    const handle = createTestRoom();
+    const user = userEvent.setup();
+    render(<EvaluationHarness handle={handle} />);
+
+    await selectRequirement(user, "SOC 2 Type II attestation");
+    const notes = screen.getByRole("textbox", { name: "Buyer notes" });
+    await user.type(notes, "Preserve this fictional unsaved note.");
+    await user.click(screen.getByRole("button", { name: "2024 observation" }));
+    await user.click(
+      screen.getByRole("button", { name: /Attach ev_005 to SOC 2 Type II attestation/ }),
+    );
+    expect(screen.getByText(/EVIDENCE_INELIGIBLE/)).toBeVisible();
+    const beforeDismiss = structuredClone(handle.room());
+
+    await user.click(screen.getByRole("button", { name: "Dismiss error" }));
+
+    expect(screen.queryByText(/EVIDENCE_INELIGIBLE/)).not.toBeInTheDocument();
+    expect(notes).toHaveValue("Preserve this fictional unsaved note.");
+    expect(handle.room()).toEqual(beforeDismiss);
   });
 
   it("clears a local evaluation error after an unrelated buyer-context mutation", async () => {

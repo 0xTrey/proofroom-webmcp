@@ -16,10 +16,21 @@ function DecisionHarness({ handle }: { handle: TestRoom }) {
   const room = useStore(handle.store, (value) => value.room);
   const lastError = useStore(handle.store, (value) => value.lastError);
   const context = (
-    <BuyerContextWorkspace room={room} actions={handle.actions} lastError={lastError} />
+    <BuyerContextWorkspace
+      room={room}
+      actions={handle.actions}
+      lastError={lastError}
+      onDismissError={handle.clearError}
+    />
   );
   return (
-    <DecisionSurface room={room} actions={handle.actions} lastError={lastError} context={context} />
+    <DecisionSurface
+      room={room}
+      actions={handle.actions}
+      lastError={lastError}
+      context={context}
+      onDismissError={handle.clearError}
+    />
   );
 }
 
@@ -481,6 +492,26 @@ describe("route feedback isolation", () => {
     const decisionFeedback = document.querySelector(".decision-feedback");
     expect(decisionFeedback?.textContent).toContain("Decision actions will be reported here");
     expect(decisionFeedback?.textContent).not.toContain("No staged buyer context");
+  });
+
+  it("dismisses only the decision error and preserves the brief draft", async () => {
+    const handle = createTestRoom();
+    attachCanonicalEvidence(handle);
+    const user = userEvent.setup();
+    render(<DecisionHarness handle={handle} />);
+
+    const summary = screen.getByLabelText("Summary");
+    await user.type(summary, "EU data residency is proven for this fictional purchase.");
+    await user.type(screen.getByLabelText("Recommended next step"), "Review the fictional file.");
+    await user.click(screen.getByRole("button", { name: "Save CFO brief" }));
+    expect(screen.getByText(/EVIDENCE_INSUFFICIENT/)).toBeVisible();
+    const beforeDismiss = structuredClone(handle.room());
+
+    await user.click(screen.getByRole("button", { name: "Dismiss error" }));
+
+    expect(screen.queryByText(/EVIDENCE_INSUFFICIENT/)).not.toBeInTheDocument();
+    expect(summary).toHaveValue("EU data residency is proven for this fictional purchase.");
+    expect(handle.room()).toEqual(beforeDismiss);
   });
 });
 

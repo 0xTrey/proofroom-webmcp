@@ -40,13 +40,20 @@ export type EvaluationSurfaceProps = {
   actions: RoomActions;
   lastError: DomainError | null;
   context?: ReactNode;
+  onDismissError?: () => void;
 };
 
 type RevisionedEvaluationFeedback = EvaluationFeedback & {
   roomRevision: number;
 };
 
-export function EvaluationSurface({ room, actions, lastError, context }: EvaluationSurfaceProps) {
+export function EvaluationSurface({
+  room,
+  actions,
+  lastError,
+  context,
+  onDismissError,
+}: EvaluationSurfaceProps) {
   const requirements = selectRequirementSummaries(room);
   const totals = selectRequirementTotals(room);
   const [selectedId, setSelectedId] = useState(room.requirements[0]?.id ?? "");
@@ -235,15 +242,29 @@ export function EvaluationSurface({ room, actions, lastError, context }: Evaluat
           ))}
         </ol>
 
-        <p
+        <div
           className={`evaluation-feedback ${
-            visibleFeedback?.kind === "error" ? "evaluation-feedback--error" : ""
+            visibleFeedback?.kind === "error"
+              ? "evaluation-feedback--error feedback-with-dismiss"
+              : ""
           }`}
-          aria-live="polite"
-          aria-atomic="true"
         >
-          {visibleFeedback?.message ?? "Evaluation actions will be reported here."}
-        </p>
+          <p aria-live="polite" aria-atomic="true">
+            {visibleFeedback?.message ?? "Evaluation actions will be reported here."}
+          </p>
+          {visibleFeedback?.kind === "error" ? (
+            <button
+              className="button button--quiet"
+              type="button"
+              onClick={() => {
+                setFeedback(null);
+                onDismissError?.();
+              }}
+            >
+              Dismiss error
+            </button>
+          ) : null}
+        </div>
       </section>
 
       {selected ? (

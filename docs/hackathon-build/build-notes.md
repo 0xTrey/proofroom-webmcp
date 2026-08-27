@@ -100,3 +100,16 @@
 - Eight final visual artifacts and their audit index live in `artifacts/visual-audit/006-decision/`. The 390-pixel proposal frame visibly includes both hard blockers, and the receipt fields remain distinct and readable at 390 and 1600 pixels.
 - Exactly nine WebMCP tools remain. `calculate_roi` is read-only, decision proposals are staged only, and no tool can apply ROI assumptions, approve, or reject.
 - Checklist item 8 is accepted. Items 9 through 12 remain open.
+
+### Accepted activity ledger, reset, and recovery milestone
+
+- Cursor work order 007 replaced the totals-only activity section with a real authoritative ledger register. It exposes stable event IDs and sequence values, UTC time, origin, action and tool, panel, read or mutation kind, revision transition, safe summary, result, affected IDs, digest, and untrusted-content state.
+- Ledger filtering combines origin, kind, and panel without changing room state. It defaults to newest first, renders 25 records at a time, preserves the 400-event cap, and keeps System lifecycle events out of the Agent-read total.
+- A global in-app reset dialog now states exactly what is removed and restored. Cancel and Escape are mutation-free, confirmation calls the existing UI-only reset action once, and the result returns revision 0, six requirements, twelve evidence records, one canonical System event, and a non-authoritative reset receipt.
+- Invalid saved state and unsupported versions fall back without partial trust. Legacy schema-version-1 buyer-context receipts are reconstructed only from a still-present approval event and surfaced as a typed migration notice. Explicit continue actions persist the recovered or upgraded room so the notice does not repeat after reload.
+- Browser persistence retry stays outside the room action ledger and changes no revision or event. Render failures hide arbitrary thrown text, allow a presentation-only retry, and route reset through the same confirmation dialog.
+- Partial or failed WebMCP registration now has a cleanup-first retry path that never duplicates the exact nine registered names or changes room state.
+- Codex independently reproduced every acceptance gate: 278 unit and component tests, 36 end-to-end checks, 48 axe scans, 12 eval definitions with four safety cases and nine known tools, lint across 151 files, typecheck, production build, diff checks, and historical-artifact verification.
+- The full visual artifact tree remained byte-identical across normal E2E, with SHA-256 digest `4548b3889caff22fdde72ad8efdd340c1d42fc97c8ee2c906b6ba52cfe1f4d42` before and after the run.
+- Eight final visual artifacts and their audit index live in `artifacts/visual-audit/007-recovery/`: populated ledger, reset confirmation, invalid-state recovery, and successful reset receipt at 390 and 1600 pixels.
+- Checklist item 9 is accepted. Items 10 through 12 remain open.

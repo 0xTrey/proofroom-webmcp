@@ -38,6 +38,15 @@ async function prepareApprovedDecision(page: Page): Promise<void> {
   await page.getByRole("button", { name: "Approve decision" }).press("Enter");
 }
 
+async function preparePopulatedLedger(page: Page): Promise<void> {
+  await page.goto("/#product");
+  await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
+  await page.getByRole("button", { name: "Approve buyer context" }).click();
+  await page.getByRole("button", { name: "Evaluation" }).click();
+  await page.getByRole("button", { name: "Apply fictional review set" }).click();
+  await page.getByRole("button", { name: "Decision" }).click();
+}
+
 for (const width of WIDTHS) {
   for (const surface of SURFACES) {
     test(`no serious axe violations on ${surface} at ${width}px`, async ({ page }) => {
@@ -109,5 +118,44 @@ for (const width of WIDTHS) {
     );
     const blocking = await blockingViolations(page);
     expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
+  });
+
+  test(`item 9 populated ledger has no serious axe violations at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await preparePopulatedLedger(page);
+    await expect(
+      page.getByRole("region", { name: "Inspect the authoritative activity register." }),
+    ).toBeVisible();
+    expect(await blockingViolations(page)).toEqual([]);
+  });
+
+  test(`item 9 reset dialog has no serious axe violations at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#product");
+    await page.getByRole("button", { name: "Reset demo" }).click();
+    await expect(page.getByRole("dialog", { name: "Reset this fictional demonstration?" })).toBeVisible();
+    expect(await blockingViolations(page)).toEqual([]);
+  });
+
+  test(`item 9 recovery notice has no serious axe violations at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.addInitScript(() => {
+      localStorage.setItem(
+        "proofroom.room.v1",
+        JSON.stringify({ schemaVersion: 1, savedAt: "invalid", room: {} }),
+      );
+    });
+    await page.goto("/#product");
+    await expect(page.getByText(/Notice code: invalid_persisted_state/)).toBeVisible();
+    expect(await blockingViolations(page)).toEqual([]);
+  });
+
+  test(`item 9 reset receipt has no serious axe violations at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#product");
+    await page.getByRole("button", { name: "Reset demo" }).click();
+    await page.getByRole("button", { name: "Reset to canonical fixture" }).click();
+    await expect(page.getByRole("region", { name: "The canonical fixture is active." })).toBeVisible();
+    expect(await blockingViolations(page)).toEqual([]);
   });
 }

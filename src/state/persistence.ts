@@ -136,10 +136,6 @@ export function createMemoryRoomStorage(options: MemoryRoomStorageOptions = {}):
   };
 }
 
-function describe(error: unknown): string {
-  if (error instanceof Error) {
-    // Message only. A stack trace must never reach the UI or a tool response.
-    return error.message.slice(0, 200);
-  }
-  return "Unknown storage failure.";
+function describe(_error: unknown): string {
+  return "Browser storage rejected the operation. No saved payload or exception detail was exposed.";
 }

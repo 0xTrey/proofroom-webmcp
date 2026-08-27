@@ -7,6 +7,7 @@ import {
   selectLedgerTotals,
 } from "../../state/selectors.ts";
 import { TOOL_NAMES } from "../../webmcp/toolDefinitions.ts";
+import { ActivityLedger } from "../ledger/ActivityLedger.tsx";
 import { RoiWorkspace } from "./RoiWorkspace.tsx";
 import { BriefWorkspace } from "./BriefWorkspace.tsx";
 import { ProposalDesk } from "./ProposalDesk.tsx";
@@ -69,6 +70,7 @@ export type DecisionSurfaceProps = {
   actions: RoomActions;
   lastError: DomainError | null;
   context?: ReactNode;
+  onDismissError?: () => void;
 };
 
 function formatTimestamp(value: string): string {
@@ -79,7 +81,13 @@ function formatTimestamp(value: string): string {
   });
 }
 
-export function DecisionSurface({ room, actions, lastError, context }: DecisionSurfaceProps) {
+export function DecisionSurface({
+  room,
+  actions,
+  lastError,
+  context,
+  onDismissError,
+}: DecisionSurfaceProps) {
   const ledger = selectLedgerTotals(room);
   const decision = room.approvedDecision;
   const [feedback, setFeedback] = useState<DecisionFeedback | null>(null);
@@ -132,13 +140,29 @@ export function DecisionSurface({ room, actions, lastError, context }: DecisionS
         <span>{room.canonicalBuyer.fictionalDisclosure}</span>
       </aside>
 
-      <p
-        className={`decision-feedback ${visibleFeedback?.kind === "error" ? "decision-feedback--error" : ""}`}
-        aria-live="polite"
-        aria-atomic="true"
+      <div
+        className={`decision-feedback ${
+          visibleFeedback?.kind === "error"
+            ? "decision-feedback--error feedback-with-dismiss"
+            : ""
+        }`}
       >
-        {visibleFeedback?.message ?? "Decision actions will be reported here."}
-      </p>
+        <p aria-live="polite" aria-atomic="true">
+          {visibleFeedback?.message ?? "Decision actions will be reported here."}
+        </p>
+        {visibleFeedback?.kind === "error" ? (
+          <button
+            className="button button--quiet"
+            type="button"
+            onClick={() => {
+              setFeedback(null);
+              onDismissError?.();
+            }}
+          >
+            Dismiss error
+          </button>
+        ) : null}
+      </div>
 
       <RoiWorkspace room={room} actions={actions} onFeedback={reportFeedback} />
 
@@ -302,6 +326,8 @@ export function DecisionSurface({ room, actions, lastError, context }: DecisionS
           </div>
         </dl>
       </section>
+
+      <ActivityLedger room={room} />
 
       <section className="tool-manifest" aria-labelledby="tools-heading">
         <header>

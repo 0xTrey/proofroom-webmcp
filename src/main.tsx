@@ -13,6 +13,7 @@ import "./design/tokens.css";
 import "./design/global.css";
 import "./design/context.css";
 import "./design/evaluation.css";
+import "./design/recovery.css";
 import "./design/motion.css";
 
 import { App } from "./app/App.tsx";

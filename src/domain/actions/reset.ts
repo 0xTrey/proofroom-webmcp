@@ -23,8 +23,21 @@ export type RoomReset = {
   receipt: Receipt;
 };
 
-export function canonicalResetState(nowIso: string): RoomState {
-  return createCanonicalRoom(nowIso);
+export function canonicalResetState(nowIso: string, roomId?: string): RoomState {
+  const canonical = createCanonicalRoom(nowIso);
+  if (!roomId || roomId === canonical.roomId) {
+    return canonical;
+  }
+
+  return {
+    ...canonical,
+    roomId,
+    activityLedger: canonical.activityLedger.map((event) => ({
+      ...event,
+      affectedIds: event.affectedIds.map((id) => (id === canonical.roomId ? roomId : id)),
+      inputDigest: inputDigest({ roomId, schemaVersion: canonical.schemaVersion }),
+    })),
+  };
 }
 
 export function buildResetResult(room: RoomState, nowIso: string): RoomReset {

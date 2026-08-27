@@ -8,26 +8,24 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 
 type ErrorBoundaryProps = {
   children: ReactNode;
-  onReset?: () => void;
+  onOpenReset?: (trigger: HTMLElement) => void;
 };
 
 type ErrorBoundaryState = {
   failed: boolean;
-  message: string | null;
 };
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  override state: ErrorBoundaryState = { failed: false, message: null };
+  override state: ErrorBoundaryState = { failed: false };
 
-  static getDerivedStateFromError(error: unknown): ErrorBoundaryState {
-    return {
-      failed: true,
-      message: error instanceof Error ? error.message.slice(0, 200) : null,
-    };
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { failed: true };
   }
 
   override componentDidCatch(error: unknown, info: ErrorInfo): void {
-    console.error("ProofRoom render failure", error, info.componentStack);
+    if (import.meta.env.DEV) {
+      console.error("ProofRoom render failure", error, info.componentStack);
+    }
   }
 
   override render(): ReactNode {
@@ -39,20 +37,25 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       <div className="errorpanel" role="alert">
         <h1 className="display">This surface stopped rendering</h1>
         <p>
-          The room state is still in your browser. Reset the demo to return to the canonical fixture,
-          or reload the page to try this surface again.
+          The room state is still available. Try rendering this surface again, or open the shared
+          reset confirmation to return to the canonical fixture.
         </p>
-        {this.state.message ? <p className="mono">{this.state.message}</p> : null}
-        <div>
+        <div className="reset-dialog__actions">
           <button
             className="button"
             type="button"
             onClick={() => {
-              this.props.onReset?.();
-              this.setState({ failed: false, message: null });
+              this.setState({ failed: false });
             }}
           >
-            Reset the room and continue
+            Try this surface again
+          </button>
+          <button
+            className="button button--quiet"
+            type="button"
+            onClick={(event) => this.props.onOpenReset?.(event.currentTarget)}
+          >
+            Open reset confirmation
           </button>
         </div>
       </div>

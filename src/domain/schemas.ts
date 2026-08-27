@@ -302,7 +302,12 @@ export const activityEventSchema = z.strictObject({
 });
 
 export const recoveryNoticeSchema = z.strictObject({
-  code: z.enum(["unsupported_schema_version", "invalid_persisted_state", "storage_unavailable"]),
+  code: z.enum([
+    "unsupported_schema_version",
+    "invalid_persisted_state",
+    "storage_unavailable",
+    "persisted_state_migrated",
+  ]),
   message: sentence,
   detail: z.string().max(LIMITS.sentenceLength).nullable(),
   detectedAt: isoDateTimeSchema,

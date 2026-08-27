@@ -59,7 +59,7 @@
   Acceptance: Budget changes cause deterministic re-evaluation; every hard requirement must be fully supported for ready; briefs cannot contradict requirement state; stale decision approval fails.
   Verify: Unit, component, shim tool, and canonical Playwright journey tests.
 
-- [ ] **9. Build the activity ledger, reset, and recovery states**
+- [x] **9. Build the activity ledger, reset, and recovery states**
   Spec ref: `prd.md > Epic 7`, `prd.md > Epic 8`
   What to build: Implement ledger filters, safe summaries, revision display, reset confirmation, canonical fixture recovery, persisted-state migration notice, and error boundary behavior.
   Acceptance: Ledger uses real domain events only; reset restores fixture; corrupted state recovers safely; no raw sensitive context is stored in events.

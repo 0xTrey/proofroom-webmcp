@@ -156,11 +156,11 @@ export function createRoomActions(
     resetRoom: () =>
       transactor.transact((state) => {
         const nowIso = transactor.now();
-        const room = canonicalResetState(nowIso);
+        const room = canonicalResetState(nowIso, state.roomId);
         return success({
           value: buildResetResult(room, nowIso),
           // Reset intentionally discards the previous room, including its ledger.
-          state: { ...room, roomId: state.roomId },
+          state: room,
         });
       }),
   };

@@ -17,7 +17,12 @@ function ProductHarness({ handle }: { handle: TestRoom }) {
   const room = useStore(handle.store, (value) => value.room);
   const lastError = useStore(handle.store, (value) => value.lastError);
   const context = (
-    <BuyerContextWorkspace room={room} actions={handle.actions} lastError={lastError} />
+    <BuyerContextWorkspace
+      room={room}
+      actions={handle.actions}
+      lastError={lastError}
+      onDismissError={handle.clearError}
+    />
   );
   return <ProductSurface room={room} context={context} />;
 }
@@ -222,6 +227,29 @@ describe("buyer context workspace", () => {
     expect(screen.getByText(/PROPOSAL_STALE/)).toBeVisible();
     expect(handle.room()).toEqual(before);
     expect(handle.room().approvedBuyerContext).toBeNull();
+  });
+
+  it("dismisses only the context error and preserves the staged proposal", async () => {
+    const handle = createTestRoom();
+    expect(handle.agentActions.proposeBuyerContext(MERIDIAN_CONTEXT_DRAFT).ok).toBe(true);
+    expect(
+      handle.agentActions.attachEvidence({
+        requirementId: "req_salesforce",
+        evidenceIds: ["ev_002"],
+      }).ok,
+    ).toBe(true);
+    const beforeFailure = structuredClone(handle.room());
+    const user = userEvent.setup();
+    render(<ProductHarness handle={handle} />);
+
+    await user.click(screen.getByRole("button", { name: "Approve buyer context" }));
+    expect(screen.getByText(/PROPOSAL_STALE/)).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Dismiss error" }));
+
+    expect(screen.queryByText(/PROPOSAL_STALE/)).not.toBeInTheDocument();
+    expect(handle.room()).toEqual(beforeFailure);
+    expect(handle.room().buyerContextProposal?.payload).toEqual(MERIDIAN_CONTEXT_DRAFT);
+    expect(screen.getByRole("button", { name: "Approve buyer context" })).toBeEnabled();
   });
 
   it("surfaces an expired approval failure and leaves the room atomic", async () => {

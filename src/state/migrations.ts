@@ -117,8 +117,29 @@ export function hydrateRoom(read: StorageReadResult, nowIso: string): HydrationR
     };
   }
 
+  const reconstructedReceipt =
+    parsed.data.room.approvedBuyerContext !== null &&
+    parsed.data.room.approvedBuyerContextReceipt === null
+      ? buyerContextReceipt(parsed.data.room)
+      : null;
+  const migratedLegacyReceipt = reconstructedReceipt !== null;
+  const refreshed = refreshDerivedState(parsed.data.room, nowIso);
+
+  if (migratedLegacyReceipt) {
+    return {
+      room: refreshed,
+      source: "persisted",
+      notice: notice(
+        "persisted_state_migrated",
+        "An older saved room was upgraded in place, and its buyer-context receipt was restored from the existing approval event.",
+        "Schema version 1 buyer-context receipt reconstruction completed.",
+        nowIso,
+      ),
+    };
+  }
+
   return {
-    room: refreshDerivedState(parsed.data.room, nowIso),
+    room: refreshed,
     source: "persisted",
     notice: null,
   };
