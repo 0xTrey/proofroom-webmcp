@@ -71,7 +71,7 @@
   Acceptance: All automated commands pass; forbidden outcomes are tested; agent-selection results have a separate evidence slot for live browser execution.
   Verify: `npm run lint`, `npm run typecheck`, `npm run test`, `npm run test:e2e`, `npm run test:a11y`, `npm run evals`, `npm run build`.
 
-- [ ] **11. Deploy and verify the public release candidate**
+- [x] **11. Deploy and verify the public release candidate**
   Spec ref: `spec.md > Cloudflare Deployment`, `spec.md > Demo And Submission Flow`
   What to build: Deploy to Cloudflare, configure headers, verify public assets and SPA routes, run public browser QA, verify WebMCP discovery in a supported browser, and write a release receipt.
   Acceptance: Public 200, correct security headers, no console errors, canonical agent journey passes, UI-only journey passes, commit and deployment hashes are recorded.

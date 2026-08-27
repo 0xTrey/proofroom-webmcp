@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "proofroom-20260827-86b01690",
+  "state": "verified",
+  "preparedAt": "2026-08-27T03:13:00.000Z",
+  "publicUrl": "https://proofroom-webmcp.harnden-trey.workers.dev",
+  "preparation": {
+    "workerName": "proofroom-webmcp",
+    "compatibilityDate": "2026-08-26",
+    "sourceCommit": "82ee322b4e4e8c8658e8eed605431974d084afca",
+    "cleanTree": true,
+    "githubRemote": "https://github.com/0xTrey/proofroom-webmcp.git",
+    "deterministicEvalReportDigest": "0edab70eaf1a9899bbeb426b0b5dfdc4896e49d207b5a32bff2c53c6ca010b06",
+    "visualArtifactDigest": "3ae653285619e5977c69f5ad472866da40b1eaa026911946d0b77e1ef00110fe"
+  },
+  "deployment": {
+    "gitCommit": "82ee322b4e4e8c8658e8eed605431974d084afca",
+    "cleanTreeProof": "git status --porcelain returned no output immediately before npm run deploy, and origin/main matched the deployment commit",
+    "githubRemote": "https://github.com/0xTrey/proofroom-webmcp.git",
+    "publicRepositoryUrl": "https://github.com/0xTrey/proofroom-webmcp",
+    "cloudflareAccountLabel": "0xTrey",
+    "workerName": "proofroom-webmcp",
+    "deploymentId": "86b01690-7492-4a37-ae70-3c71d50f43c7",
+    "deployedAt": "2026-08-27T04:22:14.782Z",
+    "wranglerVersion": "4.126.0",
+    "build": {
+      "staticAssetCount": 71,
+      "staticAssetBytes": 3047832,
+      "clientJavaScriptGzipBytes": 125030,
+      "clientCssGzipBytes": 23219,
+      "workerBytes": 2371
+    }
+  },
+  "verification": {
+    "verifiedAt": "2026-08-27T04:22:52.000Z",
+    "deterministicEvalReportDigest": "0edab70eaf1a9899bbeb426b0b5dfdc4896e49d207b5a32bff2c53c6ca010b06",
+    "responseHeaders": {
+      "origin-agent-cluster": "?1",
+      "referrer-policy": "strict-origin-when-cross-origin",
+      "x-content-type-options": "nosniff",
+      "cross-origin-opener-policy": "same-origin",
+      "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+      "strict-transport-security": "max-age=31536000; includeSubDomains"
+    },
+    "httpVerifier": {
+      "result": "passed",
+      "receiptPath": "artifacts/release/http-verification.json",
+      "receiptDigest": "c3b2a0590b835a634fc6552b287cdc45d84e3feab8f51ae08200a832f4a0c336"
+    },
+    "publicPlaywright": {
+      "result": "passed",
+      "passed": 2,
+      "failed": 0
+    },
+    "nativeChrome": {
+      "product": "Google Chrome",
+      "version": "151.0.7922.174",
+      "headed": true,
+      "diagnosticOnly": false,
+      "receiptSchemaVersion": 2,
+      "contract": "phase-bound-entry-integrity-v1",
+      "flags": [
+        "--enable-experimental-web-platform-features",
+        "--enable-features=WebMCP,WebMCPTesting,DevToolsWebMCPSupport"
+      ],
+      "toolNames": [
+        "attach_evidence",
+        "calculate_roi",
+        "evaluate_requirement",
+        "get_room_state",
+        "propose_buyer_context",
+        "propose_decision_status",
+        "save_stakeholder_brief",
+        "search_product_evidence",
+        "stage_requirement"
+      ],
+      "executionResult": "passed",
+      "reloadRegistrationVerified": true,
+      "entryIntegrity": {
+        "path": "/assets/index-CitHfJ6b.js",
+        "sha256": "9313f8c97d9ddddd3ec29f43d6f3a77ec3a342072b2f05da2817990d7f74415f",
+        "byteCount": 441935
+      },
+      "effectiveCsp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+      "applicationErrorCounts": {
+        "console": 0,
+        "page": 0,
+        "request": 0,
+        "response": 0
+      },
+      "knownBrowserDiagnosticCount": 2,
+      "knownBrowserDiagnosticPhases": [
+        "initial_registration",
+        "reload_registration"
+      ],
+      "knownBrowserDiagnosticLocation": {
+        "path": "/assets/index-CitHfJ6b.js",
+        "line": 8,
+        "column": 0
+      },
+      "evidencePath": "artifacts/release/native-webmcp.json",
+      "evidenceDigest": "1dc48974f3fc3ef161931ce42c043639bb10a5eadaba7e74aa13c311ffa03037"
+    },
+    "uiOnlyJourney": "passed",
+    "applicationErrorCounts": {
+      "console": 0,
+      "page": 0,
+      "request": 0,
+      "response": 0
+    },
+    "knownBrowserDiagnosticCount": 2,
+    "visualArtifactDigestBefore": "3ae653285619e5977c69f5ad472866da40b1eaa026911946d0b77e1ef00110fe",
+    "visualArtifactDigestAfter": "3ae653285619e5977c69f5ad472866da40b1eaa026911946d0b77e1ef00110fe",
+    "liveAgentSelectionStatus": "not_run"
+  },
+  "knownLimitations": [
+    "ProofRoom is a fictional demonstration with local browser persistence and no production authentication or shared backend.",
+    "Live natural-language browser-agent selection has not been run and is excluded from deterministic pass counts.",
+    "Chrome 151 emitted two strict-CSP WebMCP testing registration notices that are disclosed separately from application errors with phase, source, and entry-integrity proof."
+  ]
+}

@@ -147,3 +147,20 @@
   bundle measurements, source-map handling, negative contract coverage, and byte-identical visual
   artifact digest after source review of the runner, schemas, orchestration, and tests.
 - Checklist item 10 is accepted. Items 11 and 12 remain open.
+
+### Accepted Cloudflare public release milestone
+
+- Cursor work orders 009 through 009c added the Worker security and cache contract, public HTTP verifier, public Playwright journey, native headed-Chrome WebMCP verifier, release receipt schema, evidence-file validation, and release runbook.
+- Codex rejected the first native evidence rule because Chrome 151 reported the strict-CSP testing notice at the loaded module entry. A phase-instrumented reproduction proved one notice during initial registration and one during reload registration, with none during native discovery or execution.
+- The accepted native contract requires exact initial and reload phases, the same fingerprinted module URL and location, an identical anchored eval-hash message, strict CSP, a clean served-entry scan, exact nine-tool discovery before and after reload, successful native execution, and zero application console, page, request, and response errors.
+- Codex also rejected a receipt validator that did not execute its committed JSON Schema or cross-check referenced evidence bytes. The accepted validator now runs TypeScript and Ajv validation, rejects unknown nested keys and contradictory lifecycle fields, verifies repository-contained evidence files and SHA-256 digests, and cross-checks public and native origins and summaries.
+- The audited deployment commit is `82ee322b4e4e8c8658e8eed605431974d084afca`, pushed to the public GitHub repository before deployment.
+- Cloudflare Worker `proofroom-webmcp` deployed to `https://proofroom-webmcp.harnden-trey.workers.dev` as version `86b01690-7492-4a37-ae70-3c71d50f43c7` at `2026-08-27T04:22:14.782Z`.
+- Public HTTP verification passed nine responses with exact security headers, revalidating HTML, immutable fingerprinted assets, working SPA fallback, and no provider-error or leak signatures.
+- Public Playwright completed the full UI-only canonical journey at 390 and 1600 pixels with 2 passed and 0 failed tests, no console or page errors, no failed requests, and no HTTP responses at 400 or above.
+- Headed Google Chrome `151.0.7922.174` discovered the exact nine native tools before and after reload. `get_room_state` and `propose_buyer_context` executed through `document.modelContext`; revision advanced `0 -> 1`, ledger count advanced `2 -> 3`, pending state was visible, approved context remained absent, reload persistence passed, and browser storage was cleared.
+- The served module was `/assets/index-CitHfJ6b.js`, 441,935 bytes, SHA-256 `9313f8c97d9ddddd3ec29f43d6f3a77ec3a342072b2f05da2817990d7f74415f`, with zero forbidden marker matches. The two disclosed Chrome testing notices occurred at line 8, column 0 during initial and reload registration. Application error counts were all zero.
+- The final verified receipt is `artifacts/release/release-receipt.json`, SHA-256 `a8f419f12ed299994e7fc90e0d2251e77e3b39a7653c7b5aedb3d9abfa9e8560`. Its combined validator independently read and validated both public evidence files.
+- The final local acceptance matrix passed 423 unit and component tests, 38 end-to-end checks, 48 accessibility checks, 12 deterministic evals, bundle budgets, a 71-asset Wrangler dry run, and byte-identical accepted visual evidence with SHA-256 `3ae653285619e5977c69f5ad472866da40b1eaa026911946d0b77e1ef00110fe`.
+- Live natural-language browser-agent selection remains explicitly `not_run` and is not counted as a pass.
+- Checklist item 11 is accepted. Item 12 remains open.

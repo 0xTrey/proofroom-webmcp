@@ -4,7 +4,10 @@ This directory holds machine-readable evidence for the Cloudflare release lifecy
 
 - `release-receipt.schema.json` defines `prepared`, `deployed`, `verified`, and `failed`.
 - `prepared-receipt.json` records local preparation only. It contains no public URL, deployment ID, or public verification claim.
-- Future HTTP and native-browser evidence must come from real runs and must include file digests before the receipt can become `verified`.
+- `http-verification.json` records the real public HTTPS and response-contract check.
+- `native-webmcp.json` records the real headed Chrome native WebMCP check.
+- `public-headers.txt` preserves the public response-header readback.
+- `release-receipt.json` is the final verified receipt and cross-references the real evidence files by SHA-256 digest.
 
 Product, Evaluation, and Decision are hash-fragment client surfaces served from one HTTP document. Public browser QA verifies each surface. Native Chrome evidence reports zero application console, page, request, and response errors.
 
@@ -12,10 +15,16 @@ Chrome 151 attributes the blocked WebMCP testing registration notice to the load
 
 The strict CSP contains neither `unsafe-eval` nor an `eval-sha256` allowance. Natural-language browser-agent selection remains a separate, unrun evidence state.
 
-Validate the current receipt:
+Validate the honest preparation receipt:
 
 ```text
 npm run release:receipt:validate
+```
+
+Validate the final verified receipt and every referenced evidence file:
+
+```text
+PROOFROOM_RELEASE_RECEIPT=artifacts/release/release-receipt.json npm run release:receipt:validate
 ```
 
 This command runs the handwritten TypeScript contract and the committed JSON Schema with date-time format validation. Ajv and ajv-formats are development dependencies because this release command executes them directly, not only because tests import them.

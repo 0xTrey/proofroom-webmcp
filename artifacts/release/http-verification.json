@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "kind": "public_http_verification",
+  "status": "passed",
+  "origin": "https://proofroom-webmcp.harnden-trey.workers.dev",
+  "checkedRoutes": [
+    "/",
+    "/#product",
+    "/#evaluation",
+    "/#decision"
+  ],
+  "assets": {
+    "module": "/assets/index-CitHfJ6b.js",
+    "css": "/assets/index-DK5jlet8.css",
+    "favicon": "/favicon.svg",
+    "socialImage": "/og-image.svg"
+  },
+  "responseCount": 9,
+  "securityHeaders": {
+    "origin-agent-cluster": "?1",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "x-content-type-options": "nosniff",
+    "cross-origin-opener-policy": "same-origin",
+    "strict-transport-security": "max-age=31536000; includeSubDomains",
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+  },
+  "digest": "dda3daab50f5f185f0e0d3656149a052256b2092eb60916a8edfe4be5f3d6611"
+}
