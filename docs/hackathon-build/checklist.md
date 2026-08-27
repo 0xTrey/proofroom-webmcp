@@ -77,12 +77,15 @@
   Acceptance: Public 200, correct security headers, no console errors, canonical agent journey passes, UI-only journey passes, commit and deployment hashes are recorded.
   Verify: Wrangler output, HTTP header readback, browser QA, WebMCP tool discovery, release receipt readback.
 
-- [ ] **12. Prepare the open-source and Devpost handoff**
+- [x] **12. Prepare the open-source and Devpost handoff**
   Spec ref: `prd.md > Submission Proof Points`
   What to build: Finish README, architecture explanation, exact tool table, test instructions, limitations, screenshots, demo script, video shot list, project description, and submission checklist.
   Acceptance: A judge can understand and test ProofRoom without private context; all claims match verified behavior; public repo shows MIT license; demo script fits under three minutes.
   Verify: Fresh-clone setup, link check, claim/source review, timed demo rehearsal, public repo and live URL readback.
-  Progress: Local preparation now includes the judge-first root README plus the
-  `docs/submission/README.md` index, `project-story.md`, `demo-script.md`, `demo-shot-list.md`,
-  `screenshot-plan.md`, and `launch-checklist.md`. Item 12 remains unchecked pending the independent
-  acceptance gates above.
+  Acceptance evidence: The public repository contains the judge-first README and complete local
+  challenge package. A fresh public clone passed `npm ci`, lint, typecheck, all 423 unit and
+  component tests, and the production build. Independent review resolved all 38 local documentation
+  links and three screenshot paths. The 272-word script rendered at 126.4 seconds in the measured
+  narration rehearsal, leaving 38.6 seconds before the 2:45 stop for live actions and proof holds.
+  The public app and repository both passed readback. Video recording, upload, Devpost registration,
+  official form work, and submission remain separate external steps.

@@ -21,10 +21,16 @@ evidence. Unchecked items remain incomplete.
 - [x] Native headed Chrome evidence records exactly nine tools before and after reload with zero
   application console, page, request, and response errors.
 - [x] Fictional-data disclosure and browser-local persistence limitations are documented.
+- [x] The judge-first README and local challenge package are committed and visible in the public
+  repository.
+- [x] A fresh public clone passed `npm ci`, lint, typecheck, all 423 unit and component tests, and the
+  production build.
+- [x] Independent link review resolved all 38 local documentation links and three screenshot paths.
+- [x] The 272-word script rendered at 126.4 seconds in a measured narration rehearsal, leaving 38.6
+  seconds before the 2:45 stop for live actions and proof holds.
 
-## Locally prepared but not externally published
+## Publicly prepared but not entered in an official form
 
-- [x] Judge-first root README is prepared locally but is not committed or pushed.
 - [x] Submission-package navigation is prepared in [`README.md`](README.md).
 - [x] Three accepted screenshots are selected, ordered, captioned, and given crop guidance in
   [`screenshot-plan.md`](screenshot-plan.md).
@@ -32,9 +38,10 @@ evidence. Unchecked items remain incomplete.
 - [x] Sub-three-minute spoken script is prepared in [`demo-script.md`](demo-script.md).
 - [x] Recording sequence and recovery path are prepared in
   [`demo-shot-list.md`](demo-shot-list.md).
-- [ ] Demo rehearsal still needs a complete timed run against the public app.
-- [ ] Fresh-clone setup, link checking, claim review, and timed rehearsal still need independent
+- [x] Fresh-clone setup, link checking, claim review, and measured narration timing have independent
   acceptance.
+- [ ] Complete one human-paced live rehearsal against the public app before recording the final
+  video.
 
 ## Still requires Trey or explicit authorization
 
