@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "proofroom-20260826-local-prep",
+  "state": "prepared",
+  "preparedAt": "2026-08-27T03:13:00.000Z",
+  "preparation": {
+    "workerName": "proofroom-webmcp",
+    "compatibilityDate": "2026-08-26",
+    "sourceCommit": "2c8677f362d002b0cbb97325b45ecb3dc5597822",
+    "cleanTree": false,
+    "githubRemote": "https://github.com/0xTrey/proofroom-webmcp.git",
+    "deterministicEvalReportDigest": "0edab70eaf1a9899bbeb426b0b5dfdc4896e49d207b5a32bff2c53c6ca010b06",
+    "visualArtifactDigest": "3ae653285619e5977c69f5ad472866da40b1eaa026911946d0b77e1ef00110fe"
+  },
+  "knownLimitations": [
+    "Deployment and public-origin verification have not been run.",
+    "The worktree is intentionally uncommitted and not clean during release preparation.",
+    "Live natural-language browser-agent selection remains not run and is excluded from deterministic pass counts."
+  ]
+}

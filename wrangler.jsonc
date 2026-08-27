@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "proofroom-webmcp",
   "main": "worker/index.ts",
-  "compatibility_date": "2026-08-25",
+  "compatibility_date": "2026-08-26",
   "observability": {
     "enabled": true
   },

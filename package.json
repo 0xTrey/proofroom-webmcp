@@ -26,6 +26,11 @@
     "check:bundle": "node --experimental-strip-types scripts/check-bundle.ts",
     "bundle:check": "npm run check:bundle",
     "qa": "node --experimental-strip-types scripts/qa.ts",
+    "deploy:dry-run": "npm run build && wrangler deploy --dry-run",
+    "verify:public": "node --experimental-strip-types scripts/verify-public.ts",
+    "test:public": "playwright test --config=playwright.public.config.ts",
+    "verify:webmcp:chrome": "node --experimental-strip-types scripts/verify-webmcp-chrome.ts",
+    "release:receipt:validate": "node --experimental-strip-types scripts/release-receipt.ts",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
@@ -49,6 +54,8 @@
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5",
     "@vitejs/plugin-react": "5.2.0",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
     "eslint": "9.39.5",
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-react-refresh": "0.5.5",

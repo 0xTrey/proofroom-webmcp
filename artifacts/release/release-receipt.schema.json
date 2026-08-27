@@ -1,0 +1,390 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proofroom.example/schemas/release-receipt.schema.json",
+  "title": "ProofRoom release receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "releaseId", "state", "preparedAt", "preparation", "knownLimitations"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "releaseId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{5,79}$" },
+    "state": { "enum": ["prepared", "deployed", "verified", "failed"] },
+    "preparedAt": { "$ref": "#/$defs/utcDateTime" },
+    "publicUrl": { "type": "string", "format": "uri", "pattern": "^https://[^/@?#:]+(?::[0-9]+)?/?$" },
+    "preparation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workerName",
+        "compatibilityDate",
+        "sourceCommit",
+        "cleanTree",
+        "githubRemote",
+        "deterministicEvalReportDigest",
+        "visualArtifactDigest"
+      ],
+      "properties": {
+        "workerName": { "const": "proofroom-webmcp" },
+        "compatibilityDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+        "sourceCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "cleanTree": { "type": "boolean" },
+        "githubRemote": { "type": "string", "format": "uri" },
+        "deterministicEvalReportDigest": { "$ref": "#/$defs/sha256" },
+        "visualArtifactDigest": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "deployment": { "$ref": "#/$defs/deployment" },
+    "verification": { "$ref": "#/$defs/verification" },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "message"],
+      "properties": {
+        "stage": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    },
+    "knownLimitations": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "utcDateTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,3})?Z$"
+    },
+    "repositoryRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    },
+    "deployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gitCommit",
+        "cleanTreeProof",
+        "githubRemote",
+        "publicRepositoryUrl",
+        "cloudflareAccountLabel",
+        "workerName",
+        "deploymentId",
+        "deployedAt",
+        "wranglerVersion",
+        "build"
+      ],
+      "properties": {
+        "gitCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "cleanTreeProof": { "type": "string", "minLength": 1 },
+        "githubRemote": { "type": "string", "format": "uri" },
+        "publicRepositoryUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "cloudflareAccountLabel": { "type": "string", "minLength": 1 },
+        "workerName": { "const": "proofroom-webmcp" },
+        "deploymentId": { "type": "string", "minLength": 1 },
+        "deployedAt": { "$ref": "#/$defs/utcDateTime" },
+        "wranglerVersion": { "type": "string", "minLength": 1 },
+        "build": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "staticAssetCount",
+            "staticAssetBytes",
+            "clientJavaScriptGzipBytes",
+            "clientCssGzipBytes",
+            "workerBytes"
+          ],
+          "properties": {
+            "staticAssetCount": { "type": "integer", "minimum": 1 },
+            "staticAssetBytes": { "type": "integer", "minimum": 1 },
+            "clientJavaScriptGzipBytes": { "type": "integer", "minimum": 1 },
+            "clientCssGzipBytes": { "type": "integer", "minimum": 1 },
+            "workerBytes": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verifiedAt",
+        "deterministicEvalReportDigest",
+        "responseHeaders",
+        "httpVerifier",
+        "publicPlaywright",
+        "nativeChrome",
+        "uiOnlyJourney",
+        "applicationErrorCounts",
+        "knownBrowserDiagnosticCount",
+        "visualArtifactDigestBefore",
+        "visualArtifactDigestAfter",
+        "liveAgentSelectionStatus"
+      ],
+      "properties": {
+        "verifiedAt": { "$ref": "#/$defs/utcDateTime" },
+        "deterministicEvalReportDigest": { "$ref": "#/$defs/sha256" },
+        "responseHeaders": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "origin-agent-cluster",
+            "referrer-policy",
+            "x-content-type-options",
+            "cross-origin-opener-policy",
+            "content-security-policy",
+            "strict-transport-security"
+          ],
+          "properties": {
+            "origin-agent-cluster": { "const": "?1" },
+            "referrer-policy": { "const": "strict-origin-when-cross-origin" },
+            "x-content-type-options": { "const": "nosniff" },
+            "cross-origin-opener-policy": { "const": "same-origin" },
+            "content-security-policy": {
+              "const": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            },
+            "strict-transport-security": {
+              "const": "max-age=31536000; includeSubDomains"
+            }
+          }
+        },
+        "httpVerifier": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["result", "receiptPath", "receiptDigest"],
+          "properties": {
+            "result": { "const": "passed" },
+            "receiptPath": { "$ref": "#/$defs/repositoryRelativePath" },
+            "receiptDigest": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "publicPlaywright": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["result", "passed", "failed"],
+          "properties": {
+            "result": { "const": "passed" },
+            "passed": { "type": "integer", "minimum": 1 },
+            "failed": { "const": 0 }
+          }
+        },
+        "nativeChrome": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "product",
+            "version",
+            "headed",
+            "diagnosticOnly",
+            "receiptSchemaVersion",
+            "contract",
+            "flags",
+            "toolNames",
+            "executionResult",
+            "reloadRegistrationVerified",
+            "entryIntegrity",
+            "effectiveCsp",
+            "applicationErrorCounts",
+            "knownBrowserDiagnosticCount",
+            "knownBrowserDiagnosticPhases",
+            "knownBrowserDiagnosticLocation",
+            "evidencePath",
+            "evidenceDigest"
+          ],
+          "properties": {
+            "product": { "const": "Google Chrome" },
+            "version": {
+              "type": "string",
+              "pattern": "^\\d+(?:\\.\\d+){3}$"
+            },
+            "headed": { "const": true },
+            "diagnosticOnly": { "const": false },
+            "receiptSchemaVersion": { "const": 2 },
+            "contract": { "const": "phase-bound-entry-integrity-v1" },
+            "flags": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "prefixItems": [
+                { "const": "--enable-experimental-web-platform-features" },
+                {
+                  "const": "--enable-features=WebMCP,WebMCPTesting,DevToolsWebMCPSupport"
+                }
+              ],
+              "items": false
+            },
+            "toolNames": {
+              "type": "array",
+              "minItems": 9,
+              "maxItems": 9,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "get_room_state",
+                  "search_product_evidence",
+                  "evaluate_requirement",
+                  "calculate_roi",
+                  "propose_buyer_context",
+                  "stage_requirement",
+                  "attach_evidence",
+                  "save_stakeholder_brief",
+                  "propose_decision_status"
+                ]
+              }
+            },
+            "executionResult": { "const": "passed" },
+            "reloadRegistrationVerified": { "const": true },
+            "entryIntegrity": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "sha256", "byteCount"],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "pattern": "^/assets/[^/?#]+-[A-Za-z0-9_-]{6,}\\.js$"
+                },
+                "sha256": { "$ref": "#/$defs/sha256" },
+                "byteCount": { "type": "integer", "minimum": 1 }
+              }
+            },
+            "effectiveCsp": {
+              "const": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            },
+            "applicationErrorCounts": {
+              "$ref": "#/$defs/zeroApplicationErrorCounts"
+            },
+            "knownBrowserDiagnosticCount": { "enum": [0, 2] },
+            "knownBrowserDiagnosticPhases": {
+              "type": "array",
+              "maxItems": 2,
+              "items": {
+                "enum": ["initial_registration", "reload_registration"]
+              }
+            },
+            "knownBrowserDiagnosticLocation": {
+              "oneOf": [
+                { "type": "null" },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["path", "line", "column"],
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "pattern": "^/assets/[^/?#]+-[A-Za-z0-9_-]{6,}\\.js$"
+                    },
+                    "line": { "type": "integer", "minimum": 1 },
+                    "column": { "type": "integer", "minimum": 0 }
+                  }
+                }
+              ]
+            },
+            "evidencePath": { "$ref": "#/$defs/repositoryRelativePath" },
+            "evidenceDigest": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "uiOnlyJourney": { "const": "passed" },
+        "applicationErrorCounts": { "$ref": "#/$defs/zeroApplicationErrorCounts" },
+        "knownBrowserDiagnosticCount": { "enum": [0, 2] },
+        "visualArtifactDigestBefore": { "$ref": "#/$defs/sha256" },
+        "visualArtifactDigestAfter": { "$ref": "#/$defs/sha256" },
+        "liveAgentSelectionStatus": {
+          "enum": ["not_run", "passed", "blocked"]
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "knownBrowserDiagnosticCount": { "const": 0 },
+            "nativeChrome": {
+              "type": "object",
+              "properties": {
+                "knownBrowserDiagnosticCount": { "const": 0 },
+                "knownBrowserDiagnosticPhases": {
+                  "type": "array",
+                  "maxItems": 0
+                },
+                "knownBrowserDiagnosticLocation": { "type": "null" }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "knownBrowserDiagnosticCount": { "const": 2 },
+            "nativeChrome": {
+              "type": "object",
+              "properties": {
+                "knownBrowserDiagnosticCount": { "const": 2 },
+                "knownBrowserDiagnosticPhases": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "prefixItems": [
+                    { "const": "initial_registration" },
+                    { "const": "reload_registration" }
+                  ],
+                  "items": false
+                },
+                "knownBrowserDiagnosticLocation": { "type": "object" }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "zeroApplicationErrorCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["console", "page", "request", "response"],
+      "properties": {
+        "console": { "const": 0 },
+        "page": { "const": 0 },
+        "request": { "const": 0 },
+        "response": { "const": 0 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "state": { "const": "prepared" } }, "required": ["state"] },
+      "then": {
+        "not": {
+          "anyOf": [
+            { "required": ["publicUrl"] },
+            { "required": ["deployment"] },
+            { "required": ["verification"] },
+            { "required": ["failure"] }
+          ]
+        }
+      }
+    },
+    {
+      "if": { "properties": { "state": { "const": "deployed" } }, "required": ["state"] },
+      "then": {
+        "required": ["publicUrl", "deployment"],
+        "not": { "anyOf": [{ "required": ["verification"] }, { "required": ["failure"] }] }
+      }
+    },
+    {
+      "if": { "properties": { "state": { "const": "verified" } }, "required": ["state"] },
+      "then": {
+        "required": ["publicUrl", "deployment", "verification"],
+        "properties": {
+          "preparation": {
+            "type": "object",
+            "properties": { "cleanTree": { "const": true } }
+          }
+        },
+        "not": { "required": ["failure"] }
+      }
+    },
+    {
+      "if": { "properties": { "state": { "const": "failed" } }, "required": ["state"] },
+      "then": { "required": ["failure"] }
+    }
+  ]
+}

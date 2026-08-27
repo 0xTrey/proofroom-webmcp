@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 2,
+  "kind": "native_webmcp_chrome_verification",
+  "status": "passed",
+  "diagnosticOnly": false,
+  "localhostDiagnostic": true,
+  "browser": {
+    "product": "Google Chrome",
+    "version": "151.0.7922.174",
+    "headed": true,
+    "executable": "chrome-channel"
+  },
+  "origin": "http://127.0.0.1:8787",
+  "flags": [
+    "--enable-experimental-web-platform-features",
+    "--enable-features=WebMCP,WebMCPTesting,DevToolsWebMCPSupport"
+  ],
+  "toolNames": [
+    "attach_evidence",
+    "calculate_roi",
+    "evaluate_requirement",
+    "get_room_state",
+    "propose_buyer_context",
+    "propose_decision_status",
+    "save_stakeholder_brief",
+    "search_product_evidence",
+    "stage_requirement"
+  ],
+  "reloadToolNames": [
+    "attach_evidence",
+    "calculate_roi",
+    "evaluate_requirement",
+    "get_room_state",
+    "propose_buyer_context",
+    "propose_decision_status",
+    "save_stakeholder_brief",
+    "search_product_evidence",
+    "stage_requirement"
+  ],
+  "reloadRegistrationVerified": true,
+  "entryIntegrity": {
+    "url": "http://127.0.0.1:8787/assets/index-CitHfJ6b.js",
+    "path": "/assets/index-CitHfJ6b.js",
+    "sha256": "9313f8c97d9ddddd3ec29f43d6f3a77ec3a342072b2f05da2817990d7f74415f",
+    "byteCount": 441935,
+    "fingerprinted": true,
+    "scannedForbiddenMarkers": [
+      "eval(",
+      "new Function",
+      "eval-sha256",
+      "Hash of blocked script"
+    ],
+    "forbiddenMarkerMatches": [],
+    "passed": true
+  },
+  "effectiveCsp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+  "inputMode": "json-string",
+  "executions": {
+    "getRoomState": {
+      "status": "succeeded",
+      "roomId": "northstar_meridian_room",
+      "revision": 0
+    },
+    "proposeBuyerContext": {
+      "status": "succeeded",
+      "proposalId": "pcx_0001",
+      "baseRevision": 1
+    }
+  },
+  "persistence": {
+    "revisionBeforeProposal": 0,
+    "revisionAfterProposal": 1,
+    "ledgerBeforeProposal": 2,
+    "ledgerAfterProposal": 3,
+    "pendingProposalVisible": true,
+    "approvedContextAbsent": true,
+    "persistedAfterReload": true,
+    "storageCleared": true
+  },
+  "applicationErrorCounts": {
+    "console": 0,
+    "page": 0,
+    "request": 0,
+    "response": 0
+  },
+  "applicationConsoleErrors": [],
+  "pageErrors": [],
+  "requestFailures": [],
+  "responseFailures": [],
+  "knownBrowserDiagnosticCount": 2,
+  "knownBrowserDiagnostics": [
+    {
+      "message": " Hash of blocked script: \"eval-sha256-+CsItOgDyYUV0cButNNF02fx9NeCL52rS31Mq6+jjQM=\".",
+      "phase": "initial_registration",
+      "location": {
+        "url": "http://127.0.0.1:8787/assets/index-CitHfJ6b.js",
+        "line": 8,
+        "column": 0
+      },
+      "code": "chrome_webmcp_testing_eval_hash_notice",
+      "chromeVersion": "151.0.7922.174",
+      "classificationReason": "Chrome 151.0.7922.174 attributed the blocked WebMCP testing registration script to the loaded module entry during initial and reload registration. Exact phase, source, entry-integrity, strict CSP, native execution, and count checks passed."
+    },
+    {
+      "message": " Hash of blocked script: \"eval-sha256-+CsItOgDyYUV0cButNNF02fx9NeCL52rS31Mq6+jjQM=\".",
+      "phase": "reload_registration",
+      "location": {
+        "url": "http://127.0.0.1:8787/assets/index-CitHfJ6b.js",
+        "line": 8,
+        "column": 0
+      },
+      "code": "chrome_webmcp_testing_eval_hash_notice",
+      "chromeVersion": "151.0.7922.174",
+      "classificationReason": "Chrome 151.0.7922.174 attributed the blocked WebMCP testing registration script to the loaded module entry during initial and reload registration. Exact phase, source, entry-integrity, strict CSP, native execution, and count checks passed."
+    }
+  ]
+}
