@@ -35,7 +35,7 @@
   Acceptance: Nine tools register with correct annotations; strict inputs reject invalid calls; UI-only approvals are absent; real actions and events run through the shim.
   Verify: `npm run test -- webmcp`, `npm run typecheck`, and a local shim inspection.
 
-- [ ] **5. Build the premium baseline product experience**
+- [x] **5. Build the premium baseline product experience**
   Spec ref: `spec.md > Visual System`, `prd.md > Epic 1`
   What to build: Create the Northstar product page, navigation, WebMCP status, fictional-content notice, responsive shell, and visual system. Implement the editorial due-diligence aesthetic without generic dashboard patterns.
   Acceptance: Baseline page is coherent at four target widths, works without WebMCP, starts with one primary headline, and meets keyboard and contrast basics.

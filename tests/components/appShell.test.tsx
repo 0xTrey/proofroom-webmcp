@@ -15,7 +15,7 @@ describe("application shell", () => {
 
   it("labels the demo content as fictional", () => {
     render(<App />);
-    expect(screen.getByText("This is fictional demo content")).toBeInTheDocument();
+    expect(screen.getByText("Fictional demonstration")).toBeInTheDocument();
     expect(screen.getByText(/Northstar is a fictional vendor/)).toBeInTheDocument();
   });
 
@@ -30,14 +30,34 @@ describe("application shell", () => {
     render(<App />);
 
     await user.click(screen.getByRole("button", { name: "Evaluation" }));
-    expect(screen.getByRole("heading", { name: /6 requirements, 12 evidence records/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Six requirements. Evidence must earn the answer.",
+      }),
+    ).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Decision" }));
-    expect(screen.getByRole("heading", { name: "Commercial model" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "The agent can stage the case. Only a person can decide.",
+      }),
+    ).toBeInTheDocument();
     expect(screen.getByText("get_room_state")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Product" }));
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+  });
+
+  it("renders one primary headline on every surface", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    for (const route of ["Product", "Evaluation", "Decision"]) {
+      await user.click(screen.getByRole("button", { name: route }));
+      expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    }
   });
 
   it("shows every requirement with a word, not color alone", async () => {
@@ -47,6 +67,16 @@ describe("application shell", () => {
 
     expect(screen.getAllByText("unknown")).toHaveLength(6);
     expect(screen.getByText("EU data residency")).toBeInTheDocument();
+  });
+
+  it("shows all twelve evidence records with provenance labels", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "Evaluation" }));
+
+    expect(screen.getAllByText(/^ev_0/)).toHaveLength(12);
+    expect(screen.getAllByText("Untrusted text")).toHaveLength(2);
+    expect(screen.getByText("Hosting regions and data handling note")).toBeInTheDocument();
   });
 
   it("announces the registration state in a live region", () => {

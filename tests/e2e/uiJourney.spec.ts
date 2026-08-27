@@ -19,8 +19,10 @@ test.describe("ProofRoom without an agent", () => {
     await page.goto("/");
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-    await expect(page.getByText("This is fictional demo content")).toBeVisible();
-    await expect(page.getByText(/agent tools/)).toBeVisible();
+    await expect(
+      page.getByRole("complementary", { name: "Fictional demo disclosure" }),
+    ).toContainText("Fictional demonstration");
+    await expect(page.getByText("agent tools unavailable", { exact: true })).toBeVisible();
     expect(consoleErrors).toEqual([]);
   });
 
@@ -28,18 +30,30 @@ test.describe("ProofRoom without an agent", () => {
     await page.goto("/");
 
     await page.getByRole("button", { name: "Evaluation" }).press("Enter");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await expect(page.getByText("EU data residency")).toBeVisible();
 
     await page.getByRole("button", { name: "Decision" }).press("Enter");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await expect(page.getByRole("heading", { name: "Commercial model" })).toBeVisible();
     await expect(page.getByText("propose_decision_status")).toBeVisible();
   });
 
   test("keeps the room after a reload", async ({ page }) => {
     await page.goto("/#evaluation");
-    await expect(page.getByText(/6 requirements, 12 evidence records/)).toBeVisible();
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: "Six requirements. Evidence must earn the answer.",
+      }),
+    ).toBeVisible();
 
     await page.reload();
-    await expect(page.getByText(/6 requirements, 12 evidence records/)).toBeVisible();
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: "Six requirements. Evidence must earn the answer.",
+      }),
+    ).toBeVisible();
   });
 });

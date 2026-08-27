@@ -53,4 +53,14 @@
 - Codex found three release-blocking gaps: the Playwright host was unreachable, unmatched evidence searches returned the full catalog, and partially supported hard requirements did not block a ready decision.
 - Cursor work order 002 corrected those gaps and added decision-proposal consistency guards for duplicate, overlapping, supported-blocker, and omitted-blocker IDs.
 - Codex independently reproduced all gates after the corrections: 137 unit and component tests, 3 end-to-end journeys, 12 axe checks across four target widths, lint, typecheck, eval manifest, and production build.
-- Checklist items 1 through 4 are accepted. Items 5 through 12 remain open.
+- Checklist items 1 through 4 are accepted.
+
+### Accepted premium baseline milestone
+
+- Cursor work order 003 replaced the foundation shell with three coherent product surfaces: product proof, evaluation workspace, and decision desk.
+- The visual direction uses an editorial due-diligence system with warm paper, deep ink, acid green verification, cobalt agent actions, rust gaps, and Newsreader, Manrope, and IBM Plex Mono typography.
+- Codex rejected one misleading metric because the activity ledger counted a system bootstrap event as a read. Cursor work order 003a corrected the selector and added a canonical regression test.
+- Codex also found transient contrast failures caused by entrance-animation opacity and invalid description-list grouping. Cursor work order 003b removed opacity animation and repaired the semantic markup.
+- Codex independently reproduced all acceptance gates: 140 unit and component tests, 16 end-to-end checks, 12 axe scans across 390, 768, 1280, and 1600 pixel widths, lint, typecheck, eval manifest, and production build.
+- Twelve final visual artifacts and their audit index live in `artifacts/visual-audit/003-baseline/`.
+- Checklist item 5 is accepted. Items 6 through 12 remain open.

@@ -38,11 +38,17 @@ export function AppShell(props: AppShellProps) {
       </a>
 
       <header className="masthead">
-        <p className="masthead__wordmark">
-          ProofRoom <span className="mono">northstar evaluation room</span>
-        </p>
+        <div className="masthead__identity">
+          <span className="masthead__monogram" aria-hidden="true">
+            PR
+          </span>
+          <p className="masthead__wordmark">
+            ProofRoom
+            <span>Buyer-controlled evaluation</span>
+          </p>
+        </div>
         <nav className="masthead__nav" aria-label="Surfaces">
-          {ROUTES.map((route) => (
+          {ROUTES.map((route, index) => (
             <button
               key={route.id}
               type="button"
@@ -50,26 +56,34 @@ export function AppShell(props: AppShellProps) {
               aria-current={props.route === route.id ? "page" : undefined}
               onClick={() => props.onNavigate(route.id)}
             >
-              {route.label}
+              <span className="mono" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span>{route.label}</span>
             </button>
           ))}
         </nav>
       </header>
 
       <div className="statusstrip">
-        <StatusMark tone={mark.tone} glyph={mark.glyph} label={mark.label} />
-        <p className="statusstrip__detail mono" aria-live="polite">
-          {props.status.message}
-          {props.status.failures.length > 0
-            ? ` (${props.status.failures.map((failure) => failure.name).join(", ")})`
-            : ""}
-        </p>
-        <p className="mono">
+        <div className="statusstrip__tools">
+          <StatusMark tone={mark.tone} glyph={mark.glyph} label={mark.label} />
+          <p className="statusstrip__detail" aria-live="polite">
+            {props.status.message}
+            {props.status.failures.length > 0
+              ? ` Failed: ${props.status.failures.map((failure) => failure.name).join(", ")}.`
+              : ""}
+          </p>
+        </div>
+        <div className="statusstrip__room mono">
+          <span>{props.status.expectedToolCount} WebMCP tools</span>
           <RevisionTag revision={props.revision} />
-          {props.storageStatus === "unavailable"
-            ? " | this browser will not save the room"
-            : " | saved in this browser"}
-        </p>
+          <span>
+            {props.storageStatus === "unavailable"
+              ? "browser persistence unavailable"
+              : "saved in this browser"}
+          </span>
+        </div>
       </div>
 
       <main className="main" id="room">
@@ -77,13 +91,11 @@ export function AppShell(props: AppShellProps) {
       </main>
 
       <footer className="footer">
-        <p className="mono">
-          Northstar, Meridian Bank, Larkfield Mutual, and Ridgeline Research are fictional. All
-          evidence is demo content.
+        <p>
+          <strong>ProofRoom</strong> keeps agent work visible and human approval explicit.
         </p>
-        <p className="mono">
-          {props.status.expectedToolCount} WebMCP tools, 2 human only approvals, MIT licensed.
-        </p>
+        <p className="mono">Northstar and every named entity are fictional demo content.</p>
+        <p className="mono">{props.status.expectedToolCount} tools / 2 human approvals / local room</p>
       </footer>
     </div>
   );

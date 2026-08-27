@@ -58,7 +58,7 @@ export function ledgerTotals(events: readonly ActivityEvent[]): LedgerTotals {
   for (const event of events) {
     if (event.mutating) {
       totals.mutations += 1;
-    } else {
+    } else if (event.origin !== "system") {
       totals.reads += 1;
     }
     totals.byOrigin[event.origin] += 1;

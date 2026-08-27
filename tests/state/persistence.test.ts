@@ -140,6 +140,15 @@ describe("local storage adapter", () => {
 });
 
 describe("selectors", () => {
+  it("does not count the canonical system lifecycle event as a read", () => {
+    const totals = selectLedgerTotals(createTestRoom().room());
+
+    expect(totals.total).toBe(1);
+    expect(totals.byOrigin.system).toBe(1);
+    expect(totals.reads).toBe(0);
+    expect(totals.mutations).toBe(0);
+  });
+
   it("projects requirement summaries with blockers and limitation counts", () => {
     const handle = createTestRoom();
     attachCanonicalEvidence(handle);
@@ -161,7 +170,7 @@ describe("selectors", () => {
 
     const totals = selectLedgerTotals(handle.room());
     expect(totals.total).toBe(3);
-    expect(totals.reads).toBe(2);
+    expect(totals.reads).toBe(1);
     expect(totals.mutations).toBe(1);
     expect(totals.byOrigin.webmcp).toBe(1);
     expect(totals.byOrigin.ui).toBe(1);

@@ -4,9 +4,7 @@
  */
 
 .motion-fold {
-  transition:
-    grid-template-rows var(--duration-fold) var(--ease-editorial),
-    opacity var(--duration-base) var(--ease-editorial);
+  transition: grid-template-rows var(--duration-fold) var(--ease-editorial);
 }
 
 .motion-rise {
@@ -19,20 +17,26 @@
 
 @keyframes proofroom-rise {
   from {
-    opacity: 0;
     transform: translateY(0.4rem);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .motion-fold,
   .motion-rise,
   .motion-mark {
     animation: none !important;
     transition: none !important;
+  }
+
+  .evidence-stamp {
+    transform: none;
   }
 }
