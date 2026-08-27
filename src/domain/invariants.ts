@@ -169,6 +169,24 @@ export function assertDecisionProposalConsistent(
     );
   }
 
+  const unsupportedSupporting = proposal.supportingRequirementIds.filter(
+    (id) => requirementById.get(id)?.status !== "supported",
+  );
+
+  if (unsupportedSupporting.length > 0) {
+    return failure(
+      "INVALID_INPUT",
+      "Only fully supported requirements can be listed as supporting a decision.",
+      {
+        issues: unsupportedSupporting.map((id) => ({
+          path: "supportingRequirementIds",
+          message: `${id} is not fully supported by eligible evidence.`,
+        })),
+        relatedIds: unsupportedSupporting,
+      },
+    );
+  }
+
   const supportedBlockers = proposal.blockingRequirementIds.filter(
     (id) => requirementById.get(id)?.status === "supported",
   );
@@ -236,7 +254,20 @@ const PROOF_TERMS = [
   "meets",
 ];
 
-const NEGATIONS = ["not", "no", "never", "cannot", "without", "lacks", "lacking", "missing"];
+const NEGATIONS = [
+  "not",
+  "no",
+  "never",
+  "cannot",
+  "without",
+  "lacks",
+  "lacking",
+  "missing",
+];
+
+const PARTIAL_QUALIFIERS = ["partly", "partially"];
+
+const PARTIAL_PROOF_TERMS = new Set(["supported", "covered"]);
 
 const GENERIC_TERMS = new Set([
   "and",
@@ -303,6 +334,17 @@ function negatedNear(sentence: string, term: string): boolean {
   return NEGATIONS.some((negation) => new RegExp(`\\b${negation}\\b`).test(before));
 }
 
+function partiallyQualifiedNear(sentence: string, term: string): boolean {
+  const index = sentence.indexOf(term);
+  if (index < 0) {
+    return false;
+  }
+  const before = sentence.slice(Math.max(0, index - 40), index);
+  return PARTIAL_QUALIFIERS.some((qualifier) =>
+    new RegExp(`\\b${qualifier}\\b`).test(before),
+  );
+}
+
 export type BriefClaimConflict = {
   requirementId: string;
   requirementLabel: string;
@@ -341,6 +383,15 @@ export function briefClaimConflicts(
       );
 
       if (!term) {
+        continue;
+      }
+
+      const honestPartialClaim =
+        requirement.status === "partially_supported" &&
+        PARTIAL_PROOF_TERMS.has(proofTerm) &&
+        partiallyQualifiedNear(sentence, proofTerm);
+
+      if (honestPartialClaim) {
         continue;
       }
 

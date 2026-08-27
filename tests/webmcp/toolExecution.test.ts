@@ -227,6 +227,58 @@ describe("mutating tools", () => {
     expect(handle.room().approvedDecision).toBeNull();
   });
 
+  it("saves both stakeholder roles through the shim and preserves their origin", async () => {
+    attachCanonicalEvidence(handle);
+
+    const cfo = await shim.callTool("save_stakeholder_brief", {
+      role: "cfo",
+      summary: "The modelled 11.2 month payback uses explicit buyer assumptions.",
+      evidenceIds: ["ev_010"],
+      risks: ["EU data residency is unproven."],
+      openQuestions: ["Will pricing remain fixed in year two?"],
+      nextStep: "Confirm pricing and implementation cost.",
+    });
+    const ciso = await shim.callTool("save_stakeholder_brief", {
+      role: "ciso",
+      summary: "SOC 2 and SAML are documented. SCIM and EU residency remain open.",
+      evidenceIds: ["ev_004", "ev_006", "ev_007", "ev_008"],
+      risks: ["EU data residency is unproven.", "SSO is only partly covered."],
+      openQuestions: ["When will SCIM provisioning ship?"],
+      nextStep: "Request an EU region commitment and SCIM timeline.",
+    });
+
+    expect(cfo.isError).toBe(false);
+    expect(ciso.isError).toBe(false);
+    expect(handle.room().stakeholderBriefs.cfo?.savedBy).toBe("webmcp");
+    expect(handle.room().stakeholderBriefs.ciso?.savedBy).toBe("webmcp");
+  });
+
+  it("rejects a false brief claim atomically through the shim", async () => {
+    attachCanonicalEvidence(handle);
+    const before = structuredClone(handle.room());
+
+    const result = await shim.callTool("save_stakeholder_brief", {
+      role: "ciso",
+      summary: "EU data residency is proven.",
+      evidenceIds: ["ev_007", "ev_008"],
+      risks: [],
+      openQuestions: [],
+      nextStep: "Proceed.",
+    });
+
+    expect(result.isError).toBe(true);
+    expect(structuredOf<{ code: string; mutated: boolean }>(result)).toMatchObject({
+      code: "EVIDENCE_INSUFFICIENT",
+      mutated: false,
+    });
+    expect(handle.room()).toEqual(before);
+  });
+
+  it("exposes no WebMCP tool for either human decision control", () => {
+    expect(shim.has("approve_decision")).toBe(false);
+    expect(shim.has("reject_decision")).toBe(false);
+  });
+
   it("refuses a ready decision through the tool surface", async () => {
     attachCanonicalEvidence(handle);
     const result = await shim.callTool("propose_decision_status", {

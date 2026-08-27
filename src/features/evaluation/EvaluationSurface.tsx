@@ -11,7 +11,7 @@ import {
 import { EvidenceInspector } from "./EvidenceInspector.tsx";
 import type { EvaluationFeedback } from "./EvidenceSearchWorkspace.tsx";
 import { RequirementDetail } from "./RequirementDetail.tsx";
-import { CANONICAL_REVIEW_SET } from "./reviewSet.ts";
+import { CANONICAL_REVIEW_SET, hasCanonicalReviewSet } from "./reviewSet.ts";
 
 function isEvaluationError(error: DomainError | null): error is DomainError {
   if (!error) {
@@ -57,12 +57,7 @@ export function EvaluationSurface({ room, actions, lastError, context }: Evaluat
   } | null>(null);
   const selected =
     room.requirements.find((requirement) => requirement.id === selectedId) ?? room.requirements[0];
-  const reviewSetApplied = CANONICAL_REVIEW_SET.every((attachment) => {
-    const requirement = room.requirements.find((entry) => entry.id === attachment.requirementId);
-    return attachment.evidenceIds.every((evidenceId) =>
-      requirement?.attachedEvidenceIds.includes(evidenceId),
-    );
-  });
+  const reviewSetApplied = hasCanonicalReviewSet(room.requirements);
 
   function reportFeedback(nextFeedback: EvaluationFeedback): void {
     setFeedback({

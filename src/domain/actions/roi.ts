@@ -5,6 +5,7 @@
  * set and never replaces the assumptions on the page. Applying assumptions is a
  * visible UI action, because the numbers belong to the buyer.
  */
+import { failure } from "../errors.ts";
 import { calculateRoi, paybackMeetsTarget } from "../roi.ts";
 import type { RoiAssumptions, RoiResult, RoomState } from "../types.ts";
 import { applyRoiAssumptionsInputSchema, calculateRoiInputSchema } from "./inputs.ts";
@@ -89,6 +90,10 @@ export const applyRoiAssumptionsAction = defineAction({
     const changedFields = (Object.keys(input) as Array<keyof RoiAssumptions>).filter(
       (field) => state.roiAssumptions[field] !== input[field],
     );
+
+    if (changedFields.length === 0) {
+      return failure("INVALID_INPUT", "No ROI assumptions changed.");
+    }
 
     const result = calculateRoi(input);
 

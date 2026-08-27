@@ -195,18 +195,20 @@ export const rejectDecisionAction = defineAction({
   mutating: true,
   schema: rejectionInputSchema,
   run: (state, input, context) => {
-    const proposal = state.decisionProposal;
-
-    if (!proposal || proposal.id !== input.proposalId) {
-      return failure("NOT_FOUND", "There is no staged decision with that ID.", {
-        relatedIds: [input.proposalId],
-      });
+    const guard = assertProposalApprovable(
+      state.decisionProposal,
+      state.revision,
+      context.nowIso,
+      input.proposalId,
+    );
+    if (!guard.ok) {
+      return guard;
     }
 
-    if (proposal.status !== "pending") {
-      return failure("PROPOSAL_RESOLVED", `This proposal is already ${proposal.status}.`, {
-        relatedIds: [proposal.id],
-      });
+    const proposal = guard.value;
+    const consistent = assertDecisionProposalConsistent(proposal.payload, state.requirements);
+    if (!consistent.ok) {
+      return consistent;
     }
 
     const value: ProposalRejected = {

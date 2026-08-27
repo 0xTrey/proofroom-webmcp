@@ -40,18 +40,32 @@ export const saveStakeholderBriefAction = defineAction({
       });
     }
 
-    const conflicts = briefClaimConflicts(
-      `${input.summary} ${input.nextStep}`,
-      state.requirements,
-    );
+    const conflicts = [
+      ...briefClaimConflicts(input.summary, state.requirements).map((conflict) => ({
+        ...conflict,
+        path: "summary",
+      })),
+      ...input.risks.flatMap((risk) =>
+        briefClaimConflicts(risk, state.requirements).map((conflict) => ({
+          ...conflict,
+          path: "risks",
+        })),
+      ),
+      ...briefClaimConflicts(input.nextStep, state.requirements).map((conflict) => ({
+        ...conflict,
+        path: "nextStep",
+      })),
+    ];
 
     if (conflicts.length > 0) {
+      const firstConflict = conflicts[0];
+
       return failure(
         "EVIDENCE_INSUFFICIENT",
-        `The brief states that ${conflicts[0]?.requirementLabel} is ${conflicts[0]?.proofTerm}, but its evidence status is ${conflicts[0]?.status}.`,
+        `The brief states that ${firstConflict?.requirementLabel} is ${firstConflict?.proofTerm}, but its evidence status is ${firstConflict?.status}.`,
         {
           issues: conflicts.slice(0, 4).map((conflict) => ({
-            path: "summary",
+            path: conflict.path,
             message: `${conflict.requirementLabel} is ${conflict.status}. Remove the word "${conflict.proofTerm}" or describe the gap.`,
           })),
           relatedIds: [...new Set(conflicts.map((conflict) => conflict.requirementId))],

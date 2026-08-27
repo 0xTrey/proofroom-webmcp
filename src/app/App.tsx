@@ -57,7 +57,14 @@ export function App() {
             context={contextWorkspace}
           />
         ) : null}
-        {route === "decision" ? <DecisionSurface room={room} context={contextWorkspace} /> : null}
+        {route === "decision" ? (
+          <DecisionSurface
+            room={room}
+            actions={roomActions}
+            lastError={lastError}
+            context={contextWorkspace}
+          />
+        ) : null}
       </ErrorBoundary>
     </AppShell>
   );

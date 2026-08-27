@@ -87,3 +87,16 @@
 - Codex also proved identical SHA-256 hashes for all 31 files across item 5, item 6, and item 7 visual evidence before and after the final normal E2E run.
 - Eight final visual artifacts and their audit index live in `artifacts/visual-audit/005-evidence/`. The inspector captures are true 1600 by 900 and 390 by 900 viewport panels.
 - Checklist item 7 is accepted. Items 8 through 12 remain open.
+
+### Accepted ROI, briefs, and decision milestone
+
+- Cursor work order 006 built the editable buyer-owned ROI model, evidence-safe CFO and CISO briefs, exact staged decision review, visible page-only approval and rejection, durable decision receipts, and strict decision-persistence validation.
+- The canonical model remains bounded and explicit: 20 campaigns per month, 6 hours saved per campaign, 85 USD loaded hourly cost, 96,000 USD annual subscription, 18,000 USD implementation, 120,000 USD budget ceiling, 1,440 annual hours saved, 122,400 USD annual labor value, 114,000 USD first-year cost, 8,400 USD first-year net value, and 11.2 month payback.
+- The canonical decision is honestly `not_ready`. EU data residency is unknown, SSO and provisioning is partially supported, and both remain hard blockers. Salesforce, SOC 2, and campaign volume are fully supported.
+- Codex rejected four trust-contract defects in the first pass: unreachable ROI field errors, no-op ROI applies that advanced revision, status-insensitive proof qualifiers, and incomplete visual evidence. Cursor work order 006a made errors visible without losing the draft, made no-op apply atomic, added status-aware brief guards, required the exact canonical review set, and generated all eight required images.
+- Codex then rejected two mobile evidence defects: the proposal capture did not visibly contain its claimed blockers, and receipt fields lacked clear mobile separation. Cursor work order 006b added viewport-level blocker assertions, corrected narrow receipt layout, and regenerated the evidence.
+- Codex independently reproduced all acceptance gates: 253 unit and component tests, 31 end-to-end checks, 32 axe scans, 12 eval cases with nine known tools, lint across 138 files, typecheck, production build, diff checks, and historical-artifact verification.
+- The complete visual artifact tree remained byte-identical across normal E2E, with SHA-256 digest `36b31997c1907f4c097064c3f448c5e57bbb0109f0d3a42b510bf01909e19b19` before and after the run.
+- Eight final visual artifacts and their audit index live in `artifacts/visual-audit/006-decision/`. The 390-pixel proposal frame visibly includes both hard blockers, and the receipt fields remain distinct and readable at 390 and 1600 pixels.
+- Exactly nine WebMCP tools remain. `calculate_roi` is read-only, decision proposals are staged only, and no tool can apply ROI assumptions, approve, or reject.
+- Checklist item 8 is accepted. Items 9 through 12 remain open.

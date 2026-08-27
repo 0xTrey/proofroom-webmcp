@@ -253,10 +253,13 @@ export const approvedDecisionSchema = decisionPayloadSchema.extend({
   receipt: receiptSchema,
 });
 
-export function proposalSchema<PayloadSchema extends z.ZodTypeAny>(payload: PayloadSchema) {
+export function proposalSchema<PayloadSchema extends z.ZodTypeAny>(
+  payload: PayloadSchema,
+  typeLiteral: z.ZodLiteral<ProposalTypeLiteral>,
+) {
   return z.strictObject({
     id: identifierSchema,
-    type: proposalTypeSchema,
+    type: typeLiteral,
     baseRevision: z.number().int().min(0),
     inputDigest: z.string().min(1).max(64),
     createdBy: z.enum(["webmcp", "ui"]),
@@ -267,8 +270,16 @@ export function proposalSchema<PayloadSchema extends z.ZodTypeAny>(payload: Payl
   });
 }
 
-export const buyerContextProposalSchema = proposalSchema(buyerContextSchema);
-export const decisionProposalSchema = proposalSchema(decisionPayloadSchema);
+type ProposalTypeLiteral = "buyer_context" | "decision";
+
+export const buyerContextProposalSchema = proposalSchema(
+  buyerContextSchema,
+  z.literal("buyer_context"),
+);
+export const decisionProposalSchema = proposalSchema(
+  decisionPayloadSchema,
+  z.literal("decision"),
+);
 
 /* Ledger and recovery ---------------------------------------------------- */
 
@@ -324,51 +335,119 @@ export const roomStateSchema = z.strictObject({
   recoveryNotice: recoveryNoticeSchema.nullable(),
 }).superRefine((room, context) => {
   const receipt = room.approvedBuyerContextReceipt;
-  if (!receipt) {
-    return;
+  if (receipt) {
+    if (!room.approvedBuyerContext) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedBuyerContextReceipt"],
+        message: "a buyer-context receipt requires approved buyer context",
+      });
+    }
+
+    if (receipt.kind !== "buyer_context") {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedBuyerContextReceipt", "kind"],
+        message: "expected a buyer_context receipt",
+      });
+    }
+
+    if (receipt.proposalId === null) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedBuyerContextReceipt", "proposalId"],
+        message: "a buyer-context receipt requires a proposal ID",
+      });
+    }
+
+    if (receipt.revision > room.revision) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedBuyerContextReceipt", "revision"],
+        message: "receipt revision cannot be greater than room revision",
+      });
+    }
+
+    if (
+      room.approvedBuyerContext &&
+      receipt.inputDigest !== inputDigest(room.approvedBuyerContext)
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedBuyerContextReceipt", "inputDigest"],
+        message: "receipt digest must match the approved buyer context",
+      });
+    }
   }
 
-  if (!room.approvedBuyerContext) {
-    context.addIssue({
-      code: "custom",
-      path: ["approvedBuyerContextReceipt"],
-      message: "a buyer-context receipt requires approved buyer context",
-    });
-  }
+  const decision = room.approvedDecision;
+  if (decision) {
+    const dr = decision.receipt;
 
-  if (receipt.kind !== "buyer_context") {
-    context.addIssue({
-      code: "custom",
-      path: ["approvedBuyerContextReceipt", "kind"],
-      message: "expected a buyer_context receipt",
-    });
-  }
+    if (dr.kind !== "decision") {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedDecision", "receipt", "kind"],
+        message: "expected a decision receipt",
+      });
+    }
 
-  if (receipt.proposalId === null) {
-    context.addIssue({
-      code: "custom",
-      path: ["approvedBuyerContextReceipt", "proposalId"],
-      message: "a buyer-context receipt requires a proposal ID",
-    });
-  }
+    if (dr.proposalId === null || dr.proposalId !== decision.proposalId) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedDecision", "receipt", "proposalId"],
+        message: "receipt proposal ID must equal the approved decision proposal ID",
+      });
+    }
 
-  if (receipt.revision > room.revision) {
-    context.addIssue({
-      code: "custom",
-      path: ["approvedBuyerContextReceipt", "revision"],
-      message: "receipt revision cannot be greater than room revision",
+    const payloadDigest = inputDigest({
+      status: decision.status,
+      rationale: decision.rationale,
+      supportingRequirementIds: decision.supportingRequirementIds,
+      blockingRequirementIds: decision.blockingRequirementIds,
+      risks: decision.risks,
+      nextStep: decision.nextStep,
     });
-  }
 
-  if (
-    room.approvedBuyerContext &&
-    receipt.inputDigest !== inputDigest(room.approvedBuyerContext)
-  ) {
-    context.addIssue({
-      code: "custom",
-      path: ["approvedBuyerContextReceipt", "inputDigest"],
-      message: "receipt digest must match the approved buyer context",
-    });
+    if (dr.inputDigest !== payloadDigest) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedDecision", "receipt", "inputDigest"],
+        message: "receipt digest must match the approved decision payload",
+      });
+    }
+
+    if (dr.revision !== decision.approvedAtRevision) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedDecision", "receipt", "revision"],
+        message: "receipt revision must equal the approved revision",
+      });
+    }
+
+    if (dr.revision > room.revision) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedDecision", "receipt", "revision"],
+        message: "receipt revision cannot be greater than room revision",
+      });
+    }
+
+    if (decision.approvedAtRevision > room.revision) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedDecision", "approvedAtRevision"],
+        message: "approved revision cannot be greater than room revision",
+      });
+    }
+
+    if (dr.issuedAt !== decision.approvedAt) {
+      context.addIssue({
+        code: "custom",
+        path: ["approvedDecision", "receipt", "issuedAt"],
+        message: "receipt timestamp must equal the approved timestamp",
+      });
+    }
   }
 });
 

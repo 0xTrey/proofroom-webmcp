@@ -1,12 +1,15 @@
-import type { ReactNode } from "react";
-import { StatusMark } from "../../components/StatusMark.tsx";
+import { useState, type ReactNode } from "react";
+import { RequirementStatusMark, StatusMark } from "../../components/StatusMark.tsx";
+import type { RoomActions } from "../../domain/actions/index.ts";
+import type { DomainError } from "../../domain/errors.ts";
 import type { RoomState } from "../../domain/types.ts";
 import {
   selectLedgerTotals,
-  selectRequirementSummaries,
-  selectRoiSummary,
 } from "../../state/selectors.ts";
 import { TOOL_NAMES } from "../../webmcp/toolDefinitions.ts";
+import { RoiWorkspace } from "./RoiWorkspace.tsx";
+import { BriefWorkspace } from "./BriefWorkspace.tsx";
+import { ProposalDesk } from "./ProposalDesk.tsx";
 
 const READ_ONLY_TOOLS = new Set([
   "get_room_state",
@@ -15,21 +18,86 @@ const READ_ONLY_TOOLS = new Set([
   "calculate_roi",
 ]);
 
-function formatUsd(value: number): string {
-  return value.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
+function isDecisionError(error: DomainError | null): boolean {
+  if (!error) {
+    return false;
+  }
+  const decisionPaths = new Set([
+    "status",
+    "rationale",
+    "supportingRequirementIds",
+    "blockingRequirementIds",
+    "risks",
+    "nextStep",
+    "summary",
+    "role",
+    "evidenceIds",
+    "campaignsPerMonth",
+    "hoursSavedPerCampaign",
+    "loadedHourlyCost",
+    "annualSubscriptionCost",
+    "implementationCost",
+    "budgetCeiling",
+  ]);
+  if (error.issues.some((issue) => decisionPaths.has(issue.path))) {
+    return true;
+  }
+  const decisionCodes = new Set([
+    "DECISION_BLOCKED",
+    "PROPOSAL_STALE",
+    "PROPOSAL_EXPIRED",
+    "PROPOSAL_RESOLVED",
+    "EVIDENCE_INSUFFICIENT",
+  ]);
+  if (decisionCodes.has(error.code)) {
+    return true;
+  }
+  if (error.relatedIds.some((id) => id.startsWith("pdc_") || id.startsWith("brief_"))) {
+    return true;
+  }
+  return false;
+}
+
+export type DecisionFeedback = {
+  kind: "success" | "error";
+  message: string;
+  roomRevision: number;
+};
+
+export type DecisionSurfaceProps = {
+  room: RoomState;
+  actions: RoomActions;
+  lastError: DomainError | null;
+  context?: ReactNode;
+};
+
+function formatTimestamp(value: string): string {
+  return new Date(value).toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "UTC",
   });
 }
 
-export function DecisionSurface({ room, context }: { room: RoomState; context?: ReactNode }) {
-  const roi = selectRoiSummary(room);
+export function DecisionSurface({ room, actions, lastError, context }: DecisionSurfaceProps) {
   const ledger = selectLedgerTotals(room);
-  const blockers = selectRequirementSummaries(room).filter(
-    (requirement) => requirement.blocksReadyDecision,
-  );
   const decision = room.approvedDecision;
+  const [feedback, setFeedback] = useState<DecisionFeedback | null>(null);
+
+  function reportFeedback(next: Omit<DecisionFeedback, "roomRevision">): void {
+    setFeedback({ ...next, roomRevision: actions.getSnapshot().revision });
+  }
+
+  const currentFeedback =
+    feedback?.kind === "error" && feedback.roomRevision !== room.revision ? null : feedback;
+  const visibleFeedback =
+    currentFeedback ??
+    (isDecisionError(lastError)
+      ? { kind: "error" as const, message: `${lastError!.code}: ${lastError!.message}` }
+      : null);
+
+  const isHistorical =
+    decision !== null && decision.approvedAtRevision < room.revision;
 
   return (
     <article className="surface surface--decision motion-rise">
@@ -37,8 +105,8 @@ export function DecisionSurface({ room, context }: { room: RoomState; context?: 
         <div>
           <h1>The agent can stage the case. Only a person can decide.</h1>
           <p>
-            Commercial assumptions, evidence blockers, and agent activity remain inspectable before
-            a final status exists. In this reset state, no decision has been proposed or approved.
+            Challenge the commercial model, review evidence-backed briefs, inspect the staged
+            proposal, and approve or reject the final decision in this page.
           </p>
         </div>
         <aside className="human-boundary" aria-labelledby="human-boundary-heading">
@@ -58,89 +126,153 @@ export function DecisionSurface({ room, context }: { room: RoomState; context?: 
 
       {context}
 
-      <section className="decision-grid" aria-label="Current commercial and decision state">
-        <div className="commercial-model">
+      <aside className="evaluation-disclosure" aria-label="Fictional decision disclosure">
+        <strong>Fictional demonstration</strong>
+        <span>{room.vendor.fictionalDisclosure}</span>
+        <span>{room.canonicalBuyer.fictionalDisclosure}</span>
+      </aside>
+
+      <p
+        className={`decision-feedback ${visibleFeedback?.kind === "error" ? "decision-feedback--error" : ""}`}
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {visibleFeedback?.message ?? "Decision actions will be reported here."}
+      </p>
+
+      <RoiWorkspace room={room} actions={actions} onFeedback={reportFeedback} />
+
+      <BriefWorkspace room={room} actions={actions} onFeedback={reportFeedback} />
+
+      <ProposalDesk room={room} actions={actions} onFeedback={reportFeedback} />
+
+      {decision ? (
+        <section className="approved-decision" aria-labelledby="approved-decision-heading">
           <header>
-            <h2>Commercial model</h2>
+            <div>
+              <h2 id="approved-decision-heading">Approved decision</h2>
+              {isHistorical ? (
+                <p className="mono">
+                  approved at revision {decision.approvedAtRevision} / current revision{" "}
+                  {room.revision} / requires re-evaluation
+                </p>
+              ) : (
+                <p className="mono">approved at revision {decision.approvedAtRevision} / current</p>
+              )}
+            </div>
             <StatusMark
-              tone={roi.withinBudget ? "verified" : "gap"}
-              glyph={roi.withinBudget ? "✓" : "!"}
-              label={roi.withinBudget ? "inside budget ceiling" : "above budget ceiling"}
+              tone={decision.status === "ready" ? "verified" : "gap"}
+              glyph={decision.status === "ready" ? "\u2713" : "\u25CB"}
+              label={decision.status.replace(/_/g, " ")}
             />
           </header>
-          <dl className="commercial-numbers">
+          {isHistorical ? (
+            <p className="approved-decision__stale-notice">
+              The room advanced to revision {room.revision} after this decision was approved at
+              revision {decision.approvedAtRevision}. The approved record is historical and should
+              be re-evaluated against the current room state.
+            </p>
+          ) : null}
+          <dl className="approved-decision__payload">
             <div>
-              <dt>Annual hours saved</dt>
-              <dd className="commercial-number__value">
-                {roi.annualHoursSaved.toLocaleString("en-US")}
+              <dt>Status</dt>
+              <dd>{decision.status.replace(/_/g, " ")}</dd>
+            </div>
+            <div>
+              <dt>Rationale</dt>
+              <dd>{decision.rationale}</dd>
+            </div>
+            <div>
+              <dt>Supporting requirements</dt>
+              <dd>
+                <ul>
+                  {decision.supportingRequirementIds.map((id) => {
+                    const req = room.requirements.find((r) => r.id === id);
+                    return (
+                      <li key={id}>
+                        <span className="mono">{id}</span>
+                        <span>{req?.label ?? id}</span>
+                        {req ? <RequirementStatusMark status={req.status} /> : null}
+                      </li>
+                    );
+                  })}
+                </ul>
               </dd>
-              <dd className="commercial-number__note">Operator hours only</dd>
             </div>
             <div>
-              <dt>Annual labor value</dt>
-              <dd className="commercial-number__value">{formatUsd(roi.annualLaborValue)}</dd>
-              <dd className="commercial-number__note">No revenue or conversion claim</dd>
-            </div>
-            <div>
-              <dt>First year cost</dt>
-              <dd className="commercial-number__value">{formatUsd(roi.firstYearCost)}</dd>
-              <dd className="commercial-number__note">Subscription plus implementation</dd>
-            </div>
-            <div>
-              <dt>First year net value</dt>
-              <dd className="commercial-number__value">{formatUsd(roi.firstYearNetValue)}</dd>
-              <dd className="commercial-number__note">Labor value less first year cost</dd>
-            </div>
-            <div>
-              <dt>Modelled payback</dt>
-              <dd className="commercial-number__value">
-                {roi.paybackMonths === null ? "N/A" : `${roi.paybackMonths} mo.`}
+              <dt>Blocking requirements</dt>
+              <dd>
+                <ul>
+                  {decision.blockingRequirementIds.map((id) => {
+                    const req = room.requirements.find((r) => r.id === id);
+                    return (
+                      <li key={id}>
+                        <span className="mono">{id}</span>
+                        <span>{req?.label ?? id}</span>
+                        {req ? <RequirementStatusMark status={req.status} /> : null}
+                      </li>
+                    );
+                  })}
+                </ul>
               </dd>
-              <dd className="commercial-number__note">Target is twelve months</dd>
             </div>
             <div>
-              <dt>Budget ceiling</dt>
-              <dd className="commercial-number__value">{formatUsd(roi.budgetCeiling)}</dd>
-              <dd className="commercial-number__note">Visible buyer assumption</dd>
+              <dt>Risks</dt>
+              <dd>
+                <ul>
+                  {decision.risks.map((risk, index) => (
+                    <li key={index}>{risk}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+            <div>
+              <dt>Next step</dt>
+              <dd>{decision.nextStep}</dd>
             </div>
           </dl>
-        </div>
-
-        <div className="decision-file">
-          <header>
-            <h2>Decision file</h2>
-            <p className="mono">
-              {decision ? `approved / ${decision.status}` : "reset state / no approved decision"}
-            </p>
-          </header>
-          <div className="decision-file__empty">
-            <span aria-hidden="true">∅</span>
-            <div>
-              <h3>No conclusion recorded</h3>
-              <p>
-                A ready decision requires every hard requirement to be fully supported. The current
-                room has {blockers.length} hard blockers.
-              </p>
-            </div>
-          </div>
-          <ol className="blocker-list" aria-label="Current blockers">
-            {blockers.map((blocker, index) => (
-              <li key={blocker.id}>
-                <span className="mono">{String(index + 1).padStart(2, "0")}</span>
-                <span>{blocker.label}</span>
-                <span className="mono">{blocker.status.replace("_", " ")}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+          <section className="approved-decision__receipt" aria-labelledby="receipt-heading">
+            <h3 id="receipt-heading">Decision receipt</h3>
+            <dl>
+              <div>
+                <dt>Receipt ID</dt>
+                <dd className="mono">{decision.receipt.id}</dd>
+              </div>
+              <div>
+                <dt>Kind</dt>
+                <dd className="mono">{decision.receipt.kind}</dd>
+              </div>
+              <div>
+                <dt>Proposal ID</dt>
+                <dd className="mono">{decision.receipt.proposalId}</dd>
+              </div>
+              <div>
+                <dt>Payload digest</dt>
+                <dd className="mono">{decision.receipt.inputDigest}</dd>
+              </div>
+              <div>
+                <dt>Approved revision</dt>
+                <dd className="mono">{decision.receipt.revision}</dd>
+              </div>
+              <div>
+                <dt>Issued timestamp</dt>
+                <dd className="mono">{formatTimestamp(decision.receipt.issuedAt)} UTC</dd>
+              </div>
+              <div className="approved-decision__receipt-summary">
+                <dt>Safe summary</dt>
+                <dd>{decision.receipt.summary}</dd>
+              </div>
+            </dl>
+          </section>
+        </section>
+      ) : null}
 
       <section className="activity-summary" aria-labelledby="activity-heading">
         <div>
           <h2 id="activity-heading">The room keeps a real activity receipt.</h2>
           <p>
-            Events come from shared actions, never from decorative UI. This baseline shows only the
-            canonical system event.
+            Events come from shared actions, never from decorative UI. Every read and mutation
+            appears here.
           </p>
         </div>
         <dl>

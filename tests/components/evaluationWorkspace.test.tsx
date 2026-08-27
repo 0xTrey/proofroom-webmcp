@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { BuyerContextWorkspace } from "../../src/features/context/BuyerContextWorkspace.tsx";
 import { EvaluationSurface } from "../../src/features/evaluation/EvaluationSurface.tsx";
 import type { TestRoom } from "../support/room.ts";
-import { createTestRoom } from "../support/room.ts";
+import { attachCanonicalEvidence, createTestRoom } from "../support/room.ts";
 
 function EvaluationHarness({
   handle,
@@ -352,6 +352,41 @@ describe("requirement and evidence workspace", () => {
     expect(screen.getByRole("button", { name: "Fictional review set applied" })).toBeDisabled();
     expect(screen.getByText(/req_eu_residency: unknown from ev_007, ev_008/)).toBeVisible();
     expect(screen.getByText(/req_sso: partially supported from ev_006/)).toBeVisible();
+  });
+
+  it("does not mark a status-matching room complete when a canonical evidence ID is missing", async () => {
+    const handle = createTestRoom();
+    attachCanonicalEvidence(handle);
+    const room = handle.room();
+    handle.store.setState({
+      room: {
+        ...room,
+        requirements: room.requirements.map((requirement) =>
+          requirement.id === "req_salesforce"
+            ? {
+                ...requirement,
+                attachedEvidenceIds: requirement.attachedEvidenceIds.filter(
+                  (evidenceId) => evidenceId !== "ev_002",
+                ),
+              }
+            : requirement,
+        ),
+      },
+    });
+    const user = userEvent.setup();
+    render(<EvaluationHarness handle={handle} />);
+
+    const apply = screen.getByRole("button", { name: "Apply fictional review set" });
+    expect(apply).toBeEnabled();
+    await user.click(apply);
+
+    expect(screen.getByRole("button", { name: "Fictional review set applied" })).toBeDisabled();
+    expect(
+      handle
+        .room()
+        .requirements.find((requirement) => requirement.id === "req_salesforce")
+        ?.attachedEvidenceIds,
+    ).toEqual(["ev_003", "ev_002"]);
   });
 
   it("exposes the campaign contradiction and derives unsupported with both records visible", async () => {

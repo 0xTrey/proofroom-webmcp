@@ -329,7 +329,10 @@ describe("selectors", () => {
   it("totals the ledger by origin and kind", () => {
     const handle = createTestRoom();
     handle.agentActions.getRoomState();
-    handle.actions.applyRoiAssumptions(handle.room().roiAssumptions);
+    handle.actions.applyRoiAssumptions({
+      ...handle.room().roiAssumptions,
+      budgetCeiling: 100000,
+    });
 
     const totals = selectLedgerTotals(handle.room());
     expect(totals.total).toBe(3);
@@ -344,7 +347,10 @@ describe("selectors", () => {
     const first = createRoomStore({ storage: createMemoryRoomStorage(), now: () => FIXED_NOW });
     const second = createRoomStore({ storage: createMemoryRoomStorage(), now: () => FIXED_NOW });
 
-    first.actions.applyRoiAssumptions(first.store.getState().room.roiAssumptions);
+    first.actions.applyRoiAssumptions({
+      ...first.store.getState().room.roiAssumptions,
+      budgetCeiling: 100000,
+    });
 
     expect(first.store.getState().room.revision).toBe(1);
     expect(second.store.getState().room.revision).toBe(0);

@@ -53,7 +53,7 @@
   Acceptance: Evidence invariant is visible and enforced; unknown is intentional; search and attachment work through UI and WebMCP; malicious testimonial instructions render only as untrusted text.
   Verify: Domain, component, WebMCP, Playwright, mobile, keyboard, and axe tests.
 
-- [ ] **8. Build ROI, stakeholder briefs, and decision approval**
+- [x] **8. Build ROI, stakeholder briefs, and decision approval**
   Spec ref: `prd.md > Epic 4`, `prd.md > Epic 5`, `prd.md > Epic 6`
   What to build: Implement bounded ROI inputs and results, calculation review, CFO/CISO briefs, decision proposal, human approval/rejection, blocker visibility, and receipt.
   Acceptance: Budget changes cause deterministic re-evaluation; every hard requirement must be fully supported for ready; briefs cannot contradict requirement state; stale decision approval fails.
