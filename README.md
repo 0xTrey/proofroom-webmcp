@@ -1,133 +1,240 @@
 # ProofRoom
 
-ProofRoom is an agent-native B2B evaluation room. A buyer and their browser agent examine the same
-product, requirements, evidence, assumptions, and decision state on one visible page. The agent
-researches and stages work through WebMCP tools. The person controls what context becomes
-authoritative and what decision is approved.
+ProofRoom turns B2B product research into a visible decision workflow: a browser agent can inspect
+structured evidence and stage work through WebMCP, while the buyer alone decides which context and
+final decision become authoritative.
 
-Most B2B sites make buyer agents scrape marketing claims. ProofRoom exposes structured evidence and a
-shared decision workflow instead, so the buyer and the agent can evaluate fit without hiding
-assumptions or gaps.
+[Open the live demo](https://proofroom-webmcp.harnden-trey.workers.dev) ·
+[Browse the public repository](https://github.com/0xTrey/proofroom-webmcp)
 
-**Everything in this repository is fictional demo content.** Northstar, Meridian Bank, Larkfield
-Mutual, and Ridgeline Research do not exist, and no real company, product, or certification is
-described.
+| Proof | Verified state |
+| --- | --- |
+| Live release | Public on Cloudflare Workers |
+| WebMCP surface | Exactly 9 native tools |
+| Human authority | 2 UI-only approvals |
+| Automated verification | 423 unit and component, 38 end-to-end, 48 accessibility checks |
+| Deterministic evals | 12 passed |
+| License | [MIT](LICENSE) |
 
-## The differentiator: enforced evidence
+## Judge path in 60 to 90 seconds
 
-ProofRoom does not display citations and hope. Its domain model refuses to produce a conclusion the
-evidence cannot support.
+The visible UI is the fastest path and works even when WebMCP is unavailable.
 
-- A requirement is `supported` only when active, eligible evidence covers every hard condition.
-- A testimonial can never prove a security or compliance condition.
-- Expired evidence cannot support a current requirement.
-- EU data residency stays `unknown` in this catalog, because the hosting note lists North American
-  regions only and the subprocessor register does not state processing locations. That gap is the
-  point of the demo.
-- A stakeholder brief that calls an unproven requirement proven is rejected, and nothing is saved.
-- Every `must` or non negotiable requirement must be exactly `supported` for a `ready` decision.
-  Partial, unsupported, and unknown hard requirements block ready at proposal and approval time.
-- Decision proposals reject duplicate or overlapping requirement IDs, supported blockers, and
-  omitted current hard blockers.
-- A stale, expired, or already resolved proposal cannot be approved.
+1. Open the [live Product surface](https://proofroom-webmcp.harnden-trey.workers.dev/#product).
+   Confirm the fictional-data notice, the WebMCP availability state, and the product story.
+2. Select `Stage fictional Meridian Bank draft`. Review every proposed field, then select
+   `Approve buyer context`. The page reorders product, evidence, and package content only after this
+   visible approval.
+3. Open `Evaluation`, select `Apply fictional review set`, and compare a supported requirement with
+   EU data residency. EU residency stays `unknown` because the catalog does not prove it.
+4. Open `Decision`. Inspect the ROI assumptions, create the honest CFO and CISO briefs, stage the
+   canonical `not ready` proposal, and approve it in the page. Finish at the decision receipt and
+   activity register.
 
-## Human authority
+For the native WebMCP path, use headed Chrome with the experimental feature flags. The native
+verifier discovers the tools from real `document.modelContext`, executes `get_room_state` and
+`propose_buyer_context`, checks reload persistence, and uses no test shim. Live natural-language
+browser-agent selection has not been run and is not part of the passed evidence.
 
-Two actions are deliberately not tools:
+## What the room makes visible
 
-1. Approve or reject the staged buyer context.
-2. Approve or reject the decision proposal.
+![A quarantined fictional testimonial is displayed as untrusted data, including its instruction-styled sentence.](artifacts/visual-audit/005-evidence/evidence-inspector-ev-011-1600.png)
 
-The agent can stage both. Only a visible page control can approve either. Registry tests assert that
-no approval tool exists.
+Caption: The evidence inspector keeps testimonial text visible but marks it as data, not
+instructions. It cannot approve context, change status, or approve a decision.
 
-## The nine WebMCP tools
+![The commercial model shows an edited ROI preview and an above-budget warning before assumptions are applied.](artifacts/visual-audit/006-decision/roi-preview-1600.png)
 
-| Tool | Kind | What it does | What it cannot do |
-| --- | --- | --- | --- |
-| `get_room_state` | read only | Revision, approved context summary, requirement totals, blockers, ROI summary, brief presence, proposal states, next actions | Return the activity ledger |
-| `search_product_evidence` | read only, untrusted content | Search the twelve record catalog by query, type, requirement tag, and trust class | Mutate anything |
-| `evaluate_requirement` | read only | Deterministic status, covered conditions, gaps, contradictions, eligible records | Change requirement status |
-| `calculate_roi` | read only | Hours saved, labor value, first year net value, payback, budget comparison | Apply assumptions to the room |
-| `propose_buyer_context` | staged mutation | Stage company context for review with a digest and an expiry | Approve context or personalize authoritative state |
-| `stage_requirement` | mutation | Update buyer notes, priority, the non negotiable flag, and open questions | Set requirement status |
-| `attach_evidence` | mutation | Attach one to six records and recompute coverage | Set status, or attach expired or ineligible records |
-| `save_stakeholder_brief` | mutation | Save a CFO or CISO brief with citations, risks, and open questions | Save a brief that overstates evidence |
-| `propose_decision_status` | staged mutation | Stage `ready`, `ready_with_conditions`, or `not_ready` with blockers | Approve the decision |
+Caption: ROI is deterministic and reviewable. A calculation preview does not silently replace the
+room's assumptions.
 
-Read tools carry `readOnlyHint`. Evidence search carries `untrustedContentHint`, because testimonial
-and external text is returned as data. One testimonial contains an instruction styled sentence on
-purpose: ProofRoom renders and returns it as text and never follows it.
+![The approved decision receipt shows the proposal and approval metadata.](artifacts/visual-audit/006-decision/approved-receipt-1600.png)
 
-## Architecture
+Caption: The final receipt records the buyer's visible approval after the agent or UI stages a
+decision proposal.
+
+## The problem, and why WebMCP matters
+
+Most B2B sites scatter product claims, security facts, pricing assumptions, and customer proof across
+pages and documents. An agent has to scrape prose, guess at authority, and return a conclusion that
+the buyer cannot inspect as shared state.
+
+WebMCP changes the interaction model inside the live page. ProofRoom exposes narrow, typed actions
+for reading state, searching evidence, calculating ROI, and staging changes. The UI and WebMCP tools
+call the same domain actions, so both paths use the same validation, revision rules, persistence,
+and activity ledger. The agent works on the room instead of narrating around it.
+
+## Human-agent trust boundary
+
+The agent can stage buyer context and a decision proposal. Only the person can:
+
+1. Approve or reject staged buyer context.
+2. Approve or reject a staged decision.
+
+Those controls exist only in the visible UI. There is no approval WebMCP tool. A proposal carries a
+base revision, expiry, and browser-local input digest; stale, expired, invalid, or resolved proposals
+fail without changing state. The digest protects demo-state integrity and stale approvals. It does
+not prove identity or carry legal meaning.
+
+## The exact nine WebMCP tools
+
+| Tool | Boundary | Result |
+| --- | --- | --- |
+| `get_room_state` | Read only; never returns the activity ledger | Revision, context summary, requirement totals, blockers, ROI, briefs, proposals, next actions |
+| `search_product_evidence` | Read only; results may contain untrusted content | Searches 12 records by query, type, requirement tag, and trust class |
+| `evaluate_requirement` | Read-only calculation; cannot set status | Proposed status, coverage, gaps, contradictions, eligible evidence |
+| `calculate_roi` | Read-only calculation; cannot apply assumptions | Hours saved, labor value, first-year net value, payback, budget comparison |
+| `propose_buyer_context` | Stages only; cannot approve or personalize authoritative state | Reviewable buyer-context proposal with revision, digest, and expiry |
+| `stage_requirement` | Mutates notes and priority; cannot set status | Buyer notes, priority, non-negotiable state, and open questions |
+| `attach_evidence` | Recomputes status; rejects expired or ineligible records | One to six evidence relationships plus derived coverage |
+| `save_stakeholder_brief` | Rejects evidence overstatement atomically | CFO or CISO brief with citations, risks, questions, and next step |
+| `propose_decision_status` | Stages only; cannot approve | `ready`, `ready_with_conditions`, or `not_ready` proposal with blockers |
+
+The four read tools carry `readOnlyHint`. `search_product_evidence` also carries
+`untrustedContentHint`. Registry tests prove that approval, rejection, reset, recovery, ROI apply,
+and direct status-authoring tools do not exist.
+
+## Evidence rules the domain enforces
+
+- `supported` requires active, eligible evidence for every hard condition.
+- Testimonial evidence cannot prove a security or compliance condition.
+- Expired or unrelated evidence cannot support a requirement.
+- A brief that calls an unproven requirement proven is rejected, and nothing is saved.
+- Every `must` or non-negotiable requirement must be exactly `supported` for `ready`.
+- Decision proposals reject duplicate or overlapping IDs, supported blockers, and omitted hard
+  blockers.
+- Every failed action is atomic. Every successful mutation increments the revision exactly once and
+  appends exactly one activity event.
+
+EU data residency is deliberately honest. The fictional hosting note lists North American regions,
+and the fictional subprocessor register does not state processing locations. Even with both records
+attached, the two hard conditions remain open and the requirement stays `unknown`.
+
+## Architecture and repository map
 
 ```text
-browser agent -> WebMCP input schema -> strict Zod parse -> tool definition
-  -> shared RoomActions method -> invariant validation -> atomic state update
-  -> revision and activity event -> structured tool result -> visible React update
+browser agent -> WebMCP strict input schema -> tool adapter
+  -> RoomActions -> invariant validation -> atomic state update
+  -> revision and activity event -> structured result -> visible React update
+
+visible UI control -> RoomActions -> the same invariant and receipt path
 ```
 
-The same `RoomActions` interface backs the page controls. Layers:
+Dependencies flow in one direction:
 
-- `src/fixtures`: canonical vendor, buyer, six requirements, twelve evidence records, demo room.
-- `src/domain`: types, strict schemas, typed errors, evidence rules, ROI, digests, receipts, actions.
-- `src/state`: Zustand store, storage port, migration and recovery, selectors.
-- `src/webmcp`: local experimental DOM declarations, tool schemas and definitions, registration
-  lifecycle, status model, React hook, test shim.
-- `src/app`, `src/components`, `src/design`: shell, navigation, error boundary, tokens.
+| Path | Responsibility |
+| --- | --- |
+| [`src/fixtures`](src/fixtures) | Fictional vendor, buyer, six requirements, 12 evidence records, canonical room |
+| [`src/domain`](src/domain) | Types, strict schemas, errors, evidence rules, ROI, digests, receipts, actions |
+| [`src/state`](src/state) | Zustand store, browser-local persistence, migration, recovery, selectors |
+| [`src/webmcp`](src/webmcp) | DOM declarations, schemas, nine definitions, registration, status, test shim |
+| [`src/features`](src/features) | Product, context, evaluation, ROI, briefs, decision, ledger surfaces |
+| [`src/app`](src/app) and [`src/components`](src/components) | Shell, routes, navigation, shared presentation |
 
-React components never write to the store. WebMCP callbacks never hold product logic. Requirement
-status has exactly one writer, and it reads evidence.
+React components and WebMCP callbacks do not contain product mutations. `RoomActions` is the only
+mutation boundary, and requirement status has one evidence-driven writer.
 
-## Sixty second judge path
+## Run it locally
+
+Requirements: Node 22.12 or newer and npm.
 
 ```bash
-nvm use 22            # Node 22.12 or newer
-npm install
-npm run test          # domain, state, WebMCP, and component suites
-npm run build
-npm run dev           # http://localhost:5173
+nvm use 22
+npm ci
+npm run dev
 ```
 
-1. Open the Product surface. Note the single headline, the fictional content notice, and the agent
-   tool status. Without WebMCP the page still works completely.
-2. Open Evaluation. Six requirements start `unknown`, because the evaluation has not happened yet.
-3. Open Decision. The commercial model, the blockers, the activity totals, and the exact tool list
-   are all visible.
-4. In a browser with WebMCP, ask the agent to evaluate Northstar for Meridian Bank. Approve the
-   staged context in the page, then watch requirement status follow the evidence rather than the
-   narrative.
-
-## Tests
-
-| Command | Scope |
-| --- | --- |
-| `npm run lint` | ESLint plus the repository writing guard |
-| `npm run typecheck` | TypeScript strict mode across source, tests, and the Worker |
-| `npm run test` | Vitest domain, state, WebMCP, and component suites in jsdom |
-| `npm run test:e2e` | Playwright UI only journey |
-| `npm run test:a11y` | axe on every surface at 390, 768, 1280, and 1600 pixels |
-| `npm run evals` | Eval manifest validation |
-| `npm run build` | Type check plus the Cloudflare Vite build |
-
+Open `http://localhost:5173/#product`. The complete UI path remains available without WebMCP.
 Playwright needs `npx playwright install chromium` before its first run.
 
-## Deployment
+Full local QA:
 
-Cloudflare Workers static assets with the official Vite plugin, a minimal Worker entry, and single
-page application fallback. The Worker adds `Origin-Agent-Cluster: ?1`. It deliberately does not set a
-`Permissions-Policy` that restricts `tools`, because that would disable WebMCP on this page.
+```bash
+npm run lint
+npm run typecheck
+npm run test
+npm run test:e2e
+npm run test:a11y
+npm run evals
+npm run build
+```
 
-## Limitations
+Native headed Chrome verification against the public release:
 
-- The room lives in browser local storage. There is no account, no database, and no shared room.
-- The application never calls a model API. All intelligence comes from the browser agent.
-- The input digest is a short non-cryptographic fingerprint. It protects demo-state integrity and
-  stale approvals, not identity or non-repudiation.
-- WebMCP is experimental. `document.modelContext` is declared locally in `src/webmcp/types.d.ts` and
-  isolated behind one adapter, and the page states clearly when tools are unavailable.
-- Requirement evaluation covers the twelve fixture records. There is no evidence ingestion.
+```bash
+PROOFROOM_BASE_URL="https://proofroom-webmcp.harnden-trey.workers.dev" \
+npm run verify:webmcp:chrome
+```
 
-## License
+Public HTTP and browser verification:
 
-MIT. See `LICENSE`.
+```bash
+PROOFROOM_BASE_URL="https://proofroom-webmcp.harnden-trey.workers.dev" npm run verify:public
+PROOFROOM_BASE_URL="https://proofroom-webmcp.harnden-trey.workers.dev" npm run test:public
+```
+
+Deployment is a separate external mutation that requires an authenticated Cloudflare account:
+
+```bash
+npm run deploy
+```
+
+The local QA and verification commands above are reproducible checks. The deployment command is an
+intentional external mutation and is not part of ordinary local QA. These commands do not replace
+the committed production evidence described next. See the
+[release runbook](docs/release-runbook.md) for lifecycle boundaries.
+
+## Verified production evidence
+
+The release receipt records deployment commit
+`82ee322b4e4e8c8658e8eed605431974d084afca` and Cloudflare deployment version
+`86b01690-7492-4a37-ae70-3c71d50f43c7`. Git history establishes final evidence commit
+`cb51518c545b8f498f9938e2054e729a60abb328`.
+
+Verified results:
+
+- 423 unit and component tests passed.
+- 38 end-to-end tests passed.
+- 48 accessibility checks passed.
+- 12 deterministic evals passed.
+- Headed Chrome `151.0.7922.174` discovered exactly nine tools before and after reload through real
+  `document.modelContext`, with no WebMCP shim.
+- Native execution ran `get_room_state` and `propose_buyer_context`. Revision moved from 0 to 1, and
+  the pending proposal persisted across reload.
+- Application errors were zero across console, page, request, and response checks.
+- Chrome emitted two strict-CSP WebMCP testing registration notices, one during initial registration
+  and one after reload. The verifier classified them as browser diagnostics using exact phase,
+  source, entry-integrity, CSP, execution, and count checks. They are not concealed as application
+  success.
+- Live natural-language browser-agent selection remains `not_run`.
+
+Deep evidence:
+
+- [Verified release receipt](artifacts/release/release-receipt.json)
+- [Native WebMCP receipt](artifacts/release/native-webmcp.json)
+- [Release evidence contract](artifacts/release/README.md)
+
+## Demo and challenge package
+
+The [submission-package index](docs/submission/README.md) maps the local story, rehearsal, capture,
+image-selection, and launch-state documents. Start with the
+[timed demo script](docs/submission/demo-script.md) for the 2:35 to 2:45 recording path.
+
+## Limitations, disclosure, and license
+
+- Everything named in this repository is fictional demo content. Northstar, Meridian Bank,
+  Larkfield Mutual, Ridgeline Research, and every product, compliance, and testimonial claim are
+  fictional.
+- State lives in local browser storage. There is no account, database, multi-user room, or shared
+  backend.
+- The application makes no model API call. Intelligence comes from the browser agent.
+- WebMCP is experimental and environment-dependent. The page reports unavailable and registration
+  error states while preserving every visible UI control.
+- Evaluation covers the fixed 12-record catalog. There is no arbitrary evidence ingestion.
+- Live natural-language browser-agent selection has not been run.
+
+ProofRoom was built for the [OpenAI WebMCP Challenge](https://openai.com/webmcp-challenge/) hosted on
+[Devpost](https://webmcp.devpost.com/). Submission documents in this repository are local
+preparation only. No official Devpost draft exists locally, and nothing has been submitted.
+
+Released under the [MIT License](LICENSE).

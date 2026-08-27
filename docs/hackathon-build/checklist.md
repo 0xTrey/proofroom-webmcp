@@ -82,3 +82,7 @@
   What to build: Finish README, architecture explanation, exact tool table, test instructions, limitations, screenshots, demo script, video shot list, project description, and submission checklist.
   Acceptance: A judge can understand and test ProofRoom without private context; all claims match verified behavior; public repo shows MIT license; demo script fits under three minutes.
   Verify: Fresh-clone setup, link check, claim/source review, timed demo rehearsal, public repo and live URL readback.
+  Progress: Local preparation now includes the judge-first root README plus the
+  `docs/submission/README.md` index, `project-story.md`, `demo-script.md`, `demo-shot-list.md`,
+  `screenshot-plan.md`, and `launch-checklist.md`. Item 12 remains unchecked pending the independent
+  acceptance gates above.
