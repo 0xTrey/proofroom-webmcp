@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { RequirementStatusMark, StatusMark } from "../../components/StatusMark.tsx";
 import { conditionLabel } from "../../domain/conditions.ts";
 import type { EvidenceRecord, RoomState } from "../../domain/types.ts";
@@ -23,7 +24,7 @@ function trustLabel(record: EvidenceRecord): string {
   return record.trustClass === "canonical" ? "Canonical demo source" : record.trustClass;
 }
 
-export function EvaluationSurface({ room }: { room: RoomState }) {
+export function EvaluationSurface({ room, context }: { room: RoomState; context?: ReactNode }) {
   const requirements = selectRequirementSummaries(room);
   const totals = selectRequirementTotals(room);
 
@@ -56,6 +57,8 @@ export function EvaluationSurface({ room }: { room: RoomState }) {
           </div>
         </dl>
       </header>
+
+      {context}
 
       <section className="dossier" aria-labelledby="requirements-heading">
         <header className="dossier__head">

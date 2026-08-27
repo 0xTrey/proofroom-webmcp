@@ -6,6 +6,7 @@
  * caller or a test pass.
  */
 import { z } from "zod";
+import { inputDigest } from "./hash.ts";
 
 export const LIMITS = {
   idLength: 64,
@@ -306,6 +307,7 @@ export const roomStateSchema = z.strictObject({
   canonicalBuyer: buyerProfileSchema,
   buyerContextProposal: buyerContextProposalSchema.nullable(),
   approvedBuyerContext: buyerContextSchema.nullable(),
+  approvedBuyerContextReceipt: receiptSchema.nullable().default(null),
   requirements: z.array(requirementSchema).min(1).max(12),
   evidenceCatalog: z.array(evidenceRecordSchema).min(1).max(24),
   roiAssumptions: roiAssumptionsSchema,
@@ -320,6 +322,54 @@ export const roomStateSchema = z.strictObject({
   approvedDecision: approvedDecisionSchema.nullable(),
   activityLedger: z.array(activityEventSchema).max(400),
   recoveryNotice: recoveryNoticeSchema.nullable(),
+}).superRefine((room, context) => {
+  const receipt = room.approvedBuyerContextReceipt;
+  if (!receipt) {
+    return;
+  }
+
+  if (!room.approvedBuyerContext) {
+    context.addIssue({
+      code: "custom",
+      path: ["approvedBuyerContextReceipt"],
+      message: "a buyer-context receipt requires approved buyer context",
+    });
+  }
+
+  if (receipt.kind !== "buyer_context") {
+    context.addIssue({
+      code: "custom",
+      path: ["approvedBuyerContextReceipt", "kind"],
+      message: "expected a buyer_context receipt",
+    });
+  }
+
+  if (receipt.proposalId === null) {
+    context.addIssue({
+      code: "custom",
+      path: ["approvedBuyerContextReceipt", "proposalId"],
+      message: "a buyer-context receipt requires a proposal ID",
+    });
+  }
+
+  if (receipt.revision > room.revision) {
+    context.addIssue({
+      code: "custom",
+      path: ["approvedBuyerContextReceipt", "revision"],
+      message: "receipt revision cannot be greater than room revision",
+    });
+  }
+
+  if (
+    room.approvedBuyerContext &&
+    receipt.inputDigest !== inputDigest(room.approvedBuyerContext)
+  ) {
+    context.addIssue({
+      code: "custom",
+      path: ["approvedBuyerContextReceipt", "inputDigest"],
+      message: "receipt digest must match the approved buyer context",
+    });
+  }
 });
 
 export const persistedRoomSchema = z.strictObject({

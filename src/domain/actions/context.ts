@@ -143,6 +143,7 @@ export const approveBuyerContextAction = defineAction({
       patch: (current: RoomState) => ({
         ...current,
         approvedBuyerContext: proposal.payload,
+        approvedBuyerContextReceipt: receipt,
         buyerContextProposal: { ...proposal, status: "approved" },
       }),
       affectedIds: [proposal.id, receipt.id],

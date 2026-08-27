@@ -31,7 +31,8 @@
 
   .motion-fold,
   .motion-rise,
-  .motion-mark {
+  .motion-mark,
+  .context-workspace {
     animation: none !important;
     transition: none !important;
   }

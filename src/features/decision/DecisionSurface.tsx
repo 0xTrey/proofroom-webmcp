@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { StatusMark } from "../../components/StatusMark.tsx";
 import type { RoomState } from "../../domain/types.ts";
 import {
@@ -22,7 +23,7 @@ function formatUsd(value: number): string {
   });
 }
 
-export function DecisionSurface({ room }: { room: RoomState }) {
+export function DecisionSurface({ room, context }: { room: RoomState; context?: ReactNode }) {
   const roi = selectRoiSummary(room);
   const ledger = selectLedgerTotals(room);
   const blockers = selectRequirementSummaries(room).filter(
@@ -54,6 +55,8 @@ export function DecisionSurface({ room }: { room: RoomState }) {
           </div>
         </aside>
       </header>
+
+      {context}
 
       <section className="decision-grid" aria-label="Current commercial and decision state">
         <div className="commercial-model">

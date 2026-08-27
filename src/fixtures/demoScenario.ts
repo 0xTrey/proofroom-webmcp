@@ -64,6 +64,7 @@ export function createCanonicalRoom(nowIso: string): RoomState {
     canonicalBuyer: MERIDIAN_BANK,
     buyerContextProposal: null,
     approvedBuyerContext: null,
+    approvedBuyerContextReceipt: null,
     requirements: CANONICAL_REQUIREMENTS.map((requirement) =>
       deriveRequirement({ ...requirement }, evidenceCatalog, nowIso),
     ),

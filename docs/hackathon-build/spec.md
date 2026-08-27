@@ -148,6 +148,7 @@ type RoomState = {
   canonicalBuyer: BuyerProfile;
   buyerContextProposal: Proposal<BuyerContext> | null;
   approvedBuyerContext: BuyerContext | null;
+  approvedBuyerContextReceipt: Receipt | null;
   requirements: Requirement[];
   evidenceCatalog: EvidenceRecord[];
   roiAssumptions: RoiAssumptions;
@@ -359,6 +360,9 @@ proposal panel
 - Use a `RoomStorage` interface with `load`, `save`, and `clear`.
 - Default adapter uses local storage under a versioned key.
 - Parse persisted data through a Zod schema before hydration.
+- Schema-version-1 rooms saved before buyer-context receipts became authoritative hydrate with a
+  nullable receipt default. Hydration reconstructs and promotes the prior receipt from its approval
+  event when that event remains in the capped ledger.
 - Unknown schema versions fall back to fixture and show a recovery notice.
 - Tests use an in-memory adapter.
 - Do not add Neon in this release.

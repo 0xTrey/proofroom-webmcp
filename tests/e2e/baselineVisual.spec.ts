@@ -1,8 +1,5 @@
-import { mkdir } from "node:fs/promises";
-import path from "node:path";
 import { expect, test } from "@playwright/test";
 
-const AUDIT_DIRECTORY = path.resolve("artifacts/visual-audit/003-baseline");
 const VIEWPORTS = [
   { width: 390, height: 900 },
   { width: 768, height: 900 },
@@ -13,10 +10,9 @@ const SURFACES = ["product", "evaluation", "decision"] as const;
 
 for (const viewport of VIEWPORTS) {
   for (const surface of SURFACES) {
-    test(`${surface} baseline at ${viewport.width}px has no overflow and captures cleanly`, async ({
+    test(`${surface} layout at ${viewport.width}px has one primary heading and no overflow`, async ({
       page,
     }) => {
-      await mkdir(AUDIT_DIRECTORY, { recursive: true });
       await page.setViewportSize(viewport);
       await page.goto(`/#${surface}`);
       await page.evaluate(async () => {
@@ -32,12 +28,6 @@ for (const viewport of VIEWPORTS) {
       expect(dimensions.scrollWidth, JSON.stringify(dimensions)).toBeLessThanOrEqual(
         dimensions.clientWidth,
       );
-
-      await page.screenshot({
-        path: path.join(AUDIT_DIRECTORY, `${surface}-${viewport.width}.png`),
-        fullPage: true,
-        animations: "disabled",
-      });
     });
   }
 }

@@ -64,3 +64,14 @@
 - Codex independently reproduced all acceptance gates: 140 unit and component tests, 16 end-to-end checks, 12 axe scans across 390, 768, 1280, and 1600 pixel widths, lint, typecheck, eval manifest, and production build.
 - Twelve final visual artifacts and their audit index live in `artifacts/visual-audit/003-baseline/`.
 - Checklist item 5 is accepted. Items 6 through 12 remain open.
+
+### Accepted buyer-context milestone
+
+- Cursor work order 004 added exact buyer-context proposal review, UI-only approval and rejection, a durable approval rail and receipt, and immediate personalization across the product narrative, capability order, evidence emphasis, and packaging recommendation.
+- Codex rejected three acceptance defects: the first receipt implementation depended on a capped activity ledger, rejection copy became false after a prior approval, and a current browser test rewrote accepted item 5 screenshots. Cursor work order 004a persisted the exact receipt atomically, made the rejection language state-aware, and made the item 5 visual evidence immutable.
+- Codex found one final trust-boundary defect: a shape-valid but inconsistent receipt in untrusted persistence could appear authoritative. Cursor work order 004b added cross-state validation for receipt kind, proposal linkage, revision, approved context, and payload digest, with five corruption recovery tests.
+- Codex independently reproduced all acceptance gates after the corrections: 158 unit and component tests, 25 end-to-end checks, 24 axe scans, 12 eval cases with nine known tools, lint across 112 files, typecheck, production build, secret scan, writing guard, and historical-artifact diff.
+- Eight final visual artifacts and their audit index live in `artifacts/visual-audit/004-context/`.
+- No WebMCP approval tool exists. A browser agent can stage context, but only the person can approve or reject it in the page.
+- The buyer-approved context changes four product regions while the unproven EU data residency requirement remains explicitly unknown.
+- Checklist item 6 is accepted. Items 7 through 12 remain open.

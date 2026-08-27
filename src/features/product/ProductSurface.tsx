@@ -1,4 +1,10 @@
+import type { ReactNode } from "react";
 import type { RoomState } from "../../domain/types.ts";
+import {
+  prioritizedCapabilities,
+  prioritizedEvidence,
+  prioritizedPackages,
+} from "./personalization.ts";
 
 function formatUsd(value: number): string {
   return value.toLocaleString("en-US", {
@@ -8,18 +14,37 @@ function formatUsd(value: number): string {
   });
 }
 
-export function ProductSurface({ room }: { room: RoomState }) {
+export function ProductSurface({ room, context }: { room: RoomState; context?: ReactNode }) {
   const { vendor, canonicalBuyer: buyer } = room;
-  const proofRecords = room.evidenceCatalog.filter((record) =>
-    ["ev_002", "ev_004", "ev_007"].includes(record.id),
-  );
+  const approved = room.approvedBuyerContext;
+  const capabilities = prioritizedCapabilities(room);
+  const proofRecords = prioritizedEvidence(room);
+  const packages = prioritizedPackages(room);
+  const euRequirement = room.requirements.find((requirement) => requirement.id === "req_eu_residency");
 
   return (
     <article className="surface surface--product motion-rise">
       <section className="product-opening" aria-labelledby="product-headline">
         <div className="product-opening__story">
-          <h1 id="product-headline">{vendor.headline}</h1>
-          <p className="product-standfirst">{vendor.primaryValue}</p>
+          <h1 id="product-headline">
+            {approved
+              ? `${approved.companyName}'s priorities now lead the Northstar diligence story.`
+              : vendor.headline}
+          </h1>
+          {approved ? (
+            <p className="approved-story-mark">
+              <span aria-hidden="true">✓</span> Buyer-approved context applied
+            </p>
+          ) : null}
+          <p className="product-standfirst">
+            {approved
+              ? `${approved.priorities[0]} comes first${
+                  approved.priorities[1]
+                    ? `, followed by ${approved.priorities[1].toLowerCase()}`
+                    : ""
+                }. Northstar's existing product claims remain separate from the proof record.`
+              : vendor.primaryValue}
+          </p>
           <dl className="product-facts" aria-label="Northstar product facts">
             <div>
               <dt>Fictional vendor</dt>
@@ -69,6 +94,8 @@ export function ProductSurface({ room }: { room: RoomState }) {
         </aside>
       </section>
 
+      {context}
+
       <aside className="fiction-note" aria-label="Fictional demo disclosure">
         <strong>Fictional demonstration</strong>
         <span>{vendor.fictionalDisclosure}</span>
@@ -84,12 +111,17 @@ export function ProductSurface({ room }: { room: RoomState }) {
           </p>
         </header>
         <ol className="capability-ledger">
-          {vendor.capabilities.map((capability, index) => (
-            <li key={capability.id}>
+          {capabilities.map(({ capability, reason }, index) => (
+            <li
+              key={capability.id}
+              className={reason ? "capability-ledger__priority" : ""}
+              data-capability-id={capability.id}
+            >
               <span className="ledger-index">{String(index + 1).padStart(2, "0")}</span>
               <div>
                 <h3>{capability.label}</h3>
                 <p>{capability.summary}</p>
+                {reason ? <p className="personalization-reason">{reason}</p> : null}
               </div>
               <span className="mono capability-ledger__id">{capability.id}</span>
             </li>
@@ -106,8 +138,12 @@ export function ProductSurface({ room }: { room: RoomState }) {
           </p>
         </div>
         <ol className="proof-desk__records">
-          {proofRecords.map((record, index) => (
-            <li key={record.id}>
+          {proofRecords.map(({ record, relationship, unresolved }, index) => (
+            <li
+              key={record.id}
+              className={unresolved ? "proof-desk__gap" : ""}
+              data-evidence-id={record.id}
+            >
               <div className="evidence-stamp">
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <span className="mono">{record.id}</span>
@@ -118,6 +154,18 @@ export function ProductSurface({ room }: { room: RoomState }) {
                 <p className="proof-desk__source mono">
                   {record.sourceLabel} | {record.trustClass} | {record.limitations.length} limitations
                 </p>
+                {relationship ? (
+                  <p className="proof-desk__relationship">
+                    Buyer requirement: {relationship}
+                  </p>
+                ) : null}
+                {unresolved ? (
+                  <p className="proof-desk__unresolved">
+                    <strong>Requirement status: {euRequirement?.status ?? "unknown"}.</strong> The
+                    catalog does not prove EU residency. It names only North American hosting
+                    regions and gives no EU processing commitment.
+                  </p>
+                ) : null}
               </div>
             </li>
           ))}
@@ -134,18 +182,27 @@ export function ProductSurface({ room }: { room: RoomState }) {
         </header>
         <div className="commercial-sheet">
           <div className="commercial-sheet__tiers">
-            {vendor.packaging.map((tier) => (
-              <section key={tier.id} aria-labelledby={`${tier.id}-heading`}>
+            {packages.map(({ tier, candidate, reason }) => (
+              <section
+                key={tier.id}
+                aria-labelledby={`${tier.id}-heading`}
+                className={candidate ? "commercial-sheet__candidate" : ""}
+                data-package-id={tier.id}
+              >
                 <div>
                   <h3 id={`${tier.id}-heading`}>{tier.name}</h3>
                   <p className="commercial-sheet__price">{formatUsd(tier.annualListPrice)}</p>
                   <p className="mono">{tier.seatBand} | annual list price</p>
+                  {candidate ? <p className="candidate-mark">Evaluation candidate</p> : null}
                 </div>
-                <ul>
-                  {tier.includes.map((entry) => (
-                    <li key={entry}>{entry}</li>
-                  ))}
-                </ul>
+                <div>
+                  <ul>
+                    {tier.includes.map((entry) => (
+                      <li key={entry}>{entry}</li>
+                    ))}
+                  </ul>
+                  {reason ? <p className="personalization-reason">{reason}</p> : null}
+                </div>
               </section>
             ))}
           </div>

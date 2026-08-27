@@ -41,7 +41,7 @@
   Acceptance: Baseline page is coherent at four target widths, works without WebMCP, starts with one primary headline, and meets keyboard and contrast basics.
   Verify: Component tests, Playwright screenshots at 390/768/1280/1600, axe smoke test, manual visual audit.
 
-- [ ] **6. Build context proposal, approval, and personalization**
+- [x] **6. Build context proposal, approval, and personalization**
   Spec ref: `prd.md > Epic 2`, `spec.md > Human approval`
   What to build: Create context proposal UI, exact payload review, approval and rejection, stale-state errors, approved-context rail, and meaningful product reordering and emphasis.
   Acceptance: Agent stages but cannot approve; user approval transforms at least three product regions; EU gap remains visible; reduced-motion path works.

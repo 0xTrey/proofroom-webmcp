@@ -7,9 +7,10 @@
  */
 import { DecisionSurface } from "../features/decision/DecisionSurface.tsx";
 import { EvaluationSurface } from "../features/evaluation/EvaluationSurface.tsx";
+import { BuyerContextWorkspace } from "../features/context/BuyerContextWorkspace.tsx";
 import { ProductSurface } from "../features/product/ProductSurface.tsx";
 import { agentActions, roomActions, useRoomStore } from "../state/roomStore.ts";
-import { selectRoom } from "../state/selectors.ts";
+import { selectLastError, selectRoom } from "../state/selectors.ts";
 import { useWebMcpTools } from "../webmcp/useWebMCPTools.ts";
 import { AppShell } from "./AppShell.tsx";
 import { ErrorBoundary } from "./ErrorBoundary.tsx";
@@ -20,8 +21,12 @@ export function App() {
   const [route, navigate] = useRouteState();
   const status = useWebMcpTools(agentActions);
   const room = useRoomStore(selectRoom);
+  const lastError = useRoomStore(selectLastError);
   const storageStatus = useRoomStore((value) => value.storageStatus);
   const activeRoute = findRoute(route);
+  const contextWorkspace = (
+    <BuyerContextWorkspace room={room} actions={roomActions} lastError={lastError} />
+  );
 
   return (
     <AppShell
@@ -43,9 +48,11 @@ export function App() {
           {activeRoute.heading}. {activeRoute.purpose}
         </p>
 
-        {route === "product" ? <ProductSurface room={room} /> : null}
-        {route === "evaluation" ? <EvaluationSurface room={room} /> : null}
-        {route === "decision" ? <DecisionSurface room={room} /> : null}
+        {route === "product" ? <ProductSurface room={room} context={contextWorkspace} /> : null}
+        {route === "evaluation" ? (
+          <EvaluationSurface room={room} context={contextWorkspace} />
+        ) : null}
+        {route === "decision" ? <DecisionSurface room={room} context={contextWorkspace} /> : null}
       </ErrorBoundary>
     </AppShell>
   );

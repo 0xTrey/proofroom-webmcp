@@ -6,6 +6,7 @@
  * canonical fixture and records a visible recovery notice.
  */
 import { deriveRequirement } from "../domain/evidence.ts";
+import { buyerContextReceipt } from "../domain/receipts.ts";
 import { persistedRoomSchema } from "../domain/schemas.ts";
 import type { RecoveryNotice, RoomState } from "../domain/types.ts";
 import { createCanonicalRoom } from "../fixtures/demoScenario.ts";
@@ -47,6 +48,7 @@ function readVersion(raw: unknown): number | null {
 function refreshDerivedState(room: RoomState, nowIso: string): RoomState {
   return {
     ...room,
+    approvedBuyerContextReceipt: buyerContextReceipt(room),
     requirements: room.requirements.map((requirement) =>
       deriveRequirement(requirement, room.evidenceCatalog, nowIso),
     ),
