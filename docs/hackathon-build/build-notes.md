@@ -75,3 +75,15 @@
 - No WebMCP approval tool exists. A browser agent can stage context, but only the person can approve or reject it in the page.
 - The buyer-approved context changes four product regions while the unproven EU data residency requirement remains explicitly unknown.
 - Checklist item 6 is accepted. Items 7 through 12 remain open.
+
+### Accepted requirement and evidence milestone
+
+- Cursor work order 005 turned the evaluation route into an interactive six-requirement dossier with shared-action evidence search, source inspection, evidence attachment, buyer notes, open questions, and a complete UI-only fictional review path.
+- The canonical review set lands honestly at three supported requirements, two partially supported requirements, and one unknown requirement. EU data residency remains unknown after two relevant records because neither proves an EU region or EU subprocessor disclosure.
+- The untrusted testimonial record renders its complete prompt-injection sentence inside an inert quarantine. The record may remain attached for audit context, but it cannot prove restricted SSO or compliance conditions.
+- Codex rejected four acceptance defects: the inspector was fixed to the full transformed route instead of the viewport, normal browser tests rewrote accepted visual evidence, local evaluation errors survived unrelated success, and the testimonial behavior description contradicted the domain rule.
+- Cursor work order 005a moved the inspector into a body portal, added exact scroll-lock cleanup and viewport geometry tests, made visual capture explicitly opt-in, added revision-aware feedback ownership, and corrected the public tool contract.
+- Codex independently reproduced all acceptance gates: 175 unit and component tests, 28 end-to-end checks, 28 axe scans, 12 eval cases with nine known tools, lint across 124 files, typecheck, production build, secret scan, writing guard, and historical-artifact diff.
+- Codex also proved identical SHA-256 hashes for all 31 files across item 5, item 6, and item 7 visual evidence before and after the final normal E2E run.
+- Eight final visual artifacts and their audit index live in `artifacts/visual-audit/005-evidence/`. The inspector captures are true 1600 by 900 and 390 by 900 viewport panels.
+- Checklist item 7 is accepted. Items 8 through 12 remain open.

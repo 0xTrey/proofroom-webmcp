@@ -12,6 +12,7 @@ import "@fontsource/ibm-plex-mono/500.css";
 import "./design/tokens.css";
 import "./design/global.css";
 import "./design/context.css";
+import "./design/evaluation.css";
 import "./design/motion.css";
 
 import { App } from "./app/App.tsx";

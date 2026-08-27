@@ -204,7 +204,7 @@ export function createToolDefinitions(actions: AgentActions): WebMcpToolDefiniti
       name: "attach_evidence",
       title: "Attach evidence to a requirement",
       description:
-        "Attaches one to six evidence records to a requirement and recomputes coverage. Expired records, unrelated records, and testimonials offered as security or compliance proof are rejected with a reason. It cannot set requirement status directly.",
+        "Attaches one to six evidence records to a requirement and recomputes coverage. Expired and unrelated records are rejected with a reason. Testimonial security or compliance claims may be retained as evaluation context, but they cannot prove restricted conditions. It cannot set requirement status directly.",
       schema: attachEvidenceInputSchema,
       readOnlyHint: false,
       untrustedContentHint: false,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../../src/app/App.tsx";
 import { AppShell } from "../../src/app/AppShell.tsx";
@@ -65,7 +65,8 @@ describe("application shell", () => {
     render(<App />);
     await user.click(screen.getByRole("button", { name: "Evaluation" }));
 
-    expect(screen.getAllByText("unknown")).toHaveLength(6);
+    const register = screen.getByRole("list", { name: "Six requirement records" });
+    expect(within(register).getAllByText("unknown")).toHaveLength(6);
     expect(screen.getByText("EU data residency")).toBeInTheDocument();
   });
 

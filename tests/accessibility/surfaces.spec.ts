@@ -58,4 +58,23 @@ for (const width of WIDTHS) {
       expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
     });
   }
+
+  test(`evidence populated evaluation has no serious axe violations at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#evaluation");
+    await page.getByRole("button", { name: "Apply fictional review set" }).click();
+    await expect(page.getByRole("button", { name: "Fictional review set applied" })).toBeDisabled();
+
+    const dimensions = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(dimensions.scrollWidth, JSON.stringify(dimensions)).toBeLessThanOrEqual(
+      dimensions.clientWidth,
+    );
+    const blocking = await blockingViolations(page);
+    expect(blocking, JSON.stringify(blocking, null, 2)).toEqual([]);
+  });
 }

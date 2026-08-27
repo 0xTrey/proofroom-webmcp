@@ -47,7 +47,7 @@
   Acceptance: Agent stages but cannot approve; user approval transforms at least three product regions; EU gap remains visible; reduced-motion path works.
   Verify: Component tests, shim tool test, Playwright transformation test, visual before/after comparison.
 
-- [ ] **7. Build the requirement and evidence workspace**
+- [x] **7. Build the requirement and evidence workspace**
   Spec ref: `prd.md > Epic 3`, `spec.md > EvidenceRecord`, `spec.md > Requirement`
   What to build: Create the six-row matrix, status marks, evidence search and drawers, limitations, contradictions, open questions, notes, and mobile record layout.
   Acceptance: Evidence invariant is visible and enforced; unknown is intentional; search and attachment work through UI and WebMCP; malicious testimonial instructions render only as untrusted text.

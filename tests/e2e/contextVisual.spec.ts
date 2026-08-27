@@ -3,6 +3,7 @@ import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 const AUDIT_DIRECTORY = path.resolve("artifacts/visual-audit/004-context");
+const UPDATE_VISUAL_AUDIT = process.env.UPDATE_VISUAL_AUDIT === "1";
 const VIEWPORTS = [
   { width: 390, height: 900 },
   { width: 1600, height: 900 },
@@ -35,38 +36,48 @@ async function expectNoOverflow(page: Page): Promise<void> {
 
 for (const viewport of VIEWPORTS) {
   test(`product before and after approval at ${viewport.width}px`, async ({ page }) => {
-    await mkdir(AUDIT_DIRECTORY, { recursive: true });
+    if (UPDATE_VISUAL_AUDIT) {
+      await mkdir(AUDIT_DIRECTORY, { recursive: true });
+    }
     await page.setViewportSize(viewport);
     await ready(page, "product");
     await expectNoOverflow(page);
-    await page.screenshot({
-      path: path.join(AUDIT_DIRECTORY, `product-before-${viewport.width}.png`),
-      fullPage: true,
-      animations: "disabled",
-    });
+    if (UPDATE_VISUAL_AUDIT) {
+      await page.screenshot({
+        path: path.join(AUDIT_DIRECTORY, `product-before-${viewport.width}.png`),
+        fullPage: true,
+        animations: "disabled",
+      });
+    }
 
     await approveContext(page);
     await expectNoOverflow(page);
-    await page.screenshot({
-      path: path.join(AUDIT_DIRECTORY, `product-after-${viewport.width}.png`),
-      fullPage: true,
-      animations: "disabled",
-    });
+    if (UPDATE_VISUAL_AUDIT) {
+      await page.screenshot({
+        path: path.join(AUDIT_DIRECTORY, `product-after-${viewport.width}.png`),
+        fullPage: true,
+        animations: "disabled",
+      });
+    }
   });
 
   for (const route of ["evaluation", "decision"] as const) {
     test(`${route} approved context rail at ${viewport.width}px`, async ({ page }) => {
-      await mkdir(AUDIT_DIRECTORY, { recursive: true });
+      if (UPDATE_VISUAL_AUDIT) {
+        await mkdir(AUDIT_DIRECTORY, { recursive: true });
+      }
       await page.setViewportSize(viewport);
       await ready(page, "product");
       await approveContext(page);
       await page.getByRole("button", { name: route === "evaluation" ? "Evaluation" : "Decision" }).click();
       await expectNoOverflow(page);
 
-      await page.locator(".context-workspace").screenshot({
-        path: path.join(AUDIT_DIRECTORY, `${route}-approved-rail-${viewport.width}.png`),
-        animations: "disabled",
-      });
+      if (UPDATE_VISUAL_AUDIT) {
+        await page.locator(".context-workspace").screenshot({
+          path: path.join(AUDIT_DIRECTORY, `${route}-approved-rail-${viewport.width}.png`),
+          animations: "disabled",
+        });
+      }
     });
   }
 }

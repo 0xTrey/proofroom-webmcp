@@ -148,6 +148,39 @@ describe("mutating tools", () => {
     );
   });
 
+  it("retains testimonial context without letting it prove restricted SSO conditions", async () => {
+    const saml = await shim.callTool("attach_evidence", {
+      requirementId: "req_sso",
+      evidenceIds: ["ev_006"],
+    });
+    expect(saml.isError).toBe(false);
+
+    const testimonial = await shim.callTool("attach_evidence", {
+      requirementId: "req_sso",
+      evidenceIds: ["ev_011"],
+    });
+    const payload = structuredOf<{
+      accepted: string[];
+      requirement: {
+        status: string;
+        coveredConditions: string[];
+        gaps: string[];
+      };
+    }>(testimonial);
+
+    expect(testimonial.isError).toBe(false);
+    expect(payload.accepted).toEqual(["ev_011"]);
+    expect(payload.requirement).toMatchObject({
+      status: "partially_supported",
+      coveredConditions: ["sso_saml_2_0"],
+      gaps: ["sso_scim_provisioning"],
+    });
+    expect(
+      handle.room().requirements.find((requirement) => requirement.id === "req_sso")
+        ?.attachedEvidenceIds,
+    ).toEqual(["ev_006", "ev_011"]);
+  });
+
   it("returns a structured refusal when a tool tries to prove EU residency", async () => {
     attachCanonicalEvidence(handle);
     const revision = handle.room().revision;

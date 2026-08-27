@@ -17,6 +17,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test --project=e2e",
+    "capture:visual:evidence": "UPDATE_VISUAL_AUDIT=1 playwright test tests/e2e/evaluationVisual.spec.ts --project=e2e",
     "test:a11y": "playwright test --project=accessibility",
     "evals": "node evals/run.mjs",
     "deploy": "npm run build && wrangler deploy"

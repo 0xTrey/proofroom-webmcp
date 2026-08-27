@@ -163,6 +163,15 @@ describe("tool annotations and schemas", () => {
     expect(byName.get("stage_requirement")?.description).toContain("cannot set requirement status");
   });
 
+  it("publishes the testimonial attachment restriction without contradicting attachment behavior", () => {
+    const description = byName.get("attach_evidence")?.description;
+    expect(description).toContain("Expired and unrelated records are rejected");
+    expect(description).toContain("may be retained as evaluation context");
+    expect(description).toContain("cannot prove restricted conditions");
+    expect(description).toContain("cannot set requirement status directly");
+    expect(description).not.toContain("testimonials offered as security or compliance proof are rejected");
+  });
+
   it("bounds the search query and the evidence list in the published schema", () => {
     const search = byName.get("search_product_evidence")?.inputSchema.properties as
       | Record<string, { maxLength?: number }>

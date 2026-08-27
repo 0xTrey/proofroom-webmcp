@@ -10,6 +10,13 @@ type Feedback = {
   message: string;
 };
 
+function isBuyerContextError(error: DomainError | null): error is DomainError {
+  if (!error) {
+    return false;
+  }
+  return error.relatedIds.some((id) => id.startsWith("pcx_"));
+}
+
 export type BuyerContextWorkspaceProps = {
   room: RoomState;
   actions: RoomActions;
@@ -271,7 +278,7 @@ export function BuyerContextWorkspace(props: BuyerContextWorkspaceProps) {
 
   const visibleFeedback =
     feedback ??
-    (props.lastError
+    (isBuyerContextError(props.lastError)
       ? { kind: "error" as const, message: `${props.lastError.code}: ${props.lastError.message}` }
       : null);
 
