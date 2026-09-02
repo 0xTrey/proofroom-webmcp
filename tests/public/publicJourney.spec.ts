@@ -66,7 +66,7 @@ test("public UI-only canonical journey is clean, persistent, and resettable", as
   await page.getByLabel("Budget ceiling").fill("119000");
   await page.getByRole("button", { name: "Preview calculation" }).click();
   await expect(page.getByText("11.2 mo.")).toBeVisible();
-  await page.getByRole("button", { name: "Apply reviewed assumptions" }).click();
+  await page.getByRole("button", { name: "Use these reviewed numbers" }).click();
   await expect(page.getByText(/Applied 1 assumption change/)).toBeVisible();
 
   await page.getByRole("button", { name: "Fill the honest sample draft" }).click();
