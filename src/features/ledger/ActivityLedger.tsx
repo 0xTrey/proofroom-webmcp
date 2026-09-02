@@ -92,7 +92,7 @@ function EventRow({ event }: { event: ActivityEvent }) {
       <td data-label="Safe detail">
         <p>{event.inputSummary}</p>
         <details className="ledger-event__detail">
-          <summary>Inspect safe metadata</summary>
+          <summary>Technical receipt details</summary>
           <dl>
             <div>
               <dt>Input digest</dt>
@@ -122,10 +122,10 @@ export function ActivityLedger({ room }: { room: RoomState }) {
     <section className="activity-ledger" aria-labelledby="activity-ledger-heading">
       <header className="activity-ledger__head">
         <div>
-          <h2 id="activity-ledger-heading">Inspect the authoritative activity register.</h2>
+          <h2 id="activity-ledger-heading">Official activity history</h2>
           <p>
-            This workspace projects the room ledger only. Filters and pagination never change the
-            room or create an event.
+            See who changed what, when it changed, and whether the action came from a person, agent,
+            or system. Filters and pagination never change the room or create an event.
           </p>
         </div>
         <p className="mono">newest first / 400 event cap</p>
@@ -190,14 +190,14 @@ export function ActivityLedger({ room }: { room: RoomState }) {
           <span aria-hidden="true">○</span>
           <div>
             <h3>No ledger events match these filters.</h3>
-            <p>Change one or more filters. The authoritative ledger remains unchanged.</p>
+            <p>Change one or more filters. The official activity history remains unchanged.</p>
           </div>
         </div>
       ) : (
         <div className="activity-ledger__table-wrap">
           <table className="activity-ledger__table">
             <caption className="visually-hidden">
-              Authoritative room activity, newest event first
+              Official room activity, newest event first
             </caption>
             <thead>
               <tr>

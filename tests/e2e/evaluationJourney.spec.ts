@@ -45,6 +45,9 @@ test("item 7 requirement and evidence journey persists the authoritative project
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   await expect(page.locator("[data-requirement-status='unknown']")).toHaveCount(6);
 
+  const salesforceRequirement = page.getByRole("button", { name: /Salesforce integration/ });
+  await salesforceRequirement.click();
+
   const search = page.getByRole("searchbox", { name: "Evidence query" });
   await search.fill("Salesforce");
   await search.press("Enter");
@@ -67,7 +70,7 @@ test("item 7 requirement and evidence journey persists the authoritative project
     .press("Enter");
   await expectStatus(page, "req_salesforce", "supported");
 
-  await page.getByRole("button", { name: "Apply fictional review set" }).click();
+  await page.getByRole("button", { name: "Run the sample evidence check" }).click();
   for (const [requirementId, status] of Object.entries(FINAL_STATUSES)) {
     await expectStatus(page, requirementId as keyof typeof FINAL_STATUSES, status);
   }

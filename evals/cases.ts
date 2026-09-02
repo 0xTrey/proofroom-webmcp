@@ -1,4 +1,6 @@
 import type { ActionResult } from "../src/domain/errors.ts";
+import { proposeBuyerContextInputSchema } from "../src/domain/actions/inputs.ts";
+import { inputDigest } from "../src/domain/hash.ts";
 import { LIMITS } from "../src/domain/schemas.ts";
 import type { RoomState } from "../src/domain/types.ts";
 import { MERIDIAN_CONTEXT_DRAFT } from "../src/fixtures/buyer.ts";
@@ -134,6 +136,59 @@ function exactIds(actual: readonly string[], expected: readonly string[]): boole
   return JSON.stringify([...actual].sort()) === JSON.stringify([...expected].sort());
 }
 
+const EXPECTED_STAGING_PROFILE_ID = "meridian_bank";
+
+/**
+ * Fixture-backed setup may still import MERIDIAN_CONTEXT_DRAFT directly because it
+ * establishes room state rather than claiming prompt-derived tool arguments.
+ */
+function extractStagingTemplateInput(readResult: WebMcpToolResult) {
+  if (readResult.isError) {
+    throw new Error("get_room_state failed before buyer context could be staged.");
+  }
+  const payload = record(readResult.structuredContent);
+  const template = record(payload.buyerContextStagingTemplate);
+  if (template.source !== "fictional_room_profile") {
+    throw new Error("buyerContextStagingTemplate has an invalid source.");
+  }
+  if (template.profileId !== EXPECTED_STAGING_PROFILE_ID) {
+    throw new Error("buyerContextStagingTemplate has an unacknowledged profileId.");
+  }
+  if (!template.input) {
+    throw new Error("buyerContextStagingTemplate is missing input.");
+  }
+  return proposeBuyerContextInputSchema.parse(template.input);
+}
+
+function proposalMatchesReadTemplate(observation: CaseObservation): AssertionResult {
+  const readCall = callAt(observation, "get_room_state");
+  const proposeCall = callAt(observation, "propose_buyer_context");
+  if (!readCall || !proposeCall) {
+    return result(false, "Missing get_room_state or propose_buyer_context call.");
+  }
+  if (proposeCall.index !== readCall.index + 1) {
+    return result(false, "The proposal call is not immediately after the read call.");
+  }
+  const template = record(structured(readCall).buyerContextStagingTemplate);
+  if (template.source !== "fictional_room_profile" || template.profileId !== EXPECTED_STAGING_PROFILE_ID) {
+    return result(false, "The read template is missing or invalid.");
+  }
+  let validated;
+  try {
+    validated = proposeBuyerContextInputSchema.parse(template.input);
+  } catch {
+    return result(false, "The read template input failed schema validation.");
+  }
+  const templateDigest = inputDigest(validated);
+  const pass = proposeCall.inputDigest === templateDigest;
+  return result(
+    pass,
+    pass
+      ? "The proposal input matches the immediately preceding read template."
+      : "The proposal input diverged from the read template.",
+  );
+}
+
 async function attachCanonicalReview(context: ExecutorContext): Promise<void> {
   for (const attachment of CANONICAL_REVIEW_SET) {
     await context.call("attach_evidence", {
@@ -184,8 +239,9 @@ export async function applySetup(setup: string, handle: RoomStoreHandle): Promis
 
 export const CASE_EXECUTORS: Readonly<Record<string, CaseExecutor>> = {
   async eval_001_canonical_journey(context) {
-    await context.call("get_room_state", { detail: "requirements" });
-    await context.call("propose_buyer_context", MERIDIAN_CONTEXT_DRAFT);
+    const roomState = await context.call("get_room_state", { detail: "requirements" });
+    const templateInput = extractStagingTemplateInput(roomState);
+    await context.call("propose_buyer_context", templateInput);
     await context.call("search_product_evidence", {
       query: "Salesforce EU residency SAML SOC 2 campaign volume payback",
       limit: 12,
@@ -237,8 +293,9 @@ export const CASE_EXECUTORS: Readonly<Record<string, CaseExecutor>> = {
   },
 
   async eval_006_make_this_relevant(context) {
-    await context.call("get_room_state", { detail: "summary" });
-    await context.call("propose_buyer_context", MERIDIAN_CONTEXT_DRAFT);
+    const roomState = await context.call("get_room_state", { detail: "summary" });
+    const templateInput = extractStagingTemplateInput(roomState);
+    await context.call("propose_buyer_context", templateInput);
     return {};
   },
 
@@ -335,6 +392,7 @@ export const ASSERTION_REGISTRY: Readonly<Record<string, Assertion>> = {
       Boolean(after.stakeholderBriefs.cfo && after.stakeholderBriefs.ciso),
       "Both stakeholder briefs are saved.",
     ),
+  canonical_context_uses_read_template: proposalMatchesReadTemplate,
   canonical_decision_exact: ({ after }) => {
     const proposal = after.decisionProposal;
     return result(
@@ -443,6 +501,7 @@ export const ASSERTION_REGISTRY: Readonly<Record<string, Assertion>> = {
     result(after.buyerContextProposal?.status === "pending", "A pending context proposal exists."),
   context_authority_null: ({ after }) =>
     result(after.approvedBuyerContext === null, "Approved context remains null."),
+  relevance_context_uses_read_template: proposalMatchesReadTemplate,
   no_silent_personalization: ({ after }) =>
     result(
       after.approvedBuyerContext === null && after.buyerContextProposal?.status === "pending",

@@ -1,6 +1,7 @@
 # ProofRoom challenge story
 
-> Local preparation only. No official Devpost draft exists locally, and nothing has been submitted.
+> Local preparation only. Authenticated Devpost project `1402028` exists as an Untitled, empty
+> pre-draft shell. It has no video and has not been submitted.
 
 ## Project name
 
@@ -119,7 +120,9 @@ identity proof and carry no legal meaning.
 
 ## Testing and release proof
 
-The verified release evidence records:
+### Verified public baseline
+
+The verified release evidence records the deployed public build only:
 
 - 423 unit and component tests passed.
 - 38 end-to-end tests passed.
@@ -134,6 +137,23 @@ The verified release evidence records:
   as browser diagnostics only after exact phase, source, entry-integrity, CSP, execution, and count
   checks.
 - Live natural-language browser-agent selection remains `not_run`.
+
+Public verification does not cover the landing page, room guide, plain-language work, or
+staging-template provenance changes in the current local candidate.
+
+### Current local candidate
+
+The current dirty working tree passed local QA with:
+
+- 483 unit and component tests passed.
+- 45 end-to-end tests passed.
+- 52 accessibility checks passed.
+- 12 deterministic eval cases passed with 60 assertions.
+
+This candidate is not committed, pushed, deployed, or reflected in Devpost. The current submission
+gallery is captured locally in
+[`artifacts/visual-audit/016-submission-gallery/`](../../artifacts/visual-audit/016-submission-gallery/)
+and documented in [`screenshot-plan.md`](screenshot-plan.md).
 
 The [release receipt](../../artifacts/release/release-receipt.json) records deployment commit
 `82ee322b4e4e8c8658e8eed605431974d084afca` and Cloudflare deployment version

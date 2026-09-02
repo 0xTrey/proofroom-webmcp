@@ -3,41 +3,38 @@
  *
  * The base palette comes from the spec. The `-ink` variants exist because the
  * raw accent values do not reach WCAG AA as small text on the paper surface.
- * Measured contrast against --paper (#f1ecdf):
- *   --agent    #2667ff  4.04:1  accent, marks, borders, large type only
- *   --agent-ink #1b4fd0 5.81:1  body and small text
- *   --gap      #c7532f  3.77:1  accent, marks, borders, large type only
- *   --gap-ink  #9c3c1d  5.78:1  body and small text
- *   --ink-soft #29333c 10.9:1   secondary body text
+ * Small accent text uses darker ink variants to retain WCAG AA contrast.
  * Acid green is never used as text on paper. It is a fill behind ink text or a
  * mark on the deep ink panel.
  */
 
 :root {
   /* Surfaces */
-  --paper: #f1ecdf;
-  --paper-light: #faf7ef;
-  --paper-sunk: #e7e0cd;
-  --ink: #111820;
-  --ink-soft: #29333c;
-  --ink-panel: #111820;
+  --paper: #e3e3df;
+  --paper-light: #f4f4ef;
+  --paper-sunk: #d3d3ce;
+  --ink: #11110f;
+  --ink-soft: #464641;
+  --ink-panel: #090a09;
+  --ink-secondary: #1b1c1a;
 
   /* Semantic accents */
-  --verified: #b8f229;
-  --agent: #2667ff;
-  --agent-ink: #1b4fd0;
-  --gap: #c7532f;
-  --gap-ink: #9c3c1d;
+  --verified: #08dfad;
+  --agent: #08dfad;
+  --agent-ink: #00624d;
+  --gap: #df4008;
+  --gap-ink: #a32b00;
+  --gap-on-dark: #ff8055;
 
   /* Lines and elevation */
-  --line: rgba(17, 24, 32, 0.16);
-  --line-strong: rgba(17, 24, 32, 0.42);
-  --line-inverse: rgba(241, 236, 223, 0.22);
-  --focus: #1b4fd0;
+  --line: rgba(17, 17, 15, 0.16);
+  --line-strong: rgba(17, 17, 15, 0.42);
+  --line-inverse: rgba(227, 227, 223, 0.24);
+  --focus: #a32b00;
 
   /* Type */
-  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
-  --font-ui: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Black Ops One", Impact, sans-serif;
+  --font-ui: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
 
   --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
@@ -46,6 +43,7 @@
   --step-2: clamp(1.4rem, 1.24rem + 0.8vw, 1.85rem);
   --step-3: clamp(1.85rem, 1.5rem + 1.7vw, 2.9rem);
   --step-4: clamp(2.4rem, 1.6rem + 3.6vw, 4.6rem);
+  --step-5: clamp(3rem, 2rem + 5vw, 7rem);
 
   /* Space */
   --space-1: 0.25rem;

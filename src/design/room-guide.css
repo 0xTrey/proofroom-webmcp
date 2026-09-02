@@ -1,0 +1,257 @@
+.room-guide {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.55fr) minmax(0, 1.45fr);
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper-light);
+  box-shadow: 0 0.5rem 1rem rgba(29, 29, 29, 0.08);
+}
+
+.room-guide__summary {
+  grid-row: 1 / span 2;
+  padding: var(--space-4) var(--space-5);
+  border-right: 1px solid var(--line-strong);
+  background: var(--ink);
+  color: var(--paper-light);
+}
+
+.room-guide__progress {
+  width: 100%;
+  height: 0.35rem;
+  border: 0;
+  border-radius: 0;
+  background: var(--paper-sunk);
+  color: var(--agent);
+}
+
+.room-guide__progress::-webkit-progress-bar {
+  background: var(--paper-sunk);
+}
+
+.room-guide__progress::-webkit-progress-value {
+  background: var(--agent);
+}
+
+.room-guide__progress::-moz-progress-bar {
+  background: var(--agent);
+}
+
+.room-guide__desktop-steps,
+.room-guide__mobile-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.room-guide__desktop-steps li,
+.room-guide__mobile-steps li {
+  min-width: 0;
+  border-right: 1px solid var(--line);
+}
+
+.room-guide__desktop-steps li:last-child,
+.room-guide__mobile-steps li:last-child {
+  border-right: 0;
+}
+
+.room-guide__desktop-steps button,
+.room-guide__mobile-steps button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 6.4rem;
+  padding: var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.room-guide__desktop-steps button:hover,
+.room-guide__desktop-steps li[aria-current="step"] button,
+.room-guide__mobile-steps button:hover,
+.room-guide__mobile-steps li[aria-current="step"] button {
+  background: color-mix(in srgb, var(--paper-light) 90%, var(--agent) 10%);
+}
+
+.room-guide li[data-guide-state="done"] {
+  box-shadow: inset 0 0.3rem 0 var(--verified);
+}
+
+.room-guide li[data-guide-state="next"],
+.room-guide li[data-guide-state="review"],
+.room-guide li[data-guide-state="ready"] {
+  box-shadow: inset 0 0.3rem 0 var(--gap);
+}
+
+.room-guide li button > span:nth-child(2) {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.room-guide li small,
+.room-guide__state {
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+}
+
+.room-guide li strong {
+  font-size: var(--step--1);
+}
+
+.room-guide__state {
+  text-align: right;
+}
+
+.room-guide li[data-guide-state="done"] .room-guide__mark {
+  background: var(--verified);
+  color: var(--ink);
+}
+
+.room-guide__mobile-next {
+  display: none;
+}
+
+.room-guide__summary h2 {
+  font-size: var(--step-1);
+  letter-spacing: 0;
+}
+
+.room-guide__summary p {
+  margin-top: var(--space-2);
+  color: color-mix(in srgb, var(--paper-light) 76%, transparent);
+  font-size: var(--step--1);
+}
+
+.room-guide__summary .mono {
+  display: block;
+  margin-top: var(--space-3);
+  color: var(--verified);
+}
+
+.room-guide__orientation {
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.room-guide__next {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 2.75rem;
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--gap);
+  background: var(--gap-ink);
+  color: var(--paper-light);
+  cursor: pointer;
+  font-weight: 700;
+  text-align: left;
+}
+
+.room-guide__details {
+  display: none;
+}
+
+.room-guide__mark {
+  display: grid;
+  place-items: center;
+  grid-row: span 2;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 1px solid currentColor;
+  color: var(--agent-ink);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+
+[id$="-task"] {
+  scroll-margin-top: 9rem;
+}
+
+@media (max-width: 1000px) {
+  .room-guide {
+    position: static;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .room-guide__summary {
+    grid-row: auto;
+    border-right: 0;
+  }
+
+}
+
+@media (max-width: 680px) {
+  .room-guide {
+    box-shadow: none;
+  }
+
+  .room-guide__summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .room-guide__desktop-title,
+  .room-guide__desktop-next,
+  .room-guide__progress-label,
+  .room-guide__mobile-next {
+    display: none;
+  }
+
+  .room-guide__orientation {
+    flex: 1 1 100%;
+    margin-top: 0;
+    font-size: 0.58rem;
+  }
+
+  .room-guide__progress {
+    flex: 1 1 100%;
+    height: 0.2rem;
+  }
+
+  .room-guide__next {
+    flex: 1 1 auto;
+    min-height: 2rem;
+    margin-top: 0;
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.72rem;
+  }
+
+  .room-guide__desktop-steps {
+    display: none;
+  }
+
+  .room-guide__details {
+    display: block;
+    background: var(--paper-light);
+  }
+
+  .room-guide__details summary {
+    min-height: 2.35rem;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--step--1);
+  }
+
+  .room-guide__mobile-steps button {
+    min-height: 3.5rem;
+  }
+
+  [id$="-task"] {
+    scroll-margin-top: var(--space-4);
+  }
+}

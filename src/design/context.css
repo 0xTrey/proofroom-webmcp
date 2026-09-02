@@ -362,7 +362,7 @@
 }
 
 .proof-desk__unresolved strong {
-  color: #ffb49d;
+  color: var(--gap-on-dark);
 }
 
 .commercial-sheet__candidate {

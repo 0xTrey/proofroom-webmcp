@@ -51,6 +51,10 @@ async function selectRequirement(user: ReturnType<typeof userEvent.setup>, label
   await user.click(within(register).getByRole("button", { name: new RegExp(label) }));
 }
 
+async function selectSalesforceRequirement(user: ReturnType<typeof userEvent.setup>) {
+  await selectRequirement(user, "Salesforce integration");
+}
+
 describe("requirement and evidence workspace", () => {
   it("keeps six requirements in stable order and opens exact detail with keyboard controls", async () => {
     const handle = createTestRoom();
@@ -70,8 +74,8 @@ describe("requirement and evidence workspace", () => {
         expect.stringContaining("req_payback"),
       ]),
     );
-    expect(controls[0]).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("heading", { name: "Salesforce integration" })).toBeVisible();
+    expect(controls.find((control) => control.getAttribute("aria-pressed") === "true")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "EU data residency" })).toBeVisible();
 
     const euControl = within(register).getByRole("button", { name: /EU data residency/ });
     euControl.focus();
@@ -82,7 +86,7 @@ describe("requirement and evidence workspace", () => {
     expect(screen.getByText("EU data region storage")).toBeVisible();
     expect(screen.getByText("eu_data_region_storage")).toBeVisible();
     expect(screen.getByText("EU subprocessor disclosure")).toBeVisible();
-    expect(screen.getByText(/Unknown is an intentional evidence result/)).toBeVisible();
+    expect(screen.getByText(/Unknown: no eligible record proves the required conditions yet/)).toBeVisible();
   });
 
   it("runs matched and unmatched search through the shared room action", async () => {
@@ -90,6 +94,7 @@ describe("requirement and evidence workspace", () => {
     const user = userEvent.setup();
     render(<EvaluationHarness handle={handle} />);
 
+    await selectSalesforceRequirement(user);
     const input = screen.getByRole("searchbox", { name: "Evidence query" });
     await user.type(input, "Salesforce");
     await user.click(screen.getByRole("button", { name: "Search evidence" }));
@@ -121,6 +126,7 @@ describe("requirement and evidence workspace", () => {
     document.body.style.overflow = "scroll";
     const view = render(<EvaluationHarness handle={handle} />);
 
+    await selectSalesforceRequirement(user);
     await user.click(screen.getByRole("button", { name: "Salesforce" }));
     const inspect = within(
       screen.getByRole("list", { name: "Evidence search results" }),
@@ -195,6 +201,7 @@ describe("requirement and evidence workspace", () => {
     const user = userEvent.setup();
     render(<EvaluationHarness handle={handle} />);
 
+    await selectSalesforceRequirement(user);
     await user.click(screen.getByRole("button", { name: "Salesforce" }));
     await user.click(screen.getByRole("button", { name: /Attach ev_002 to Salesforce integration/ }));
 
@@ -255,7 +262,7 @@ describe("requirement and evidence workspace", () => {
     expect(feedback).toHaveTextContent("EVIDENCE_INELIGIBLE");
     const failedAtRevision = handle.room().revision;
 
-    await user.click(screen.getByRole("button", { name: "Stage fictional Meridian Bank draft" }));
+    await user.click(screen.getByRole("button", { name: "Review the sample buyer profile" }));
 
     expect(handle.room().revision).toBe(failedAtRevision + 1);
     await waitFor(() =>
@@ -295,6 +302,7 @@ describe("requirement and evidence workspace", () => {
     const user = userEvent.setup();
     render(<EvaluationHarness handle={handle} />);
 
+    await selectSalesforceRequirement(user);
     await user.click(screen.getByRole("button", { name: "Salesforce" }));
     await user.click(screen.getByRole("button", { name: /Attach ev_002 to Salesforce integration/ }));
     await user.click(screen.getByRole("button", { name: /Attach ev_003 to Salesforce integration/ }));
@@ -345,12 +353,12 @@ describe("requirement and evidence workspace", () => {
     );
   });
 
-  it("applies the fictional review set through six shared actions and lands the exact status shape", async () => {
+  it("applies the sample evidence check through six shared actions and lands the exact status shape", async () => {
     const handle = createTestRoom();
     const user = userEvent.setup();
     render(<EvaluationHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Apply fictional review set" }));
+    await user.click(screen.getByRole("button", { name: "Run the sample evidence check" }));
 
     expect(
       Object.fromEntries(
@@ -377,7 +385,7 @@ describe("requirement and evidence workspace", () => {
         .activityLedger.slice(-6)
         .map((event) => [event.origin, event.action]),
     ).toEqual(Array.from({ length: 6 }, () => ["ui", "attach_evidence"]));
-    expect(screen.getByRole("button", { name: "Fictional review set applied" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Sample evidence check applied" })).toBeDisabled();
     expect(screen.getByText(/req_eu_residency: unknown from ev_007, ev_008/)).toBeVisible();
     expect(screen.getByText(/req_sso: partially supported from ev_006/)).toBeVisible();
   });
@@ -404,11 +412,11 @@ describe("requirement and evidence workspace", () => {
     const user = userEvent.setup();
     render(<EvaluationHarness handle={handle} />);
 
-    const apply = screen.getByRole("button", { name: "Apply fictional review set" });
+    const apply = screen.getByRole("button", { name: "Run the sample evidence check" });
     expect(apply).toBeEnabled();
     await user.click(apply);
 
-    expect(screen.getByRole("button", { name: "Fictional review set applied" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Sample evidence check applied" })).toBeDisabled();
     expect(
       handle
         .room()
@@ -422,7 +430,7 @@ describe("requirement and evidence workspace", () => {
     const user = userEvent.setup();
     render(<EvaluationHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Apply fictional review set" }));
+    await user.click(screen.getByRole("button", { name: "Run the sample evidence check" }));
     await selectRequirement(user, "Twenty campaigns per month");
     await user.click(screen.getByRole("button", { name: "campaign throughput" }));
     await user.click(
@@ -494,9 +502,9 @@ describe("requirement and evidence workspace", () => {
 
     render(<EvaluationHarness handle={handle} includeContext />);
 
-    const context = screen.getByRole("complementary", { name: "No buyer context is approved." });
+    const context = screen.getByRole("complementary", { name: "No buyer profile is approved yet." });
     expect(within(context).queryByText(/EVIDENCE_INELIGIBLE/)).not.toBeInTheDocument();
-    expect(within(context).getByText("Context actions will be reported here.")).toBeVisible();
+    expect(within(context).getByText("Buyer profile actions will be reported here.")).toBeVisible();
     expect(screen.getByText(/EVIDENCE_INELIGIBLE/)).toBeVisible();
   });
 

@@ -38,7 +38,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         <h1 className="display">This surface stopped rendering</h1>
         <p>
           The room state is still available. Try rendering this surface again, or open the shared
-          reset confirmation to return to the canonical fixture.
+          reset confirmation to return to the demo starting point.
         </p>
         <div className="reset-dialog__actions">
           <button

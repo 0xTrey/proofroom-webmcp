@@ -1,0 +1,3957 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proofroom.local/artifacts/rc-gate/rc-gate.schema.json",
+  "title": "ProofRoom release-candidate gate receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "status",
+    "recordingEvidenceReady",
+    "submissionTechnicalEvidenceReady",
+    "candidate",
+    "lanes",
+    "localQa",
+    "deterministic",
+    "responsesApi",
+    "publicDeployment",
+    "nativeWebMcp",
+    "compatibleBrowserAgent",
+    "productInvariants",
+    "blockingReasons"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "maxLength": 32,
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,3})?Z$"
+    },
+    "status": {
+      "enum": [
+        "ready",
+        "blocked"
+      ]
+    },
+    "recordingEvidenceReady": {
+      "type": "boolean"
+    },
+    "submissionTechnicalEvidenceReady": {
+      "type": "boolean"
+    },
+    "candidate": {
+      "$ref": "#/$defs/candidate"
+    },
+    "lanes": {
+      "$ref": "#/$defs/lanes"
+    },
+    "localQa": {
+      "$ref": "#/$defs/localQa"
+    },
+    "deterministic": {
+      "$ref": "#/$defs/deterministicLane"
+    },
+    "responsesApi": {
+      "$ref": "#/$defs/responsesLane"
+    },
+    "publicDeployment": {
+      "$ref": "#/$defs/publicDeploymentLane"
+    },
+    "nativeWebMcp": {
+      "$ref": "#/$defs/nativeLane"
+    },
+    "compatibleBrowserAgent": {
+      "$ref": "#/$defs/compatibleBrowserAgentLane"
+    },
+    "productInvariants": {
+      "$ref": "#/$defs/productInvariants"
+    },
+    "blockingReasons": {
+      "type": "array",
+      "maxItems": 48,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/blockingReason"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "WORKTREE_DIRTY"
+              },
+              "lane": {
+                "const": "localCandidate"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "LOCAL_QA_MISSING"
+              },
+              "lane": {
+                "const": "localCandidate"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "LOCAL_QA_FAILED"
+              },
+              "lane": {
+                "const": "localCandidate"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "LOCAL_QA_STALE_COMMIT"
+              },
+              "lane": {
+                "const": "localCandidate"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "LOCAL_QA_STALE_STATUS"
+              },
+              "lane": {
+                "const": "localCandidate"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "LOCAL_QA_STALE_EVAL_DIGEST"
+              },
+              "lane": {
+                "const": "localCandidate"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "DETERMINISTIC_INVALID"
+              },
+              "lane": {
+                "const": "deterministic"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "DETERMINISTIC_COUNT_MISMATCH"
+              },
+              "lane": {
+                "const": "deterministic"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "DETERMINISTIC_TOOL_MISMATCH"
+              },
+              "lane": {
+                "const": "deterministic"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "DETERMINISTIC_MANIFEST_DIGEST_MISMATCH"
+              },
+              "lane": {
+                "const": "deterministic"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "DETERMINISTIC_SEQUENCE_DIGEST_MISMATCH"
+              },
+              "lane": {
+                "const": "deterministic"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RESPONSES_NOT_RUN"
+              },
+              "lane": {
+                "const": "responsesApi"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RESPONSES_FAILED"
+              },
+              "lane": {
+                "const": "responsesApi"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RESPONSES_INVALID"
+              },
+              "lane": {
+                "const": "responsesApi"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RESPONSES_STALE_CONTRACT"
+              },
+              "lane": {
+                "const": "responsesApi"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RESPONSES_CASE_MISMATCH"
+              },
+              "lane": {
+                "const": "responsesApi"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RESPONSES_SCORE_LOW"
+              },
+              "lane": {
+                "const": "responsesApi"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RESPONSES_TRUTH_LABEL_FORGED"
+              },
+              "lane": {
+                "const": "responsesApi"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PUBLIC_RELEASE_MISSING"
+              },
+              "lane": {
+                "const": "publicDeployment"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RELEASE_DOCUMENT_INVALID"
+              },
+              "lane": {
+                "const": "publicDeployment"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RELEASE_DOCUMENT_INVALID"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RELEASE_EVIDENCE_INVALID"
+              },
+              "lane": {
+                "const": "publicDeployment"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RELEASE_EVIDENCE_INVALID"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "SOURCE_INVALID"
+              },
+              "lane": {
+                "const": "deterministic"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "SOURCE_INVALID"
+              },
+              "lane": {
+                "const": "responsesApi"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "SOURCE_INVALID"
+              },
+              "lane": {
+                "const": "compatibleBrowserAgent"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PUBLIC_RELEASE_INVALID"
+              },
+              "lane": {
+                "const": "publicDeployment"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PUBLIC_RELEASE_STALE"
+              },
+              "lane": {
+                "const": "publicDeployment"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PUBLIC_RELEASE_COMMIT_MISMATCH"
+              },
+              "lane": {
+                "const": "publicDeployment"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PUBLIC_RELEASE_DIGEST_MISMATCH"
+              },
+              "lane": {
+                "const": "publicDeployment"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PUBLIC_RELEASE_ORIGIN_MISMATCH"
+              },
+              "lane": {
+                "const": "publicDeployment"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "NATIVE_WEBMCP_INVALID"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "NATIVE_WEBMCP_DIGEST_MISMATCH"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "NATIVE_WEBMCP_ORIGIN_MISMATCH"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "NATIVE_WEBMCP_TOOL_MISMATCH"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "NATIVE_WEBMCP_RELOAD_MISMATCH"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "NATIVE_WEBMCP_EXECUTION_FAILED"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "NATIVE_WEBMCP_ENTRY_INTEGRITY_FAILED"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "NATIVE_WEBMCP_STALE"
+              },
+              "lane": {
+                "const": "nativeWebMcp"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "COMPATIBLE_BROWSER_AGENT_NOT_RUN"
+              },
+              "lane": {
+                "const": "compatibleBrowserAgent"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "COMPATIBLE_BROWSER_AGENT_FAILED"
+              },
+              "lane": {
+                "const": "compatibleBrowserAgent"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "COMPATIBLE_BROWSER_AGENT_MISSING_CASES"
+              },
+              "lane": {
+                "const": "compatibleBrowserAgent"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "COMPATIBLE_BROWSER_AGENT_PROMPT_MISMATCH"
+              },
+              "lane": {
+                "const": "compatibleBrowserAgent"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "COMPATIBLE_BROWSER_AGENT_BUILD_MISMATCH"
+              },
+              "lane": {
+                "const": "compatibleBrowserAgent"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "COMPATIBLE_BROWSER_AGENT_ORIGIN_MISMATCH"
+              },
+              "lane": {
+                "const": "compatibleBrowserAgent"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "COMPATIBLE_BROWSER_AGENT_CASE_FAILED"
+              },
+              "lane": {
+                "const": "compatibleBrowserAgent"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PRODUCT_INVARIANT_TOOL_COUNT"
+              },
+              "lane": {
+                "const": "productInvariants"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PRODUCT_INVARIANT_TOOL_MISMATCH"
+              },
+              "lane": {
+                "const": "productInvariants"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PRODUCT_INVARIANT_HUMAN_ONLY_MISMATCH"
+              },
+              "lane": {
+                "const": "productInvariants"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PRODUCT_INVARIANT_HUMAN_ONLY_EXPOSED"
+              },
+              "lane": {
+                "const": "productInvariants"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PRODUCT_INVARIANT_HUMAN_ONLY_SET"
+              },
+              "lane": {
+                "const": "productInvariants"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PRODUCT_INVARIANT_APPROVAL_GATE_MISSING"
+              },
+              "lane": {
+                "const": "productInvariants"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "PRODUCT_INVARIANT_EU_STATUS"
+              },
+              "lane": {
+                "const": "productInvariants"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RECEIPT_SOURCE_CHANGED"
+              },
+              "lane": {
+                "const": "receipt"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "code",
+              "lane"
+            ],
+            "properties": {
+              "code": {
+                "const": "RECEIPT_VALIDATION_ERROR"
+              },
+              "lane": {
+                "const": "receipt"
+              }
+            }
+          },
+          "minContains": 0,
+          "maxContains": 1
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ready"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "blockingReasons": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "recordingEvidenceReady": {
+            "const": true
+          },
+          "submissionTechnicalEvidenceReady": {
+            "const": true
+          },
+          "candidate": {
+            "type": "object",
+            "properties": {
+              "filteredClean": {
+                "const": true
+              }
+            }
+          },
+          "localQa": {
+            "type": "object",
+            "required": [
+              "status",
+              "digest",
+              "candidateCommit",
+              "workspaceStatusDigest",
+              "workspaceParity",
+              "evalArtifactDigests"
+            ],
+            "properties": {
+              "status": {
+                "const": "passed"
+              },
+              "digest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "candidateCommit": {
+                "$ref": "#/$defs/commit"
+              },
+              "workspaceStatusDigest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "workspaceParity": {
+                "const": true
+              },
+              "evalArtifactDigests": {
+                "type": "object",
+                "required": [
+                  "deterministicReport",
+                  "responsesCurrent",
+                  "liveAgentCurrent"
+                ],
+                "properties": {
+                  "deterministicReport": {
+                    "$ref": "#/$defs/sha256"
+                  },
+                  "responsesCurrent": {
+                    "$ref": "#/$defs/sha256"
+                  },
+                  "liveAgentCurrent": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                }
+              }
+            }
+          },
+          "lanes": {
+            "type": "object",
+            "properties": {
+              "localCandidate": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "ready"
+                  },
+                  "digest": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                }
+              },
+              "publicDeployment": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "ready"
+                  },
+                  "digest": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                }
+              },
+              "nativeWebMcp": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "passed"
+                  },
+                  "digest": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                }
+              },
+              "responsesApi": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "passed"
+                  },
+                  "digest": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                }
+              },
+              "compatibleBrowserAgent": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "verified"
+                  },
+                  "digest": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                }
+              },
+              "deterministic": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "passed"
+                  },
+                  "digest": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                }
+              },
+              "productInvariants": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "passed"
+                  },
+                  "digest": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                }
+              }
+            }
+          },
+          "deterministic": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "passed"
+              },
+              "passedCases": {
+                "const": 12
+              },
+              "failedCases": {
+                "const": 0
+              },
+              "assertions": {
+                "const": 60
+              },
+              "manifestDigest": {
+                "const": "1db51bfbafb2ee68543905300e2efaf6ef1d0970bf156eacb6edcfe7e1c1ee4e"
+              },
+              "expectedSequenceDigest": {
+                "const": "4be96767aca3f2604570e4a9b9ec3f89c1b77fcce71c2338d6582ab392fb8df2"
+              },
+              "toolNames": {
+                "$ref": "#/$defs/canonicalToolNames"
+              }
+            }
+          },
+          "responsesApi": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "passed"
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "startedAt": {
+                "$ref": "#/$defs/utcDateTime"
+              },
+              "completedAt": {
+                "$ref": "#/$defs/utcDateTime"
+              },
+              "caseIds": {
+                "$ref": "#/$defs/responsesCaseIds"
+              },
+              "aggregateScore": {
+                "const": 100
+              },
+              "casePassCount": {
+                "const": 7
+              },
+              "caseFailCount": {
+                "const": 0
+              },
+              "contractDigest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "truthLabels": {
+                "$ref": "#/$defs/truthLabelsReady"
+              }
+            }
+          },
+          "publicDeployment": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "ready"
+              },
+              "releaseId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "state": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "sourceCommit": {
+                "$ref": "#/$defs/commit"
+              },
+              "deploymentCommit": {
+                "$ref": "#/$defs/commit"
+              },
+              "deploymentId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "publicOrigin": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              },
+              "deployedAt": {
+                "$ref": "#/$defs/utcDateTime"
+              },
+              "verifiedAt": {
+                "$ref": "#/$defs/utcDateTime"
+              },
+              "httpReceiptDigest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "nativeReceiptDigest": {
+                "$ref": "#/$defs/sha256"
+              }
+            }
+          },
+          "nativeWebMcp": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "passed"
+              },
+              "digest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "product": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "headed": {
+                "const": true
+              },
+              "toolCountBefore": {
+                "const": 9
+              },
+              "toolCountAfter": {
+                "const": 9
+              },
+              "executionStatus": {
+                "const": "passed"
+              },
+              "publicOrigin": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              },
+              "entryPath": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              },
+              "entrySha256": {
+                "$ref": "#/$defs/sha256"
+              },
+              "entryByteCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 50000000
+              },
+              "cspParity": {
+                "const": true
+              },
+              "applicationErrorTotal": {
+                "const": 0
+              }
+            }
+          },
+          "compatibleBrowserAgent": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "verified"
+              },
+              "browserAgentName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "browserVersion": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "testedOrigin": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              },
+              "appBuildIdentifier": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "verifiedAt": {
+                "$ref": "#/$defs/utcDateTime"
+              },
+              "casePassCount": {
+                "const": 12
+              },
+              "caseFailCount": {
+                "const": 0
+              },
+              "evidencePaths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 12,
+                "items": {
+                  "$ref": "#/$defs/repoPath"
+                }
+              }
+            }
+          },
+          "productInvariants": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "passed"
+              },
+              "humanOnlyAbsentFromTools": {
+                "const": true
+              },
+              "canonicalEuResidencyStatus": {
+                "const": "unknown"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "blocked"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "blockingReasons": {
+            "type": "array",
+            "minItems": 1
+          },
+          "recordingEvidenceReady": {
+            "const": false
+          },
+          "submissionTechnicalEvidenceReady": {
+            "const": false
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "repoPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.($|/))(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "utcDateTime": {
+      "type": "string",
+      "maxLength": 32,
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,3})?Z$"
+    },
+    "laneStatus": {
+      "enum": [
+        "ready",
+        "blocked",
+        "stale",
+        "passed",
+        "failed",
+        "not_run",
+        "invalid",
+        "verified"
+      ]
+    },
+    "blockingReasonLane": {
+      "enum": [
+        "localCandidate",
+        "publicDeployment",
+        "nativeWebMcp",
+        "responsesApi",
+        "compatibleBrowserAgent",
+        "deterministic",
+        "productInvariants",
+        "receipt"
+      ]
+    },
+    "blockingReasonCode": {
+      "enum": [
+        "WORKTREE_DIRTY",
+        "LOCAL_QA_MISSING",
+        "LOCAL_QA_FAILED",
+        "LOCAL_QA_STALE_COMMIT",
+        "LOCAL_QA_STALE_STATUS",
+        "LOCAL_QA_STALE_EVAL_DIGEST",
+        "DETERMINISTIC_INVALID",
+        "DETERMINISTIC_COUNT_MISMATCH",
+        "DETERMINISTIC_TOOL_MISMATCH",
+        "DETERMINISTIC_MANIFEST_DIGEST_MISMATCH",
+        "DETERMINISTIC_SEQUENCE_DIGEST_MISMATCH",
+        "RESPONSES_NOT_RUN",
+        "RESPONSES_FAILED",
+        "RESPONSES_INVALID",
+        "RESPONSES_STALE_CONTRACT",
+        "RESPONSES_CASE_MISMATCH",
+        "RESPONSES_SCORE_LOW",
+        "RESPONSES_TRUTH_LABEL_FORGED",
+        "PUBLIC_RELEASE_MISSING",
+        "RELEASE_DOCUMENT_INVALID",
+        "RELEASE_EVIDENCE_INVALID",
+        "SOURCE_INVALID",
+        "PUBLIC_RELEASE_INVALID",
+        "PUBLIC_RELEASE_STALE",
+        "PUBLIC_RELEASE_COMMIT_MISMATCH",
+        "PUBLIC_RELEASE_DIGEST_MISMATCH",
+        "PUBLIC_RELEASE_ORIGIN_MISMATCH",
+        "NATIVE_WEBMCP_INVALID",
+        "NATIVE_WEBMCP_DIGEST_MISMATCH",
+        "NATIVE_WEBMCP_ORIGIN_MISMATCH",
+        "NATIVE_WEBMCP_TOOL_MISMATCH",
+        "NATIVE_WEBMCP_RELOAD_MISMATCH",
+        "NATIVE_WEBMCP_EXECUTION_FAILED",
+        "NATIVE_WEBMCP_ENTRY_INTEGRITY_FAILED",
+        "NATIVE_WEBMCP_STALE",
+        "COMPATIBLE_BROWSER_AGENT_NOT_RUN",
+        "COMPATIBLE_BROWSER_AGENT_FAILED",
+        "COMPATIBLE_BROWSER_AGENT_MISSING_CASES",
+        "COMPATIBLE_BROWSER_AGENT_PROMPT_MISMATCH",
+        "COMPATIBLE_BROWSER_AGENT_BUILD_MISMATCH",
+        "COMPATIBLE_BROWSER_AGENT_ORIGIN_MISMATCH",
+        "COMPATIBLE_BROWSER_AGENT_CASE_FAILED",
+        "PRODUCT_INVARIANT_TOOL_COUNT",
+        "PRODUCT_INVARIANT_TOOL_MISMATCH",
+        "PRODUCT_INVARIANT_HUMAN_ONLY_MISMATCH",
+        "PRODUCT_INVARIANT_HUMAN_ONLY_EXPOSED",
+        "PRODUCT_INVARIANT_HUMAN_ONLY_SET",
+        "PRODUCT_INVARIANT_APPROVAL_GATE_MISSING",
+        "PRODUCT_INVARIANT_EU_STATUS",
+        "RECEIPT_SOURCE_CHANGED",
+        "RECEIPT_VALIDATION_ERROR"
+      ]
+    },
+    "blockingReason": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "WORKTREE_DIRTY"
+            },
+            "lane": {
+              "const": "localCandidate"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "LOCAL_QA_MISSING"
+            },
+            "lane": {
+              "const": "localCandidate"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "LOCAL_QA_FAILED"
+            },
+            "lane": {
+              "const": "localCandidate"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "LOCAL_QA_STALE_COMMIT"
+            },
+            "lane": {
+              "const": "localCandidate"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "LOCAL_QA_STALE_STATUS"
+            },
+            "lane": {
+              "const": "localCandidate"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "LOCAL_QA_STALE_EVAL_DIGEST"
+            },
+            "lane": {
+              "const": "localCandidate"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "DETERMINISTIC_INVALID"
+            },
+            "lane": {
+              "const": "deterministic"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "DETERMINISTIC_COUNT_MISMATCH"
+            },
+            "lane": {
+              "const": "deterministic"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "DETERMINISTIC_TOOL_MISMATCH"
+            },
+            "lane": {
+              "const": "deterministic"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "DETERMINISTIC_MANIFEST_DIGEST_MISMATCH"
+            },
+            "lane": {
+              "const": "deterministic"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "DETERMINISTIC_SEQUENCE_DIGEST_MISMATCH"
+            },
+            "lane": {
+              "const": "deterministic"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RESPONSES_NOT_RUN"
+            },
+            "lane": {
+              "const": "responsesApi"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RESPONSES_FAILED"
+            },
+            "lane": {
+              "const": "responsesApi"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RESPONSES_INVALID"
+            },
+            "lane": {
+              "const": "responsesApi"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RESPONSES_STALE_CONTRACT"
+            },
+            "lane": {
+              "const": "responsesApi"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RESPONSES_CASE_MISMATCH"
+            },
+            "lane": {
+              "const": "responsesApi"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RESPONSES_SCORE_LOW"
+            },
+            "lane": {
+              "const": "responsesApi"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RESPONSES_TRUTH_LABEL_FORGED"
+            },
+            "lane": {
+              "const": "responsesApi"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PUBLIC_RELEASE_MISSING"
+            },
+            "lane": {
+              "const": "publicDeployment"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RELEASE_DOCUMENT_INVALID"
+            },
+            "lane": {
+              "const": "publicDeployment"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RELEASE_DOCUMENT_INVALID"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RELEASE_EVIDENCE_INVALID"
+            },
+            "lane": {
+              "const": "publicDeployment"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RELEASE_EVIDENCE_INVALID"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "SOURCE_INVALID"
+            },
+            "lane": {
+              "const": "deterministic"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "SOURCE_INVALID"
+            },
+            "lane": {
+              "const": "responsesApi"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "SOURCE_INVALID"
+            },
+            "lane": {
+              "const": "compatibleBrowserAgent"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PUBLIC_RELEASE_INVALID"
+            },
+            "lane": {
+              "const": "publicDeployment"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PUBLIC_RELEASE_STALE"
+            },
+            "lane": {
+              "const": "publicDeployment"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PUBLIC_RELEASE_COMMIT_MISMATCH"
+            },
+            "lane": {
+              "const": "publicDeployment"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PUBLIC_RELEASE_DIGEST_MISMATCH"
+            },
+            "lane": {
+              "const": "publicDeployment"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PUBLIC_RELEASE_ORIGIN_MISMATCH"
+            },
+            "lane": {
+              "const": "publicDeployment"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "NATIVE_WEBMCP_INVALID"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "NATIVE_WEBMCP_DIGEST_MISMATCH"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "NATIVE_WEBMCP_ORIGIN_MISMATCH"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "NATIVE_WEBMCP_TOOL_MISMATCH"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "NATIVE_WEBMCP_RELOAD_MISMATCH"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "NATIVE_WEBMCP_EXECUTION_FAILED"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "NATIVE_WEBMCP_ENTRY_INTEGRITY_FAILED"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "NATIVE_WEBMCP_STALE"
+            },
+            "lane": {
+              "const": "nativeWebMcp"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "COMPATIBLE_BROWSER_AGENT_NOT_RUN"
+            },
+            "lane": {
+              "const": "compatibleBrowserAgent"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "COMPATIBLE_BROWSER_AGENT_FAILED"
+            },
+            "lane": {
+              "const": "compatibleBrowserAgent"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "COMPATIBLE_BROWSER_AGENT_MISSING_CASES"
+            },
+            "lane": {
+              "const": "compatibleBrowserAgent"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "COMPATIBLE_BROWSER_AGENT_PROMPT_MISMATCH"
+            },
+            "lane": {
+              "const": "compatibleBrowserAgent"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "COMPATIBLE_BROWSER_AGENT_BUILD_MISMATCH"
+            },
+            "lane": {
+              "const": "compatibleBrowserAgent"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "COMPATIBLE_BROWSER_AGENT_ORIGIN_MISMATCH"
+            },
+            "lane": {
+              "const": "compatibleBrowserAgent"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "COMPATIBLE_BROWSER_AGENT_CASE_FAILED"
+            },
+            "lane": {
+              "const": "compatibleBrowserAgent"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PRODUCT_INVARIANT_TOOL_COUNT"
+            },
+            "lane": {
+              "const": "productInvariants"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PRODUCT_INVARIANT_TOOL_MISMATCH"
+            },
+            "lane": {
+              "const": "productInvariants"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PRODUCT_INVARIANT_HUMAN_ONLY_MISMATCH"
+            },
+            "lane": {
+              "const": "productInvariants"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PRODUCT_INVARIANT_HUMAN_ONLY_EXPOSED"
+            },
+            "lane": {
+              "const": "productInvariants"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PRODUCT_INVARIANT_HUMAN_ONLY_SET"
+            },
+            "lane": {
+              "const": "productInvariants"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PRODUCT_INVARIANT_APPROVAL_GATE_MISSING"
+            },
+            "lane": {
+              "const": "productInvariants"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "PRODUCT_INVARIANT_EU_STATUS"
+            },
+            "lane": {
+              "const": "productInvariants"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RECEIPT_SOURCE_CHANGED"
+            },
+            "lane": {
+              "const": "receipt"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "code",
+            "lane",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "const": "RECEIPT_VALIDATION_ERROR"
+            },
+            "lane": {
+              "const": "receipt"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        }
+      ]
+    },
+    "laneReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "sourcePath",
+        "digest",
+        "identifiers"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/laneStatus"
+        },
+        "sourcePath": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identifiers": {
+          "type": "object",
+          "maxProperties": 24,
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "head",
+        "filteredClean",
+        "filteredStatusDigest",
+        "filteredStatusEntryCount"
+      ],
+      "properties": {
+        "head": {
+          "$ref": "#/$defs/commit"
+        },
+        "filteredClean": {
+          "type": "boolean"
+        },
+        "filteredStatusDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "filteredStatusEntryCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        }
+      }
+    },
+    "lanes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "localCandidate",
+        "publicDeployment",
+        "nativeWebMcp",
+        "responsesApi",
+        "compatibleBrowserAgent",
+        "deterministic",
+        "productInvariants"
+      ],
+      "properties": {
+        "localCandidate": {
+          "$ref": "#/$defs/laneReceipt"
+        },
+        "publicDeployment": {
+          "$ref": "#/$defs/laneReceipt"
+        },
+        "nativeWebMcp": {
+          "$ref": "#/$defs/laneReceipt"
+        },
+        "responsesApi": {
+          "$ref": "#/$defs/laneReceipt"
+        },
+        "compatibleBrowserAgent": {
+          "$ref": "#/$defs/laneReceipt"
+        },
+        "deterministic": {
+          "$ref": "#/$defs/laneReceipt"
+        },
+        "productInvariants": {
+          "$ref": "#/$defs/laneReceipt"
+        }
+      }
+    },
+    "localQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourcePath",
+        "digest",
+        "status",
+        "candidateCommit",
+        "workspaceStatusDigest",
+        "workspaceParity",
+        "stepSummary",
+        "evalArtifactDigests"
+      ],
+      "properties": {
+        "sourcePath": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "missing",
+            "invalid"
+          ]
+        },
+        "candidateCommit": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/commit"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "workspaceStatusDigest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "workspaceParity": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stepSummary": {
+          "type": "array",
+          "maxItems": 24,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 80
+              },
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed"
+                ]
+              }
+            }
+          }
+        },
+        "evalArtifactDigests": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "deterministicReport",
+            "responsesCurrent",
+            "liveAgentCurrent"
+          ],
+          "properties": {
+            "deterministicReport": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/sha256"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "responsesCurrent": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/sha256"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "liveAgentCurrent": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/sha256"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "deterministicLane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourcePath",
+        "digest",
+        "manifestDigest",
+        "expectedSequenceDigest",
+        "passedCases",
+        "failedCases",
+        "assertions",
+        "toolNames",
+        "status"
+      ],
+      "properties": {
+        "sourcePath": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "manifestDigest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expectedSequenceDigest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "passedCases": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failedCases": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "assertions": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "toolNames": {
+          "oneOf": [
+            {
+              "type": "array",
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "maxLength": 80
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "invalid"
+          ]
+        }
+      }
+    },
+    "responsesLane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourcePath",
+        "digest",
+        "status",
+        "model",
+        "startedAt",
+        "completedAt",
+        "caseIds",
+        "aggregateScore",
+        "casePassCount",
+        "caseFailCount",
+        "contractDigest",
+        "truthLabels"
+      ],
+      "properties": {
+        "sourcePath": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_run",
+            "invalid"
+          ]
+        },
+        "model": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "startedAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "completedAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "caseIds": {
+          "oneOf": [
+            {
+              "type": "array",
+              "maxItems": 12,
+              "items": {
+                "type": "string",
+                "maxLength": 80
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aggregateScore": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "casePassCount": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 12
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "caseFailCount": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 12
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "contractDigest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "truthLabels": {
+          "oneOf": [
+            {
+              "type": "object",
+              "maxProperties": 12,
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  {
+                    "type": "boolean"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "publicDeploymentLane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourcePath",
+        "digest",
+        "releaseId",
+        "state",
+        "sourceCommit",
+        "deploymentCommit",
+        "deploymentId",
+        "publicOrigin",
+        "deployedAt",
+        "verifiedAt",
+        "httpReceiptDigest",
+        "nativeReceiptDigest",
+        "status"
+      ],
+      "properties": {
+        "sourcePath": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "releaseId": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "state": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 40
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceCommit": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/commit"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deploymentCommit": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/commit"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deploymentId": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "publicOrigin": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 240
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deployedAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verifiedAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "httpReceiptDigest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nativeReceiptDigest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "stale",
+            "blocked",
+            "invalid"
+          ]
+        }
+      }
+    },
+    "nativeLane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourcePath",
+        "digest",
+        "status",
+        "product",
+        "version",
+        "headed",
+        "toolCountBefore",
+        "toolCountAfter",
+        "executionStatus",
+        "publicOrigin",
+        "entryPath",
+        "entrySha256",
+        "entryByteCount",
+        "cspParity",
+        "applicationErrorTotal"
+      ],
+      "properties": {
+        "sourcePath": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/laneStatus"
+        },
+        "product": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 80
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "version": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 40
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "headed": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "toolCountBefore": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "toolCountAfter": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "executionStatus": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 40
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "publicOrigin": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 240
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "entryPath": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 240
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "entrySha256": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "entryByteCount": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 50000000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cspParity": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "applicationErrorTotal": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "compatibleBrowserAgentLane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourcePath",
+        "digest",
+        "status",
+        "browserAgentName",
+        "browserVersion",
+        "testedOrigin",
+        "appBuildIdentifier",
+        "verifiedAt",
+        "casePassCount",
+        "caseFailCount",
+        "evidencePaths"
+      ],
+      "properties": {
+        "sourcePath": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "failed",
+            "not_run",
+            "invalid"
+          ]
+        },
+        "browserAgentName": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "browserVersion": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "testedOrigin": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 240
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "appBuildIdentifier": {
+          "oneOf": [
+            {
+              "type": "string",
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "verifiedAt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/utcDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "casePassCount": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 12
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "caseFailCount": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 12
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidencePaths": {
+          "oneOf": [
+            {
+              "type": "array",
+              "maxItems": 12,
+              "items": {
+                "$ref": "#/$defs/repoPath"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "canonicalToolNames": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "prefixItems": [
+        {
+          "const": "get_room_state"
+        },
+        {
+          "const": "search_product_evidence"
+        },
+        {
+          "const": "evaluate_requirement"
+        },
+        {
+          "const": "calculate_roi"
+        },
+        {
+          "const": "propose_buyer_context"
+        },
+        {
+          "const": "stage_requirement"
+        },
+        {
+          "const": "attach_evidence"
+        },
+        {
+          "const": "save_stakeholder_brief"
+        },
+        {
+          "const": "propose_decision_status"
+        }
+      ],
+      "items": false
+    },
+    "canonicalHumanOnlyNames": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "const": "approve_buyer_context"
+        },
+        {
+          "const": "reject_buyer_context"
+        },
+        {
+          "const": "approve_decision"
+        },
+        {
+          "const": "reject_decision"
+        },
+        {
+          "const": "apply_roi_assumptions"
+        },
+        {
+          "const": "dismiss_recovery_notice"
+        },
+        {
+          "const": "reset_room"
+        }
+      ],
+      "items": false
+    },
+    "productInvariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "digest",
+        "toolNames",
+        "humanOnlyActionNames",
+        "judgeVisibleApprovalGates",
+        "canonicalEuResidencyStatus",
+        "humanOnlyAbsentFromTools"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "toolNames": {
+          "$ref": "#/$defs/canonicalToolNames"
+        },
+        "humanOnlyActionNames": {
+          "$ref": "#/$defs/canonicalHumanOnlyNames"
+        },
+        "judgeVisibleApprovalGates": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {
+              "const": "approve_buyer_context"
+            },
+            {
+              "const": "approve_decision"
+            }
+          ],
+          "items": false
+        },
+        "canonicalEuResidencyStatus": {
+          "const": "unknown"
+        },
+        "humanOnlyAbsentFromTools": {
+          "type": "boolean"
+        }
+      }
+    },
+    "responsesCaseIds": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "const": "responses_001_judge_rehearsal"
+        },
+        {
+          "const": "responses_002_salesforce_evidence"
+        },
+        {
+          "const": "responses_003_budget_calculation"
+        },
+        {
+          "const": "responses_004_missing_security"
+        },
+        {
+          "const": "responses_005_force_eu_support"
+        },
+        {
+          "const": "responses_006_approval_refusal"
+        },
+        {
+          "const": "responses_007_testimonial_injection"
+        }
+      ],
+      "items": false
+    },
+    "truthLabelsReady": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "provesNativeWebMcpDiscovery",
+        "provesCompatibleBrowserAgent",
+        "liveBrowserAgentStatus",
+        "euDataResidency"
+      ],
+      "properties": {
+        "classification": {
+          "const": "local_openai_responses_model_selection"
+        },
+        "provesNativeWebMcpDiscovery": {
+          "const": false
+        },
+        "provesCompatibleBrowserAgent": {
+          "const": false
+        },
+        "liveBrowserAgentStatus": {
+          "const": "not_run"
+        },
+        "euDataResidency": {
+          "const": "unknown"
+        }
+      }
+    }
+  }
+}

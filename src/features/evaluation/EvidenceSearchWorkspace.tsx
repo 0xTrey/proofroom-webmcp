@@ -136,7 +136,7 @@ export function EvidenceSearchWorkspace(props: EvidenceSearchWorkspaceProps) {
     <section className="evidence-search" aria-labelledby="evidence-search-heading">
       <header className="evidence-search__head">
         <div>
-          <h3 id="evidence-search-heading">Search the structured proof index</h3>
+          <h3 id="evidence-search-heading">Search the available records</h3>
           <p>
             Results stay scoped to {props.requirement.label}. Search is read only and never attaches
             a record by itself.

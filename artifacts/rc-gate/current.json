@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-02T14:31:59.000Z",
+  "status": "blocked",
+  "recordingEvidenceReady": false,
+  "submissionTechnicalEvidenceReady": false,
+  "candidate": {
+    "head": "c1783ef744d5c6cc62305a99df695bb70d49a507",
+    "filteredClean": false,
+    "filteredStatusDigest": "3e825793783f322454f2834dea8c87bb2b90d745725a485c1fb165af2ac63d09",
+    "filteredStatusEntryCount": 192
+  },
+  "lanes": {
+    "localCandidate": {
+      "status": "blocked",
+      "sourcePath": "artifacts/rc-gate/local-qa.json",
+      "digest": "bd45d3a417328da287d7653bf53be340461c49ce75160665632bb70cf1fcb926",
+      "identifiers": {
+        "qaStatus": "passed",
+        "candidateCommit": "c1783ef744d5c6cc62305a99df695bb70d49a507"
+      }
+    },
+    "publicDeployment": {
+      "status": "stale",
+      "sourcePath": "artifacts/release/release-receipt.json",
+      "digest": "a8f419f12ed299994e7fc90e0d2251e77e3b39a7653c7b5aedb3d9abfa9e8560",
+      "identifiers": {
+        "releaseId": "proofroom-20260827-86b01690",
+        "deploymentCommit": "82ee322b4e4e8c8658e8eed605431974d084afca"
+      }
+    },
+    "nativeWebMcp": {
+      "status": "stale",
+      "sourcePath": "artifacts/release/native-webmcp.json",
+      "digest": "1dc48974f3fc3ef161931ce42c043639bb10a5eadaba7e74aa13c311ffa03037",
+      "identifiers": {
+        "executionStatus": "passed",
+        "publicOrigin": "https://proofroom-webmcp.harnden-trey.workers.dev"
+      }
+    },
+    "responsesApi": {
+      "status": "passed",
+      "sourcePath": "evals/responses-api/results/current.json",
+      "digest": "07d6f9d41104423789330c4764f2554a60788d146d22a6c81947d6b9cdfe88ff",
+      "identifiers": {
+        "model": "gpt-5.6",
+        "aggregateScore": 100
+      }
+    },
+    "compatibleBrowserAgent": {
+      "status": "not_run",
+      "sourcePath": "evals/live-agent/current.json",
+      "digest": "1526b6b66418d520804b926d0e7d8ad40607391698f272e12a11c78e1ce8cb80",
+      "identifiers": {
+        "appBuildIdentifier": null,
+        "verifiedAt": null
+      }
+    },
+    "deterministic": {
+      "status": "passed",
+      "sourcePath": "evals/results/deterministic-report.json",
+      "digest": "fea25fc6c7ad31dc84cb6fc6c5b3ed0ddb5c96b7f0c2add13a00178a652befa2",
+      "identifiers": {
+        "passedCases": 12,
+        "assertions": 60
+      }
+    },
+    "productInvariants": {
+      "status": "passed",
+      "sourcePath": "src/webmcp/toolDefinitions.ts",
+      "digest": "34c431655f06e58aadf1ee8e94f0b0195e7548b469f966f6a7a3b93d83acd142",
+      "identifiers": {
+        "toolCount": 9,
+        "euStatus": "unknown"
+      }
+    }
+  },
+  "localQa": {
+    "sourcePath": "artifacts/rc-gate/local-qa.json",
+    "digest": "bd45d3a417328da287d7653bf53be340461c49ce75160665632bb70cf1fcb926",
+    "status": "passed",
+    "candidateCommit": "c1783ef744d5c6cc62305a99df695bb70d49a507",
+    "workspaceStatusDigest": "3e825793783f322454f2834dea8c87bb2b90d745725a485c1fb165af2ac63d09",
+    "workspaceParity": true,
+    "stepSummary": [
+      {
+        "id": "lint",
+        "status": "passed"
+      },
+      {
+        "id": "typecheck",
+        "status": "passed"
+      },
+      {
+        "id": "unit_component",
+        "status": "passed"
+      },
+      {
+        "id": "production_build",
+        "status": "passed"
+      },
+      {
+        "id": "bundle_budget",
+        "status": "passed"
+      },
+      {
+        "id": "end_to_end",
+        "status": "passed"
+      },
+      {
+        "id": "accessibility",
+        "status": "passed"
+      },
+      {
+        "id": "deterministic_evals",
+        "status": "passed"
+      },
+      {
+        "id": "responses_eval_validate",
+        "status": "passed"
+      },
+      {
+        "id": "live_agent_record",
+        "status": "passed"
+      },
+      {
+        "id": "git_diff_check",
+        "status": "passed"
+      }
+    ],
+    "evalArtifactDigests": {
+      "deterministicReport": "fea25fc6c7ad31dc84cb6fc6c5b3ed0ddb5c96b7f0c2add13a00178a652befa2",
+      "responsesCurrent": "07d6f9d41104423789330c4764f2554a60788d146d22a6c81947d6b9cdfe88ff",
+      "liveAgentCurrent": "1526b6b66418d520804b926d0e7d8ad40607391698f272e12a11c78e1ce8cb80"
+    }
+  },
+  "deterministic": {
+    "sourcePath": "evals/results/deterministic-report.json",
+    "digest": "fea25fc6c7ad31dc84cb6fc6c5b3ed0ddb5c96b7f0c2add13a00178a652befa2",
+    "manifestDigest": "1db51bfbafb2ee68543905300e2efaf6ef1d0970bf156eacb6edcfe7e1c1ee4e",
+    "expectedSequenceDigest": "4be96767aca3f2604570e4a9b9ec3f89c1b77fcce71c2338d6582ab392fb8df2",
+    "passedCases": 12,
+    "failedCases": 0,
+    "assertions": 60,
+    "toolNames": [
+      "get_room_state",
+      "search_product_evidence",
+      "evaluate_requirement",
+      "calculate_roi",
+      "propose_buyer_context",
+      "stage_requirement",
+      "attach_evidence",
+      "save_stakeholder_brief",
+      "propose_decision_status"
+    ],
+    "status": "passed"
+  },
+  "responsesApi": {
+    "sourcePath": "evals/responses-api/results/current.json",
+    "digest": "07d6f9d41104423789330c4764f2554a60788d146d22a6c81947d6b9cdfe88ff",
+    "status": "passed",
+    "model": "gpt-5.6",
+    "startedAt": "2026-08-31T16:15:03.175Z",
+    "completedAt": "2026-08-31T16:15:52.038Z",
+    "caseIds": [
+      "responses_001_judge_rehearsal",
+      "responses_002_salesforce_evidence",
+      "responses_003_budget_calculation",
+      "responses_004_missing_security",
+      "responses_005_force_eu_support",
+      "responses_006_approval_refusal",
+      "responses_007_testimonial_injection"
+    ],
+    "aggregateScore": 100,
+    "casePassCount": 7,
+    "caseFailCount": 0,
+    "contractDigest": "ab61419dc5a4cb48795145f0f29a9fc25d928ee848d5babd8714f45305f474d3",
+    "truthLabels": {
+      "classification": "local_openai_responses_model_selection",
+      "provesNativeWebMcpDiscovery": false,
+      "provesCompatibleBrowserAgent": false,
+      "liveBrowserAgentStatus": "not_run",
+      "euDataResidency": "unknown"
+    }
+  },
+  "publicDeployment": {
+    "sourcePath": "artifacts/release/release-receipt.json",
+    "digest": "a8f419f12ed299994e7fc90e0d2251e77e3b39a7653c7b5aedb3d9abfa9e8560",
+    "releaseId": "proofroom-20260827-86b01690",
+    "state": "verified",
+    "sourceCommit": "82ee322b4e4e8c8658e8eed605431974d084afca",
+    "deploymentCommit": "82ee322b4e4e8c8658e8eed605431974d084afca",
+    "deploymentId": "86b01690-7492-4a37-ae70-3c71d50f43c7",
+    "publicOrigin": "https://proofroom-webmcp.harnden-trey.workers.dev",
+    "deployedAt": "2026-08-27T04:22:14.782Z",
+    "verifiedAt": "2026-08-27T04:22:52.000Z",
+    "httpReceiptDigest": "c3b2a0590b835a634fc6552b287cdc45d84e3feab8f51ae08200a832f4a0c336",
+    "nativeReceiptDigest": "1dc48974f3fc3ef161931ce42c043639bb10a5eadaba7e74aa13c311ffa03037",
+    "status": "stale"
+  },
+  "nativeWebMcp": {
+    "sourcePath": "artifacts/release/native-webmcp.json",
+    "digest": "1dc48974f3fc3ef161931ce42c043639bb10a5eadaba7e74aa13c311ffa03037",
+    "status": "stale",
+    "product": "Google Chrome",
+    "version": "151.0.7922.174",
+    "headed": true,
+    "toolCountBefore": 9,
+    "toolCountAfter": 9,
+    "executionStatus": "passed",
+    "publicOrigin": "https://proofroom-webmcp.harnden-trey.workers.dev",
+    "entryPath": "/assets/index-CitHfJ6b.js",
+    "entrySha256": "9313f8c97d9ddddd3ec29f43d6f3a77ec3a342072b2f05da2817990d7f74415f",
+    "entryByteCount": 441935,
+    "cspParity": true,
+    "applicationErrorTotal": 0
+  },
+  "compatibleBrowserAgent": {
+    "sourcePath": "evals/live-agent/current.json",
+    "digest": "1526b6b66418d520804b926d0e7d8ad40607391698f272e12a11c78e1ce8cb80",
+    "status": "not_run",
+    "browserAgentName": null,
+    "browserVersion": null,
+    "testedOrigin": null,
+    "appBuildIdentifier": null,
+    "verifiedAt": null,
+    "casePassCount": 0,
+    "caseFailCount": 0,
+    "evidencePaths": []
+  },
+  "productInvariants": {
+    "status": "passed",
+    "digest": "34c431655f06e58aadf1ee8e94f0b0195e7548b469f966f6a7a3b93d83acd142",
+    "toolNames": [
+      "get_room_state",
+      "search_product_evidence",
+      "evaluate_requirement",
+      "calculate_roi",
+      "propose_buyer_context",
+      "stage_requirement",
+      "attach_evidence",
+      "save_stakeholder_brief",
+      "propose_decision_status"
+    ],
+    "humanOnlyActionNames": [
+      "approve_buyer_context",
+      "reject_buyer_context",
+      "approve_decision",
+      "reject_decision",
+      "apply_roi_assumptions",
+      "dismiss_recovery_notice",
+      "reset_room"
+    ],
+    "judgeVisibleApprovalGates": [
+      "approve_buyer_context",
+      "approve_decision"
+    ],
+    "canonicalEuResidencyStatus": "unknown",
+    "humanOnlyAbsentFromTools": true
+  },
+  "blockingReasons": [
+    {
+      "code": "PUBLIC_RELEASE_STALE",
+      "lane": "publicDeployment",
+      "message": "Verified public release commit does not match the current candidate HEAD."
+    },
+    {
+      "code": "NATIVE_WEBMCP_STALE",
+      "lane": "nativeWebMcp",
+      "message": "Native WebMCP evidence is stale relative to the current candidate."
+    },
+    {
+      "code": "COMPATIBLE_BROWSER_AGENT_NOT_RUN",
+      "lane": "compatibleBrowserAgent",
+      "message": "Compatible browser-agent evidence is not verified."
+    },
+    {
+      "code": "WORKTREE_DIRTY",
+      "lane": "localCandidate",
+      "message": "Filtered working tree is not clean."
+    }
+  ]
+}

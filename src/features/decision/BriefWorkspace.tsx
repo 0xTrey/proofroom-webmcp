@@ -114,13 +114,13 @@ export function BriefWorkspace({ room, actions, onFeedback }: BriefWorkspaceProp
       onFeedback({
         kind: "error",
         message:
-          "Apply the complete fictional review set on the Evaluation route before filling canonical briefs. The convenience will not overstate an incomplete review.",
+          "Run the sample evidence check on the Evaluation route before filling honest sample briefs. The convenience will not overstate an incomplete review.",
       });
       return;
     }
     const canonical = role === "cfo" ? canonicalCfoDraft(room) : canonicalCisoDraft(room);
     updateDraft(role, canonical);
-    onFeedback({ kind: "success", message: `Filled the ${role.toUpperCase()} draft with canonical honest content. Review and save.` });
+    onFeedback({ kind: "success", message: `Filled the ${role.toUpperCase()} draft with honest sample content. Review and save.` });
   }
 
   function handleAddEvidence(role: StakeholderRole): void {
@@ -147,10 +147,10 @@ export function BriefWorkspace({ room, actions, onFeedback }: BriefWorkspaceProp
     <section className="brief-workspace" aria-labelledby="briefs-heading">
       <header className="brief-workspace__head">
         <div>
-          <h2 id="briefs-heading">Stakeholder briefs</h2>
+          <h2 id="briefs-heading">Briefs for finance and security</h2>
           <p>
-            Evidence-safe CFO and CISO briefs. A brief that states an unproven requirement is proven
-            fails atomically. Both UI and WebMCP use the same save action.
+            Each CFO and CISO brief must stay honest about missing evidence. The page and browser agent
+            save it the same way.
           </p>
         </div>
         <div className="brief-workspace__roles">
@@ -275,11 +275,11 @@ export function BriefWorkspace({ room, actions, onFeedback }: BriefWorkspaceProp
               Save {ROLES.find((r) => r.key === activeRole)?.label} brief
             </button>
             <button className="button button--quiet" type="button" onClick={() => handleCanonicalFill(activeRole)}>
-              Fill canonical honest {ROLES.find((r) => r.key === activeRole)?.label} draft
+              Fill the honest sample draft
             </button>
           </div>
           <p className="brief-workspace__convenience-note">
-            The canonical fill is a fictional-demo convenience. It fills the draft with honest
+            The honest sample fill is a fictional-demo convenience. It fills the draft with honest
             content that matches current room state. You still review and save through the shared
             action.
           </p>

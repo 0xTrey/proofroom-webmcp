@@ -7,12 +7,46 @@
 import { conditionLabel } from "./conditions.ts";
 import { decisionBlockers } from "./invariants.ts";
 import type {
+  BuyerContext,
+  BuyerProfile,
   EvidenceRecord,
   Requirement,
   RequirementStatus,
   RoiResult,
   RoomState,
 } from "./types.ts";
+
+export type BuyerContextStagingTemplate = {
+  source: "fictional_room_profile";
+  profileId: string;
+  fictionalDisclosure: string;
+  input: BuyerContext;
+  instruction: string;
+};
+
+const BUYER_CONTEXT_STAGING_INSTRUCTION =
+  "Use this exact fictional profile with propose_buyer_context only when the person asks to prepare the Meridian Bank sample. Do not infer, merge, or silently change any field. The person must review and approve it in the page.";
+
+export function buyerContextStagingTemplate(
+  canonicalBuyer: BuyerProfile,
+): BuyerContextStagingTemplate {
+  return {
+    source: "fictional_room_profile",
+    profileId: canonicalBuyer.id,
+    fictionalDisclosure: canonicalBuyer.fictionalDisclosure,
+    input: {
+      companyName: canonicalBuyer.companyName,
+      industry: canonicalBuyer.industry,
+      employeeBand: canonicalBuyer.employeeBand,
+      personas: [...canonicalBuyer.personas],
+      priorities: [...canonicalBuyer.priorities],
+      hardRequirements: [...canonicalBuyer.hardRequirements],
+      budgetCeiling: canonicalBuyer.budgetCeiling,
+      paybackTargetMonths: canonicalBuyer.paybackTargetMonths,
+    },
+    instruction: BUYER_CONTEXT_STAGING_INSTRUCTION,
+  };
+}
 
 export type RequirementSummary = {
   id: string;
@@ -97,6 +131,7 @@ export type RoomSummary = {
   activityEventCount: number;
   recoveryNotice: RoomState["recoveryNotice"];
   recommendedNextActions: string[];
+  buyerContextStagingTemplate: BuyerContextStagingTemplate;
 };
 
 export function countLimitations(
@@ -174,7 +209,9 @@ export function recommendedNextActions(state: RoomState, nowIso: string): string
       "A buyer context proposal is waiting in the context panel. Only the person can approve it.",
     );
   } else if (!state.approvedBuyerContext) {
-    actions.push("Call propose_buyer_context with the company details from the prompt.");
+    actions.push(
+      "Read buyerContextStagingTemplate from get_room_state. It is page-owned fictional demo data. Copy input verbatim with propose_buyer_context only when the person asks to prepare the Meridian Bank sample. Missing or different real buyer values need clarification, not inference. The template does not stage or approve anything by itself.",
+    );
   }
 
   const withoutEvidence = state.requirements.filter(
@@ -275,6 +312,7 @@ export function roomSummary(
     activityEventCount: state.activityLedger.length,
     recoveryNotice: state.recoveryNotice,
     recommendedNextActions: recommendedNextActions(state, nowIso),
+    buyerContextStagingTemplate: buyerContextStagingTemplate(state.canonicalBuyer),
   };
 
   if (detail === "requirements") {

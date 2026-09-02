@@ -164,12 +164,12 @@ test("supported browser shim completes the canonical case with the deterministic
     approvedDecisionPresent: canonical?.terminal.approvedDecisionPresent,
   });
 
-  await page.getByRole("button", { name: "Decision" }).click();
-  const proposal = page.getByRole("article", { name: "Staged proposal" });
+  await page.getByRole("button", { name: "Review decision" }).click();
+  const proposal = page.getByRole("article", { name: "Recommendation prepared for your review" });
   await expect(proposal).toContainText("not ready");
   await expect(proposal).toContainText("req_eu_residency");
   await expect(proposal).toContainText("req_sso");
-  await expect(page.getByRole("heading", { name: "No buyer context is approved." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "No buyer profile is approved yet." })).toBeVisible();
 });
 
 test("required UI states emit no runtime, request, or response errors at target widths", async ({
@@ -193,37 +193,37 @@ test("required UI states emit no runtime, request, or response errors at target 
     await page.goto("/#product");
     await expectNoOverflow(page);
 
-    await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
+    await page.getByRole("button", { name: "Review the sample buyer profile" }).click();
     await expect(page.locator("[data-proposal-status='pending']")).toBeVisible();
     await expectNoOverflow(page);
 
-    await page.getByRole("button", { name: "Approve buyer context" }).click();
-    await expect(page.getByText("Buyer-approved context applied")).toBeVisible();
+    await page.getByRole("button", { name: "Use this buyer profile" }).click();
+    await expect(page.getByText("Buying priorities approved for this review")).toBeVisible();
     await expectNoOverflow(page);
 
-    await page.getByRole("button", { name: "Evaluation" }).click();
-    await page.getByRole("button", { name: "Apply fictional review set" }).click();
+    await page.getByRole("button", { name: "Check evidence" }).click();
+    await page.getByRole("button", { name: "Run the sample evidence check" }).click();
     await expect(page.locator("[data-requirement-status='supported']")).toHaveCount(3);
     await expectNoOverflow(page);
 
-    await page.getByRole("button", { name: "Decision" }).click();
-    await page.getByRole("button", { name: "Fill canonical honest CFO draft" }).click();
+    await page.getByRole("button", { name: "Review decision" }).click();
+    await page.getByRole("button", { name: "Fill the honest sample draft" }).click();
     await page.getByRole("button", { name: "Save CFO brief" }).click();
     await page.getByRole("button", { name: /CISO/ }).click();
-    await page.getByRole("button", { name: "Fill canonical honest CISO draft" }).click();
+    await page.getByRole("button", { name: "Fill the honest sample draft" }).click();
     await page.getByRole("button", { name: "Save CISO brief" }).click();
-    await page.getByRole("button", { name: "Fill canonical not-ready draft" }).click();
-    await page.getByRole("button", { name: "Stage proposal" }).click();
-    await expect(page.getByRole("article", { name: "Staged proposal" })).toBeVisible();
+    await page.getByRole("button", { name: "Prepare the sample not-ready recommendation" }).click();
+    await page.getByRole("button", { name: "Prepare recommendation" }).click();
+    await expect(page.getByRole("article", { name: "Recommendation prepared for your review" })).toBeVisible();
     await expectNoOverflow(page);
 
-    await page.getByRole("button", { name: "Approve decision" }).click();
+    await page.getByRole("button", { name: "Approve recommendation" }).click();
     await expect(page.getByRole("region", { name: "Decision receipt" })).toBeVisible();
     await expectNoOverflow(page);
 
     await page.getByRole("button", { name: "Reset demo" }).click();
-    await page.getByRole("button", { name: "Reset to canonical fixture" }).click();
-    await expect(page.getByRole("region", { name: "The canonical fixture is active." })).toBeVisible();
+    await page.getByRole("button", { name: "Reset to the demo starting point" }).click();
+    await expect(page.getByRole("region", { name: "The demo starting point is active." })).toBeVisible();
     await expectNoOverflow(page);
 
     await page.evaluate(() => {

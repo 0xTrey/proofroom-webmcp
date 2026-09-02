@@ -1,4 +1,5 @@
 import { act, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { useStore } from "zustand";
 import { describe, expect, it } from "vitest";
 import { EvaluationSurface } from "../../src/features/evaluation/EvaluationSurface.tsx";
@@ -31,6 +32,7 @@ describe("WebMCP evaluation projection", () => {
     );
     expect(salesforce).toHaveAttribute("data-requirement-status", "unknown");
 
+    const user = userEvent.setup();
     await act(async () => {
       const result = await shim.callTool("attach_evidence", {
         requirementId: "req_salesforce",
@@ -41,6 +43,11 @@ describe("WebMCP evaluation projection", () => {
 
     expect(salesforce).toHaveAttribute("data-requirement-status", "supported");
     expect(within(salesforce!).getByText("supported")).toBeVisible();
+    await user.click(
+      within(screen.getByRole("list", { name: "Six requirement records" })).getByRole("button", {
+        name: /Salesforce integration/,
+      }),
+    );
     expect(
       screen.getByRole("list", { name: "Salesforce integration attached evidence" }),
     ).toHaveTextContent("ev_002");

@@ -164,3 +164,15 @@
 - The final local acceptance matrix passed 423 unit and component tests, 38 end-to-end checks, 48 accessibility checks, 12 deterministic evals, bundle budgets, a 71-asset Wrangler dry run, and byte-identical accepted visual evidence with SHA-256 `3ae653285619e5977c69f5ad472866da40b1eaa026911946d0b77e1ef00110fe`.
 - Live natural-language browser-agent selection remains explicitly `not_run` and is not counted as a pass.
 - Checklist item 11 is accepted. Item 12 remains open.
+
+### Current documentation state (August 29, 2026)
+
+- Verified public baseline: deployment commit `82ee322b4e4e8c8658e8eed605431974d084afca`, Cloudflare
+  version `86b01690-7492-4a37-ae70-3c71d50f43c7`, 423 unit and component tests, 38 end-to-end
+  tests, 48 accessibility checks, 12 deterministic evals passed.
+- Current local candidate after work orders 011 through 014a and autoresearch run 12: 483 unit and
+  component tests, 45 end-to-end tests, 52 accessibility checks, 12 deterministic eval cases with 60
+  assertions; not committed, pushed, deployed, or reflected in Devpost.
+- External Devpost shell: authenticated project `1402028`, Untitled, empty, `submission_pre_draft`,
+  no video, not submitted. No local Devpost journey-state file exists in the repository.
+- Live natural-language browser-agent selection remains `not_run`.

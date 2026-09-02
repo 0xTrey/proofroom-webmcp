@@ -1,12 +1,12 @@
 # Autoresearch: custom
 
 Started: 2026-08-26
-Runs: 10 | Best score: 94/100 | Status: reverted
+Runs: 16 | Best score: 100/100 | Status: kept
 
 ## Current best
-Strategy: trust-contract-and-evals
-Score: 94/100
-Summary: Added enforced proposal integrity, evidence eligibility, deterministic requirement rules, genuine activity events, security boundaries, a twelve-case eval suite, and a distinctive visual direction. Brand gate: pass. Evidence gate: ready.
+Strategy: release-candidate-parity-gate
+Score: 100/100
+Summary: Added a fail-closed release-candidate gate that keeps local QA, public deployment, native WebMCP, Responses API, compatible browser-agent, deterministic, and product-invariant evidence distinct. Independent adversarial loops closed digest-binding, path-containment, schema-parity, invalid-eval, and receipt-readback gaps. The honest candidate remains blocked until external lifecycle evidence is refreshed.
 
 
 ## Experiment target
@@ -69,3 +69,9 @@ Produce the strongest launch plan for ProofRoom, an agent-native B2B evaluation 
 | 8   | 85    | reverted   | add-vendor-outreach |
 | 9   | 90    | reverted   | generalize-category |
 | 10   | 92    | reverted   | multi-buyer-collaboration |
+| 11   | 98    | kept   | judge-runway-and-agent-rehearsal |
+| 12   | 99    | kept   | agent-input-provenance |
+| 13   | 99    | kept   | submission-state-truth |
+| 14   | 99    | kept   | judge-facing-demo-gallery |
+| 15   | 100    | kept   | responses-api-model-selection-eval |
+| 16   | 100    | kept   | release-candidate-parity-gate |

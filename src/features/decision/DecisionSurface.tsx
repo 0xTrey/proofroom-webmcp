@@ -111,10 +111,10 @@ export function DecisionSurface({
     <article className="surface surface--decision motion-rise">
       <header className="surface-intro surface-intro--decision">
         <div>
-          <h1>The agent can stage the case. Only a person can decide.</h1>
+          <h1>Review the recommendation, then make the final call.</h1>
           <p>
-            Challenge the commercial model, review evidence-backed briefs, inspect the staged
-            proposal, and approve or reject the final decision in this page.
+            The agent can prepare the business case, summarize the evidence, and identify blockers.
+            Only you can approve or reject the recommendation.
           </p>
         </div>
         <aside className="human-boundary" aria-labelledby="human-boundary-heading">
@@ -122,12 +122,12 @@ export function DecisionSurface({
             H
           </span>
           <div>
-            <h2 id="human-boundary-heading">Human approval boundary</h2>
+            <h2 id="human-boundary-heading">Decisions only you can make</h2>
             <p>
-              Browser tools can research, calculate, and stage. They cannot approve buyer context
-              or the final decision.
+              Browser tools can research, calculate, and prepare a recommendation. They cannot
+              approve buying priorities or the final recommendation.
             </p>
-            <p className="mono">2 approvals intentionally excluded from WebMCP</p>
+            <p className="mono">The agent cannot make either approval.</p>
           </div>
         </aside>
       </header>
@@ -293,10 +293,10 @@ export function DecisionSurface({
 
       <section className="activity-summary" aria-labelledby="activity-heading">
         <div>
-          <h2 id="activity-heading">The room keeps a real activity receipt.</h2>
+          <h2 id="activity-heading">Activity summary</h2>
           <p>
-            Events come from shared actions, never from decorative UI. Every read and mutation
-            appears here.
+            See who changed what, when it changed, and whether the action came from a person or
+            agent.
           </p>
         </div>
         <dl>
@@ -332,10 +332,13 @@ export function DecisionSurface({
       <section className="tool-manifest" aria-labelledby="tools-heading">
         <header>
           <div>
-            <h2 id="tools-heading">Nine WebMCP tools expose the evaluation, not the authority.</h2>
+            <h2 id="tools-heading">How the browser agent connects</h2>
             <p>
-              Four tools read or calculate. Five stage work through the same domain actions used by
-              the page. Approval is absent by design.
+              Nine built-in actions let the agent read, calculate, and prepare work through the same
+              domain actions used by the page. Approval is absent by design.
+            </p>
+            <p className="tool-manifest__webmcp">
+              A supported browser makes these nine actions available to the agent.
             </p>
           </div>
           <p className="mono">manifest / 09 tools / same-origin</p>
@@ -345,7 +348,7 @@ export function DecisionSurface({
             <li key={name}>
               <span className="ledger-index">{String(index + 1).padStart(2, "0")}</span>
               <code>{name}</code>
-              <span>{READ_ONLY_TOOLS.has(name) ? "read or calculate" : "stage work"}</span>
+              <span>{READ_ONLY_TOOLS.has(name) ? "read or calculate" : "prepare work"}</span>
             </li>
           ))}
         </ol>

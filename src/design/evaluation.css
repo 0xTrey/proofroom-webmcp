@@ -256,11 +256,11 @@
 }
 
 .requirement-detail .statusmark--agent {
-  color: #8fb2ff;
+  color: var(--agent);
 }
 
 .requirement-detail .statusmark--gap {
-  color: #ffb49d;
+  color: var(--gap-on-dark);
 }
 
 .requirement-detail .priority-mark {
@@ -319,8 +319,8 @@
   place-items: center;
   width: 1.5rem;
   height: 1.5rem;
-  border: 1px solid #ffb49d;
-  color: #ffb49d;
+  border: 1px solid var(--gap);
+  color: var(--gap);
   font-family: var(--font-mono);
 }
 
@@ -857,7 +857,7 @@
 }
 
 .evidence-quarantine h3 {
-  color: #ffb49d;
+  color: var(--gap);
 }
 
 .evidence-quarantine blockquote {

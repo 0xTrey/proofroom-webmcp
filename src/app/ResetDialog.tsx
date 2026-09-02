@@ -85,7 +85,7 @@ export function ResetDialog(props: ResetDialogProps) {
       >
         <h2 id="reset-dialog-heading">Reset this fictional demonstration?</h2>
         <p id="reset-dialog-description">
-          The reset replaces the current room with the canonical fixture. Review the exact
+          The reset replaces the current room with the demo starting point. Review the exact
           consequences before continuing.
         </p>
 
@@ -93,7 +93,7 @@ export function ResetDialog(props: ResetDialogProps) {
           <section aria-labelledby="reset-removes-heading">
             <h3 id="reset-removes-heading">Reset removes</h3>
             <ul>
-              <li>Approved buyer context and its receipt</li>
+              <li>Approved buyer profile and its receipt</li>
               <li>Requirement attachments and buyer notes</li>
               <li>ROI changes</li>
               <li>CFO and CISO briefs</li>
@@ -102,13 +102,13 @@ export function ResetDialog(props: ResetDialogProps) {
             </ul>
           </section>
           <section aria-labelledby="reset-keeps-heading">
-            <h3 id="reset-keeps-heading">Canonical fixture keeps</h3>
+            <h3 id="reset-keeps-heading">Demo starting point keeps</h3>
             <ul>
               <li>Six fictional requirements</li>
               <li>Twelve fictional evidence records</li>
-              <li>Canonical commercial assumptions</li>
+              <li>Sample commercial assumptions</li>
               <li>Schema version 1</li>
-              <li>One new canonical System event</li>
+              <li>One new System event</li>
             </ul>
           </section>
         </div>
@@ -128,7 +128,7 @@ export function ResetDialog(props: ResetDialogProps) {
               props.onConfirm();
             }}
           >
-            Reset to canonical fixture
+            Reset to the demo starting point
           </button>
         </div>
       </div>

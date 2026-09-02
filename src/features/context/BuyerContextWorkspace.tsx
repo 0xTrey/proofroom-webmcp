@@ -42,9 +42,9 @@ function formatTimestamp(value: string): string {
 
 function rejectionResolution(proposalId: string, hasApprovedContext: boolean): string {
   if (hasApprovedContext) {
-    return `Rejected ${proposalId}. The previously approved buyer context remains authoritative, and its personalization remains in place.`;
+    return `Rejected ${proposalId}. The previously approved buyer profile remains in place, and its personalization remains in place.`;
   }
-  return `Rejected ${proposalId}. No buyer context has ever been approved, so baseline product ordering remains in place.`;
+  return `Rejected ${proposalId}. No buyer profile has ever been approved, so baseline product ordering remains in place.`;
 }
 
 function ContextFields({ context }: { context: BuyerContext }) {
@@ -156,10 +156,10 @@ function ProposalReview(props: {
     >
       <header className="context-proposal__head">
         <div>
-          <h2 id="context-proposal-heading">Review the exact proposed buyer context.</h2>
+          <h2 id="context-proposal-heading">Use these buying priorities?</h2>
           <p>
-            This dossier is a staged claim. It cannot influence the product story until a person
-            approves it here.
+            This buyer profile is proposed work. It cannot change the product story until a person
+            approves it in this page.
           </p>
         </div>
         <p className="context-proposal__status mono">
@@ -168,48 +168,51 @@ function ProposalReview(props: {
         </p>
       </header>
 
-      <dl className="proposal-envelope" aria-label="Proposal envelope">
-        <div>
-          <dt>Proposal ID</dt>
-          <dd className="mono">{props.proposal.id}</dd>
-        </div>
-        <div>
-          <dt>Base revision</dt>
-          <dd className="mono">{props.proposal.baseRevision}</dd>
-        </div>
-        <div>
-          <dt>Current room revision</dt>
-          <dd className="mono">{props.currentRevision}</dd>
-        </div>
-        <div>
-          <dt>Expiry</dt>
-          <dd className="mono">{formatTimestamp(props.proposal.expiresAt)} UTC</dd>
-        </div>
-        <div>
-          <dt>Digest</dt>
-          <dd className="mono">{props.proposal.inputDigest}</dd>
-        </div>
-        <div>
-          <dt>Creator origin</dt>
-          <dd className="mono">{props.proposal.createdBy}</dd>
-        </div>
-        <div>
-          <dt>Status</dt>
-          <dd className="mono">{props.proposal.status}</dd>
-        </div>
-      </dl>
+      <details className="proposal-envelope-details">
+        <summary>Technical profile details</summary>
+        <dl className="proposal-envelope" aria-label="Buyer profile proposal details">
+          <div>
+            <dt>Proposal ID</dt>
+            <dd className="mono">{props.proposal.id}</dd>
+          </div>
+          <div>
+            <dt>Base revision</dt>
+            <dd className="mono">{props.proposal.baseRevision}</dd>
+          </div>
+          <div>
+            <dt>Current room revision</dt>
+            <dd className="mono">{props.currentRevision}</dd>
+          </div>
+          <div>
+            <dt>Expiry</dt>
+            <dd className="mono">{formatTimestamp(props.proposal.expiresAt)} UTC</dd>
+          </div>
+          <div>
+            <dt>Digest</dt>
+            <dd className="mono">{props.proposal.inputDigest}</dd>
+          </div>
+          <div>
+            <dt>Creator origin</dt>
+            <dd className="mono">{props.proposal.createdBy}</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd className="mono">{props.proposal.status}</dd>
+          </div>
+        </dl>
+      </details>
 
       <ContextFields context={props.proposal.payload} />
 
       {pending ? (
         <div className="context-proposal__actions" aria-label="Human context decision">
           <button className="button" type="button" onClick={props.onApprove}>
-            Approve buyer context
+            Use this buyer profile
           </button>
           <button className="button button--danger" type="button" onClick={props.onReject}>
-            Reject proposal
+            Reject this buyer profile
           </button>
-          <p>These decisions are page controls only. No WebMCP approval tool exists.</p>
+          <p>Only you can use these approval buttons. The agent cannot approve or reject the profile.</p>
         </div>
       ) : null}
 
@@ -240,7 +243,7 @@ export function BuyerContextWorkspace(props: BuyerContextWorkspaceProps) {
     }
     setFeedback({
       kind: "success",
-      message: `Staged ${result.value.proposalId}. Buyer context is still not approved.`,
+      message: `Prepared ${result.value.proposalId}. No buyer profile is approved yet.`,
     });
   }
 
@@ -265,7 +268,7 @@ export function BuyerContextWorkspace(props: BuyerContextWorkspaceProps) {
     }
     const result = props.actions.rejectBuyerContext({
       proposalId: proposal.id,
-      reason: "The person rejected the staged context in the page.",
+      reason: "The person rejected the prepared buyer profile in the page.",
     });
     if (!result.ok) {
       setFeedback({ kind: "error", message: `${result.error.code}: ${result.error.message}` });
@@ -285,8 +288,10 @@ export function BuyerContextWorkspace(props: BuyerContextWorkspaceProps) {
 
   return (
     <aside
+      id="buyer-context-task"
       className={`context-workspace ${approved ? "context-workspace--approved motion-mark" : ""}`}
       aria-labelledby="buyer-context-heading"
+      tabIndex={-1}
     >
       <div className="context-rail">
         <div className="context-rail__identity">
@@ -296,19 +301,19 @@ export function BuyerContextWorkspace(props: BuyerContextWorkspaceProps) {
           <div>
             <h2 id="buyer-context-heading">
               {approved
-                ? `${approved.companyName} context is buyer-approved.`
-                : "No buyer context is approved."}
+                ? `${approved.companyName} buying priorities are approved.`
+                : "No buyer profile is approved yet."}
             </h2>
             <p>
               {approved
                 ? `${approved.industry}. Personalization comes only from the approved state.`
-                : "Buyer details are not yet shared with the authoritative product view."}
+                : "Approve the priorities that should guide this review."}
             </p>
           </div>
         </div>
 
         {approved ? (
-          <dl className="context-rail__facts" aria-label="Approved buyer context summary">
+          <dl className="context-rail__facts" aria-label="Approved buyer profile summary">
             <div>
               <dt>Personas</dt>
               <dd>{approved.personas.join(", ")}</dd>
@@ -325,12 +330,12 @@ export function BuyerContextWorkspace(props: BuyerContextWorkspaceProps) {
         ) : (
           <div className="context-rail__empty">
             <p>
-              A browser agent may stage details, but only the visible controls below can approve
-              them.
+              A browser agent may prepare details for review, but only the visible controls below can
+              approve them.
             </p>
             {proposal?.status !== "pending" ? (
               <button className="button" type="button" onClick={stageCanonicalDraft}>
-                Stage fictional Meridian Bank draft
+                Review the sample buyer profile
               </button>
             ) : null}
           </div>
@@ -354,7 +359,7 @@ export function BuyerContextWorkspace(props: BuyerContextWorkspaceProps) {
         }`}
       >
         <p aria-live="polite" aria-atomic="true">
-          {visibleFeedback?.message ?? "Context actions will be reported here."}
+          {visibleFeedback?.message ?? "Buyer profile actions will be reported here."}
         </p>
         {visibleFeedback?.kind === "error" ? (
           <button

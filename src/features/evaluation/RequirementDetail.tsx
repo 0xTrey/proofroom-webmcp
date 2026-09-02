@@ -19,15 +19,15 @@ type RequirementDetailProps = {
 
 function statusExplanation(requirement: Requirement): string {
   if (requirement.status === "unknown") {
-    return "Unknown is an intentional evidence result. No active eligible record proves a hard condition yet.";
+    return "Unknown: no eligible record proves the required conditions yet.";
   }
   if (requirement.status === "partially_supported") {
-    return "Partial means active eligible evidence proves at least one condition while another remains open.";
+    return "Partial: some conditions are proven, but at least one is still open.";
   }
   if (requirement.status === "unsupported") {
-    return "Unsupported means attached evidence contains a direct refutation or contradiction.";
+    return "Unsupported: an eligible record directly contradicts a required condition.";
   }
-  return "Supported means active eligible evidence covers every hard condition.";
+  return "Supported: every required condition is proven by eligible records.";
 }
 
 export function RequirementDetail(props: RequirementDetailProps) {
@@ -91,7 +91,7 @@ export function RequirementDetail(props: RequirementDetailProps) {
 
         <div className="requirement-detail__columns">
           <section aria-labelledby="conditions-heading">
-            <h3 id="conditions-heading">Exact hard-condition checklist</h3>
+            <h3 id="conditions-heading">What the evidence must prove</h3>
             <ol className="condition-checklist">
               {props.requirement.hardConditions.map((conditionId) => {
                 const covered = props.requirement.coveredConditions.includes(conditionId);
@@ -117,7 +117,7 @@ export function RequirementDetail(props: RequirementDetailProps) {
           </section>
 
           <section className="requirement-rationale" aria-labelledby="rationale-heading">
-            <h3 id="rationale-heading">Deterministic rationale</h3>
+            <h3 id="rationale-heading">Why this answer</h3>
             <p>{props.requirement.rationale}</p>
             <dl>
               <div>
@@ -143,7 +143,7 @@ export function RequirementDetail(props: RequirementDetailProps) {
         <section className="attached-evidence" aria-labelledby="attached-evidence-heading">
           <header>
             <div>
-              <h3 id="attached-evidence-heading">Attached evidence record</h3>
+              <h3 id="attached-evidence-heading">Records used for this answer</h3>
               <p>These records, and only eligible claims inside them, determine the status above.</p>
             </div>
             <p className="mono">{attachedRecords.length} attached</p>
@@ -205,10 +205,10 @@ export function RequirementDetail(props: RequirementDetailProps) {
       <section className="requirement-notes" aria-labelledby="buyer-notes-heading">
         <header>
           <div>
-            <h3 id="buyer-notes-heading">Buyer notes and open questions</h3>
+            <h3 id="buyer-notes-heading">Your notes and follow-up questions</h3>
             <p>
-              This context saves through stage_requirement. It can recompute status, but it cannot
-              author one.
+              Saving these notes can recalculate the answer, but only eligible source records can
+              change what is proven.
             </p>
           </div>
           <p className="mono">buyer-authored / not approval</p>

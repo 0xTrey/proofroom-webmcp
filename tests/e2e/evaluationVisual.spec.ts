@@ -1,6 +1,7 @@
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
+import { captureSubmissionGallery } from "./support/submissionGallery.ts";
 
 const AUDIT_DIRECTORY = path.resolve("artifacts/visual-audit/005-evidence");
 const UPDATE_VISUAL_AUDIT = process.env.UPDATE_VISUAL_AUDIT === "1";
@@ -43,8 +44,8 @@ for (const viewport of VIEWPORTS) {
       });
     }
 
-    await page.getByRole("button", { name: "Apply fictional review set" }).click();
-    await expect(page.getByRole("button", { name: "Fictional review set applied" })).toBeDisabled();
+    await page.getByRole("button", { name: "Run the sample evidence check" }).click();
+    await expect(page.getByRole("button", { name: "Sample evidence check applied" })).toBeDisabled();
     await expectNoOverflow(page);
     if (UPDATE_VISUAL_AUDIT) {
       await page.screenshot({
@@ -108,6 +109,9 @@ for (const viewport of VIEWPORTS) {
         path: path.join(AUDIT_DIRECTORY, `evidence-inspector-ev-011-${viewport.width}.png`),
         animations: "disabled",
       });
+    }
+    if (viewport.width === 1600) {
+      await captureSubmissionGallery(page, "02-untrusted-evidence-1600.png");
     }
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveCount(0);
