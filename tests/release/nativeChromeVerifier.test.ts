@@ -7,6 +7,7 @@ import {
   KNOWN_BROWSER_DIAGNOSTIC_CODE,
   NATIVE_READ_ONLY_TOOLS,
   NATIVE_TOOL_NAMES,
+  nativeVerificationUrl,
   type EntryIntegrityEvidence,
   type NativeReceipt,
   resolveChromeExecutable,
@@ -131,6 +132,12 @@ function passingReceipt(): NativeReceipt {
 }
 
 describe("native flagged Chrome verifier", () => {
+  it("opens the buyer workspace while preserving the verified origin", () => {
+    expect(nativeVerificationUrl(new URL("https://proofroom.example"))).toBe(
+      "https://proofroom.example/#product",
+    );
+  });
+
   it("validates the exact discovered names, strict schemas, and annotations", () => {
     expect(validateNativeTools(discoveredTools()).map((tool) => tool.name)).toEqual(
       NATIVE_TOOL_NAMES,

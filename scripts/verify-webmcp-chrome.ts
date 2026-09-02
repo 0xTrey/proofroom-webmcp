@@ -42,6 +42,11 @@ export const NATIVE_READ_ONLY_TOOLS = new Set([
   "get_room_state",
   "search_product_evidence",
 ]);
+
+export function nativeVerificationUrl(origin: URL): string {
+  return `${origin.origin}/#product`;
+}
+
 const FORBIDDEN_TOOL_PARTS = [
   "approve",
   "reject",
@@ -1006,7 +1011,9 @@ export async function runNativeVerifier(options: {
     });
 
     lifecyclePhase = "initial_registration";
-    const navigationResponse = await page.goto(origin.origin, { waitUntil: "networkidle" });
+    const navigationResponse = await page.goto(nativeVerificationUrl(origin), {
+      waitUntil: "networkidle",
+    });
     assert(navigationResponse !== null, "Initial navigation returned no browser response.");
     const effectiveCsp = navigationResponse.headers()["content-security-policy"] ?? "";
     validateEffectiveCsp(effectiveCsp, "Initial navigation effective CSP");
