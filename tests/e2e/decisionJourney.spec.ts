@@ -1,25 +1,25 @@
 import { expect, test, type Page } from "@playwright/test";
+import { approveSampleBuyerProfile } from "./support/context.ts";
 
 async function approveCanonicalContext(page: Page): Promise<void> {
   await page.goto("/#product");
-  await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
-  await page.getByRole("button", { name: "Approve buyer context" }).click();
-  await page.getByRole("button", { name: "Evaluation" }).click();
-  await page.getByRole("button", { name: "Apply fictional review set" }).click();
-  await page.getByRole("button", { name: "Decision" }).click();
+  await approveSampleBuyerProfile(page);
+  await page.getByRole("button", { name: "Check evidence" }).click();
+  await page.getByRole("button", { name: "Run the sample evidence check" }).click();
+  await page.getByRole("button", { name: "Review decision" }).click();
 }
 
 async function fillAndSaveBriefs(page: Page): Promise<void> {
-  await page.getByRole("button", { name: "Fill canonical honest CFO draft" }).click();
+  await page.getByRole("button", { name: "Fill the honest sample draft" }).click();
   await page.getByRole("button", { name: "Save CFO brief" }).click();
   await page.getByRole("button", { name: /CISO/ }).click();
-  await page.getByRole("button", { name: "Fill canonical honest CISO draft" }).click();
+  await page.getByRole("button", { name: "Fill the honest sample draft" }).click();
   await page.getByRole("button", { name: "Save CISO brief" }).click();
 }
 
 async function stageCanonicalDecision(page: Page): Promise<void> {
-  await page.getByRole("button", { name: "Fill canonical not-ready draft" }).click();
-  await page.getByRole("button", { name: "Stage proposal" }).click();
+  await page.getByRole("button", { name: "Prepare the sample not-ready recommendation" }).click();
+  await page.getByRole("button", { name: "Prepare recommendation" }).click();
 }
 
 test("item 8 ROI, briefs, and human decision journey persists the exact approved record", async ({
@@ -71,13 +71,13 @@ test("item 8 ROI, briefs, and human decision journey persists the exact approved
       return persisted?.room.revision ?? -1;
     }),
   ).toBe(revisionBeforePreview);
-  await expect(page.getByRole("button", { name: "Apply reviewed assumptions" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Use these reviewed numbers" })).toBeDisabled();
   await expect(page.getByText(/No ROI assumptions changed/)).toBeVisible();
 
   const budget = page.getByLabel("Budget ceiling");
   await budget.fill("119000");
   await page.getByRole("button", { name: "Preview calculation" }).click();
-  await page.getByRole("button", { name: "Apply reviewed assumptions" }).click();
+  await page.getByRole("button", { name: "Use these reviewed numbers" }).click();
   await expect(page.getByText(/Applied 1 assumption change/)).toBeVisible();
 
   await page.reload();
@@ -91,10 +91,10 @@ test("item 8 ROI, briefs, and human decision journey persists the exact approved
     }),
   ).toBe(119000);
 
-  await page.getByRole("button", { name: "Reset to canonical" }).click();
+  await page.getByRole("button", { name: "Reset sample values" }).click();
   await page.getByRole("button", { name: "Preview calculation" }).click();
   await expect(page.getByText("11.2 mo.")).toBeVisible();
-  await page.getByRole("button", { name: "Apply reviewed assumptions" }).click();
+  await page.getByRole("button", { name: "Use these reviewed numbers" }).click();
   await expect(page.getByLabel("Budget ceiling")).toHaveValue("120000");
 
   await fillAndSaveBriefs(page);
@@ -105,7 +105,7 @@ test("item 8 ROI, briefs, and human decision journey persists the exact approved
   await expect(page.locator('[data-brief-role="cfo"]')).toContainText("ev_010");
 
   await stageCanonicalDecision(page);
-  const review = page.getByRole("article", { name: "Staged proposal" });
+  const review = page.getByRole("article", { name: "Recommendation prepared for your review" });
   await expect(review).toContainText("not ready");
   await expect(review).toContainText("req_salesforce");
   await expect(review).toContainText("req_soc2");
@@ -116,10 +116,10 @@ test("item 8 ROI, briefs, and human decision journey persists the exact approved
 
   await page.getByLabel("Budget ceiling").fill("100000");
   await page.getByRole("button", { name: "Preview calculation" }).click();
-  await page.getByRole("button", { name: "Apply reviewed assumptions" }).click();
+  await page.getByRole("button", { name: "Use these reviewed numbers" }).click();
   await expect(review.getByText(/stale/i).first()).toBeVisible();
 
-  await review.getByRole("button", { name: "Approve decision" }).click();
+  await review.getByRole("button", { name: "Approve recommendation" }).click();
   await expect(page.getByText(/PROPOSAL_STALE/)).toBeVisible();
   expect(
     await page.evaluate(() => {
@@ -134,7 +134,7 @@ test("item 8 ROI, briefs, and human decision journey persists the exact approved
   ).toEqual({ approvedDecision: null, proposalStatus: "pending" });
 
   await stageCanonicalDecision(page);
-  await page.getByRole("button", { name: "Approve decision" }).click();
+  await page.getByRole("button", { name: "Approve recommendation" }).click();
   const approved = page.getByRole("region", { name: "Decision receipt" });
   await expect(approved).toContainText("decision");
   await expect(approved).toContainText("pdc_");

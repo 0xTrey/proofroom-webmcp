@@ -122,7 +122,7 @@ export function createToolDefinitions(actions: AgentActions): WebMcpToolDefiniti
       name: "get_room_state",
       title: "Read the evaluation room",
       description:
-        "Reads the current ProofRoom state: revision, approved buyer context summary, requirement totals, blocking requirements, ROI summary, brief presence, proposal states, and recommended next actions. Read only. It never returns the activity ledger and never changes anything.",
+        "Reads the current ProofRoom state: revision, approved buyer context summary, requirement totals, blocking requirements, ROI summary, brief presence, proposal states, recommended next actions, and buyerContextStagingTemplate. The staging template is page-owned fictional demo data for the fixed Meridian Bank sample. An agent may copy input verbatim with propose_buyer_context only after the person asks to prepare that sample. Missing or different real buyer values require clarification, not inference. The template does not stage or approve anything by itself. Read only. It never returns the activity ledger, canonicalBuyer, or raw private state, and it never changes anything.",
       schema: getRoomStateInputSchema,
       readOnlyHint: true,
       untrustedContentHint: false,

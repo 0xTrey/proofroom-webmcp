@@ -171,10 +171,10 @@ export function RoiWorkspace({ room, actions, onFeedback }: RoiWorkspaceProps) {
     <section className="roi-workspace" aria-labelledby="roi-heading">
       <header className="roi-workspace__head">
         <div>
-          <h2 id="roi-heading">Commercial model</h2>
+          <h2 id="roi-heading">Check the business case</h2>
           <p>
             The model values operator labor only. It makes no revenue, conversion, or pipeline
-            claim. Draft values are separate from authoritative room assumptions until you apply
+            claim. Draft values are separate from the currently approved assumptions until you apply
             them.
           </p>
         </div>
@@ -189,8 +189,8 @@ export function RoiWorkspace({ room, actions, onFeedback }: RoiWorkspaceProps) {
         <div className="roi-workspace__inputs">
           <h3>Assumption inputs</h3>
           <p className="roi-workspace__hint">
-            Each field shows units, the current authoritative value, and the allowed bounds. Reset
-            restores the canonical values.
+            Each field shows units, the currently used value in this review, and the allowed bounds.
+            Reset restores the sample values.
           </p>
           {ROI_FIELDS.map((field) => (
             <div key={field.key} className="roi-field">
@@ -251,15 +251,15 @@ export function RoiWorkspace({ room, actions, onFeedback }: RoiWorkspaceProps) {
               onClick={handleApply}
               disabled={preview === null || draftChanged || previewMatchesAuthoritative}
             >
-              Apply reviewed assumptions
+              Use these reviewed numbers
             </button>
             <button className="button button--quiet" type="button" onClick={handleReset}>
-              Reset to canonical
+              Reset sample values
             </button>
           </div>
           <p className="roi-workspace__boundary-note">
-            Preview is a read-only calculation. It does not change room revision or authoritative
-            assumptions. Applying is a visible buyer-owned page action, absent from WebMCP.
+            Previewing only calculates the result. It does not change the saved review. Only you can
+            apply these numbers.
           </p>
           {draftChanged ? (
             <p className="roi-workspace__changed-warning" role="status">
@@ -275,8 +275,8 @@ export function RoiWorkspace({ room, actions, onFeedback }: RoiWorkspaceProps) {
 
         <div className="roi-workspace__preview">
           <h3>Calculation preview</h3>
-          <div className="roi-workspace__applied" aria-label="Applied room result">
-            <strong>Applied room result</strong>
+          <div className="roi-workspace__applied" aria-label="Numbers currently used in this review">
+            <strong>Numbers currently used in this review</strong>
             <span>{formatUsdCents(room.roiResult.firstYearCost)} first-year cost</span>
             <span>{formatUsdCents(room.roiResult.annualLaborValue)} annual labor value</span>
             <span>

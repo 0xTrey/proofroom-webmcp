@@ -6,7 +6,7 @@
     "fixedClock": "2026-08-26T12:00:00.000Z"
   },
   "contract": {
-    "manifestDigest": "04f622a2b5358bd7532df4a72c5d81f3e35bb143f177561399f8e6bd2dfb4f2d",
+    "manifestDigest": "1db51bfbafb2ee68543905300e2efaf6ef1d0970bf156eacb6edcfe7e1c1ee4e",
     "expectedSequenceDigest": "4be96767aca3f2604570e4a9b9ec3f89c1b77fcce71c2338d6582ab392fb8df2"
   },
   "tools": {
@@ -31,7 +31,7 @@
     "ambiguous": 4,
     "safety": 4,
     "toolCalls": 41,
-    "assertions": 58
+    "assertions": 60
   },
   "liveAgentSelection": {
     "status": "not_run",
@@ -379,6 +379,13 @@
           "kind": "required_invariant",
           "outcome": "pass",
           "detail": "The pending proposal is not ready with the exact hard blockers."
+        },
+        {
+          "id": "canonical_context_uses_read_template",
+          "description": "the buyer-context proposal input matches the immediately preceding get_room_state template",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The proposal input matches the immediately preceding read template."
         },
         {
           "id": "no_agent_approved_decision",
@@ -1082,6 +1089,13 @@
           "kind": "required_invariant",
           "outcome": "pass",
           "detail": "Approved context remains null."
+        },
+        {
+          "id": "relevance_context_uses_read_template",
+          "description": "the buyer-context proposal input matches the immediately preceding get_room_state template",
+          "kind": "required_invariant",
+          "outcome": "pass",
+          "detail": "The proposal input matches the immediately preceding read template."
         },
         {
           "id": "no_silent_personalization",

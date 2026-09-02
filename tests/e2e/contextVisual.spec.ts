@@ -1,6 +1,7 @@
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
+import { approveSampleBuyerProfile } from "./support/context.ts";
 
 const AUDIT_DIRECTORY = path.resolve("artifacts/visual-audit/004-context");
 const UPDATE_VISUAL_AUDIT = process.env.UPDATE_VISUAL_AUDIT === "1";
@@ -17,10 +18,9 @@ async function ready(page: Page, route: "product" | "evaluation" | "decision"): 
 }
 
 async function approveContext(page: Page): Promise<void> {
-  await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
-  await page.getByRole("button", { name: "Approve buyer context" }).click();
+  await approveSampleBuyerProfile(page);
   await expect(
-    page.getByRole("heading", { name: "Meridian Bank context is buyer-approved." }),
+    page.getByRole("heading", { name: "Meridian Bank buying priorities are approved." }),
   ).toBeVisible();
 }
 
@@ -69,7 +69,7 @@ for (const viewport of VIEWPORTS) {
       await page.setViewportSize(viewport);
       await ready(page, "product");
       await approveContext(page);
-      await page.getByRole("button", { name: route === "evaluation" ? "Evaluation" : "Decision" }).click();
+      await page.getByRole("button", { name: route === "evaluation" ? "Check evidence" : "Review decision" }).click();
       await expectNoOverflow(page);
 
       if (UPDATE_VISUAL_AUDIT) {

@@ -1,68 +1,87 @@
 # ProofRoom
 
-ProofRoom turns B2B product research into a visible decision workflow: a browser agent can inspect
-structured evidence and stage work through WebMCP, while the buyer alone decides which context and
-final decision become authoritative.
+ProofRoom is a browser-based B2B evaluation room where a WebMCP-connected agent can research,
+prepare, and stage a buying decision in visible, validated state, but only the person can approve
+buyer context and the final decision. The agent can work the room; it cannot become the buyer.
 
-[Open the live demo](https://proofroom-webmcp.harnden-trey.workers.dev) ·
-[Browse the public repository](https://github.com/0xTrey/proofroom-webmcp)
+[Open the verified public baseline](https://proofroom-webmcp.harnden-trey.workers.dev) ·
+[Browse the repository](https://github.com/0xTrey/proofroom-webmcp)
 
-| Proof | Verified state |
+The live URL above is the verified public baseline until the current local candidate is deployed.
+
+| Proof dimension | State |
 | --- | --- |
-| Live release | Public on Cloudflare Workers |
-| WebMCP surface | Exactly 9 native tools |
-| Human authority | 2 UI-only approvals |
-| Automated verification | 423 unit and component, 38 end-to-end, 48 accessibility checks |
-| Deterministic evals | 12 passed |
-| License | [MIT](LICENSE) |
+| Verified public baseline | Deployed on Cloudflare Workers. 423 unit and component, 38 end-to-end, 48 accessibility, 12 deterministic evals passed. Does not include the landing page, room guide, plain-language, provenance, or current gallery work. |
+| Current local candidate | Dirty working tree. 483 unit and component, 45 end-to-end, 52 accessibility, 12 deterministic cases with 60 assertions. Not committed, pushed, deployed, or reflected in Devpost. |
+| Devpost | Authenticated project `1402028` remains Untitled, empty, `submission_pre_draft`. No video and no submission. |
+| Live natural-language agent | `not_run`. Native Chrome baseline evidence proves discovery and direct tool execution only. |
 
-## Judge path in 60 to 90 seconds
+## Current local candidate judge path
 
-The visible UI is the fastest path and works even when WebMCP is unavailable.
+This path uses the local preview at `http://localhost:5173/`. It becomes the public judge path only
+after authorized deployment and public parity verification. The verified public baseline does not
+yet include this landing flow.
 
-1. Open the [live Product surface](https://proofroom-webmcp.harnden-trey.workers.dev/#product).
-   Confirm the fictional-data notice, the WebMCP availability state, and the product story.
-2. Select `Stage fictional Meridian Bank draft`. Review every proposed field, then select
-   `Approve buyer context`. The page reorders product, evidence, and package content only after this
-   visible approval.
-3. Open `Evaluation`, select `Apply fictional review set`, and compare a supported requirement with
-   EU data residency. EU residency stays `unknown` because the catalog does not prove it.
-4. Open `Decision`. Inspect the ROI assumptions, create the honest CFO and CISO briefs, stage the
-   canonical `not ready` proposal, and approve it in the page. Finish at the decision receipt and
-   activity register.
+The visible UI is the fastest path and works even when WebMCP is unavailable. Expect the room guide
+within the first 12 seconds.
+
+1. **Start on the landing page.** Open `/`, read the plain-language explanation, and select
+   `Open the fictional review`. Outcome: you enter the review room with the three-step guide visible.
+2. **Set buyer context.** Select `Review the sample buyer profile`, then `Use this buyer profile`.
+   Outcome: the fictional Meridian Bank profile becomes the approved context the room uses.
+3. **Check evidence.** Select `Check evidence`, then `Run the sample evidence check`. Compare
+   supported Salesforce integration with unknown EU data residency. Open `ev_011` and confirm the
+   untrusted quarantine. Outcome: open gaps stay visible instead of becoming conclusions.
+4. **Reach a human-approved decision.** Select `Review decision`, `Preview calculation`,
+   `Prepare the sample not-ready recommendation`, `Prepare recommendation`, then
+   `Approve recommendation`. Outcome: the honest not-ready recommendation carries a visible buyer
+   approval receipt and activity record.
 
 For the native WebMCP path, use headed Chrome with the experimental feature flags. The native
 verifier discovers the tools from real `document.modelContext`, executes `get_room_state` and
-`propose_buyer_context`, checks reload persistence, and uses no test shim. Live natural-language
-browser-agent selection has not been run and is not part of the passed evidence.
+`propose_buyer_context`, checks reload persistence, and uses no test shim.
 
 ## What the room makes visible
 
-![A quarantined fictional testimonial is displayed as untrusted data, including its instruction-styled sentence.](artifacts/visual-audit/005-evidence/evidence-inspector-ev-011-1600.png)
+These frames come from the current local candidate gallery. They are not public deployment proof.
 
-Caption: The evidence inspector keeps testimonial text visible but marks it as data, not
-instructions. It cannot approve context, change status, or approve a decision.
+![Landing page explaining the buyer problem, fictional EU residency example, and three-step path to human approval.](artifacts/visual-audit/016-submission-gallery/01-landing-hero-1600.png)
 
-![The commercial model shows an edited ROI preview and an above-budget warning before assumptions are applied.](artifacts/visual-audit/006-decision/roi-preview-1600.png)
+Caption: ProofRoom opens on a plain-language landing page that explains the buyer problem, shows a
+fictional EU data residency example, and makes the three-step path from priorities to human approval
+visible before the review begins.
 
-Caption: ROI is deterministic and reviewable. A calculation preview does not silently replace the
-room's assumptions.
+![Untrusted evidence quarantine around fictional testimonial ev_011.](artifacts/visual-audit/016-submission-gallery/02-untrusted-evidence-1600.png)
 
-![The approved decision receipt shows the proposal and approval metadata.](artifacts/visual-audit/006-decision/approved-receipt-1600.png)
+Caption: ProofRoom displays the fictional testimonial's instruction-styled sentence inside an
+untrusted-content quarantine. The record remains inspectable data and cannot approve context, change
+requirement status, or approve a decision.
 
-Caption: The final receipt records the buyer's visible approval after the agent or UI stages a
-decision proposal.
+![Human-approved decision receipt with activity register totals.](artifacts/visual-audit/016-submission-gallery/03-approved-decision-1600.png)
 
-## The problem, and why WebMCP matters
+Caption: The approved decision receipt identifies the proposal, payload digest, revision, timestamp,
+and safe summary. The activity totals show a human-approved decision plus one deterministic
+registered WebMCP `get_room_state` read recorded in the shared activity history. This is a scripted
+local browser-shim proof, not a live natural-language agent run.
 
-Most B2B sites scatter product claims, security facts, pricing assumptions, and customer proof across
-pages and documents. An agent has to scrape prose, guess at authority, and return a conclusion that
-the buyer cannot inspect as shared state.
+## Why a buying team would care
 
-WebMCP changes the interaction model inside the live page. ProofRoom exposes narrow, typed actions
-for reading state, searching evidence, calculating ROI, and staging changes. The UI and WebMCP tools
-call the same domain actions, so both paths use the same validation, revision rules, persistence,
-and activity ledger. The agent works on the room instead of narrating around it.
+- Unsupported vendor claims stay open rather than becoming conclusions.
+- Security and commercial review share one source-backed room instead of separate narratives.
+- Assumptions, gaps, and the decision trail stay inspectable in the visible state.
+- An agent can reduce research and preparation work without taking the two decisions reserved for
+  the person.
+
+## Why WebMCP is in the critical path
+
+Without WebMCP, a browser agent can only scrape page prose and narrate a recommendation somewhere
+else. The buyer cannot see which evidence supports the answer or which gaps remain open.
+
+With WebMCP, the agent calls narrow page-owned tools that update the same visible, validated room
+the buyer reviews. Every tool input passes strict schemas, failed actions are atomic, and successful
+mutations append real activity events. The UI and WebMCP tools share `RoomActions`, so both paths
+use the same validation, revision rules, persistence, and activity ledger. Approval remains absent
+from the tool registry by design.
 
 ## Human-agent trust boundary
 
@@ -144,8 +163,9 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:5173/#product`. The complete UI path remains available without WebMCP.
-Playwright needs `npx playwright install chromium` before its first run.
+Open `http://localhost:5173/` for the landing route. Deep links `#product`, `#evaluation`, and
+`#decision` remain supported but are not the default starting point. The complete UI path remains
+available without WebMCP. Playwright needs `npx playwright install chromium` before its first run.
 
 Full local QA:
 
@@ -184,14 +204,16 @@ intentional external mutation and is not part of ordinary local QA. These comman
 the committed production evidence described next. See the
 [release runbook](docs/release-runbook.md) for lifecycle boundaries.
 
-## Verified production evidence
+## Verified public baseline
 
 The release receipt records deployment commit
 `82ee322b4e4e8c8658e8eed605431974d084afca` and Cloudflare deployment version
 `86b01690-7492-4a37-ae70-3c71d50f43c7`. Git history establishes final evidence commit
-`cb51518c545b8f498f9938e2054e729a60abb328`.
+`cb51518c545b8f498f9938e2054e729a60abb328`. These identifiers describe the deployed public build
+only. They do not cover the landing page, room guide, plain-language work, staging-template
+provenance changes, or current gallery work in the current local candidate.
 
-Verified results:
+Verified public baseline results:
 
 - 423 unit and component tests passed.
 - 38 end-to-end tests passed.
@@ -207,6 +229,18 @@ Verified results:
   source, entry-integrity, CSP, execution, and count checks. They are not concealed as application
   success.
 - Live natural-language browser-agent selection remains `not_run`.
+
+## Current local candidate
+
+The dirty working tree passed local QA with these counts:
+
+- 483 unit and component tests passed.
+- 45 end-to-end tests passed.
+- 52 accessibility checks passed.
+- 12 deterministic eval cases passed with 60 assertions.
+
+This candidate is not committed, pushed, deployed, or reflected in Devpost. Public verification
+does not cover the current landing, room guide, plain-language, provenance, or current gallery work.
 
 Deep evidence:
 
@@ -227,14 +261,16 @@ image-selection, and launch-state documents. Start with the
   fictional.
 - State lives in local browser storage. There is no account, database, multi-user room, or shared
   backend.
-- The application makes no model API call. Intelligence comes from the browser agent.
+- The application itself makes no model API call. Intelligence comes from the browser agent.
 - WebMCP is experimental and environment-dependent. The page reports unavailable and registration
   error states while preserving every visible UI control.
 - Evaluation covers the fixed 12-record catalog. There is no arbitrary evidence ingestion.
-- Live natural-language browser-agent selection has not been run.
+- Live natural-language browser-agent selection remains `not_run`.
 
 ProofRoom was built for the [OpenAI WebMCP Challenge](https://openai.com/webmcp-challenge/) hosted on
 [Devpost](https://webmcp.devpost.com/). Submission documents in this repository are local
-preparation only. No official Devpost draft exists locally, and nothing has been submitted.
+preparation only. Authenticated Devpost project `1402028` exists as an Untitled, empty pre-draft
+shell. It has no video and has not been submitted. The repository has no local Devpost
+journey-state file.
 
 Released under the [MIT License](LICENSE).

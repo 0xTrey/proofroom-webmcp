@@ -21,6 +21,11 @@ npm run qa
 ```
 
 Record the exact test counts, bundle measurements, deterministic eval digest, and visual artifact digest. This proves local QA only.
+If port `4173` is already in use, choose a free local port without stopping the other process:
+
+```text
+PROOFROOM_PREVIEW_PORT=4193 npm run qa
+```
 
 ## 3. Read the authenticated Cloudflare account
 

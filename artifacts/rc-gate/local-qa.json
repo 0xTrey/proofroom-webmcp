@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-02T14:31:55.000Z",
+  "status": "passed",
+  "candidateCommit": "c1783ef744d5c6cc62305a99df695bb70d49a507",
+  "workspace": {
+    "filteredClean": false,
+    "statusBefore": {
+      "algorithm": "sha256",
+      "digest": "3e825793783f322454f2834dea8c87bb2b90d745725a485c1fb165af2ac63d09",
+      "entryCount": 192
+    },
+    "statusAfter": {
+      "algorithm": "sha256",
+      "digest": "3e825793783f322454f2834dea8c87bb2b90d745725a485c1fb165af2ac63d09",
+      "entryCount": 192
+    },
+    "statusParity": true
+  },
+  "steps": [
+    {
+      "id": "lint",
+      "command": "npm",
+      "args": [
+        "run",
+        "lint"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "typecheck",
+      "command": "npm",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "unit_component",
+      "command": "npm",
+      "args": [
+        "run",
+        "test"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "production_build",
+      "command": "npm",
+      "args": [
+        "run",
+        "build"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "bundle_budget",
+      "command": "npm",
+      "args": [
+        "run",
+        "check:bundle"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "end_to_end",
+      "command": "npm",
+      "args": [
+        "run",
+        "test:e2e"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "accessibility",
+      "command": "npm",
+      "args": [
+        "run",
+        "test:a11y"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "deterministic_evals",
+      "command": "npm",
+      "args": [
+        "run",
+        "evals"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "responses_eval_validate",
+      "command": "npm",
+      "args": [
+        "run",
+        "evals:responses:validate"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "live_agent_record",
+      "command": "npm",
+      "args": [
+        "run",
+        "evals:live:validate"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    },
+    {
+      "id": "git_diff_check",
+      "command": "git",
+      "args": [
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "status": "passed"
+    }
+  ],
+  "visualArtifacts": {
+    "before": {
+      "algorithm": "sha256",
+      "digest": "ce0fa4dbae866bde4b26c4bc4ca076dcbab87f81bd68db6ec7cb0be75df613d8",
+      "fileCount": 64,
+      "totalBytes": 16129287
+    },
+    "after": {
+      "algorithm": "sha256",
+      "digest": "ce0fa4dbae866bde4b26c4bc4ca076dcbab87f81bd68db6ec7cb0be75df613d8",
+      "fileCount": 64,
+      "totalBytes": 16129287
+    },
+    "byteIdentical": true
+  },
+  "evalArtifacts": {
+    "deterministicReportDigest": "fea25fc6c7ad31dc84cb6fc6c5b3ed0ddb5c96b7f0c2add13a00178a652befa2",
+    "responsesCurrentDigest": "07d6f9d41104423789330c4764f2554a60788d146d22a6c81947d6b9cdfe88ff",
+    "liveAgentCurrentDigest": "1526b6b66418d520804b926d0e7d8ad40607391698f272e12a11c78e1ce8cb80"
+  }
+}

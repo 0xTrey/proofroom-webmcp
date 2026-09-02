@@ -9,6 +9,9 @@ import { DEFAULT_ROUTE, ROUTES, type RouteId } from "./routes.ts";
 
 export function routeFromHash(hash: string): RouteId {
   const normalized = hash.replace(/^#/, "").toLowerCase();
+  if (normalized === "" || normalized === "home" || normalized === "how-it-works") {
+    return DEFAULT_ROUTE;
+  }
   const match = ROUTES.find((route) => route.id === normalized);
   return match?.id ?? DEFAULT_ROUTE;
 }
@@ -19,15 +22,27 @@ export function useRouteState(): [RouteId, (next: RouteId) => void] {
   );
 
   useEffect(() => {
-    const onHashChange = () => setRoute(routeFromHash(globalThis.location?.hash ?? ""));
-    globalThis.addEventListener("hashchange", onHashChange);
-    return () => globalThis.removeEventListener("hashchange", onHashChange);
+    const onLocationChange = () => setRoute(routeFromHash(globalThis.location?.hash ?? ""));
+    globalThis.addEventListener("hashchange", onLocationChange);
+    globalThis.addEventListener("popstate", onLocationChange);
+    return () => {
+      globalThis.removeEventListener("hashchange", onLocationChange);
+      globalThis.removeEventListener("popstate", onLocationChange);
+    };
   }, []);
 
   const navigate = useCallback((next: RouteId) => {
     setRoute(next);
     if (globalThis.location) {
-      globalThis.location.hash = next;
+      if (next === "home") {
+        globalThis.history.pushState(
+          null,
+          "",
+          `${globalThis.location.pathname}${globalThis.location.search}`,
+        );
+      } else {
+        globalThis.location.hash = next;
+      }
     }
   }, []);
 

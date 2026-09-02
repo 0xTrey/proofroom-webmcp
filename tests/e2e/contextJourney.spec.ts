@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { stageSampleBuyerProfile } from "./support/context.ts";
 
 async function dataOrder(page: Page, selector: string, attribute: string): Promise<string[]> {
   return page.locator(selector).evaluateAll(
@@ -8,10 +9,8 @@ async function dataOrder(page: Page, selector: string, attribute: string): Promi
 }
 
 async function stageCanonicalDraft(page: Page): Promise<void> {
-  await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Review the exact proposed buyer context." }),
-  ).toBeVisible();
+  await stageSampleBuyerProfile(page);
+  await expect(page.getByRole("button", { name: "Use this buyer profile" })).toBeVisible();
 }
 
 test.describe("buyer-controlled context journey", () => {
@@ -26,10 +25,12 @@ test.describe("buyer-controlled context journey", () => {
     );
     const baselineEvidence = await dataOrder(page, "[data-evidence-id]", "data-evidence-id");
     const baselinePackages = await dataOrder(page, "[data-package-id]", "data-package-id");
-    await expect(page.getByRole("heading", { name: "No buyer context is approved." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "No buyer profile is approved yet." })).toBeVisible();
 
     await stageCanonicalDraft(page);
     const proposal = page.locator("[data-proposal-status='pending']");
+    const fields = proposal.locator(".context-fields");
+    await expect(fields).toBeVisible();
     for (const text of [
       "Meridian Bank",
       "Fintech and regulated banking",
@@ -48,6 +49,12 @@ test.describe("buyer-controlled context journey", () => {
       "A current SOC 2 Type II report",
       "$120,000",
       "12 months",
+    ]) {
+      await expect(fields).toContainText(text);
+    }
+
+    await proposal.getByText("Technical profile details").click();
+    for (const text of [
       "pcx_0001",
       "Base revision",
       "Current room revision",
@@ -71,13 +78,13 @@ test.describe("buyer-controlled context journey", () => {
       baselinePackages,
     );
 
-    await page.getByRole("button", { name: "Approve buyer context" }).click();
+    await page.getByRole("button", { name: "Use this buyer profile" }).click();
 
     await expect(
-      page.getByRole("heading", { name: "Meridian Bank context is buyer-approved." }),
+      page.getByRole("heading", { name: "Meridian Bank buying priorities are approved." }),
     ).toBeVisible();
-    await expect(page.getByText("Buyer-approved context applied")).toBeVisible();
-    await expect(page.getByRole("heading", { level: 1 })).not.toHaveText(baselineHeadline ?? "");
+    await expect(page.getByText("Buying priorities approved for this review")).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(baselineHeadline ?? "");
     expect((await dataOrder(page, "[data-capability-id]", "data-capability-id")).slice(0, 3)).toEqual(
       ["cap_salesforce_bridge", "cap_hosting", "cap_access_control"],
     );
@@ -101,21 +108,21 @@ test.describe("buyer-controlled context journey", () => {
     await expect(receipt.getByText("pcx_0001")).toBeVisible();
     await expect(receipt.getByText(/Buyer context approved in the page at revision 2/)).toBeVisible();
 
-    await page.getByRole("button", { name: "Evaluation" }).click();
+    await page.getByRole("button", { name: "Check evidence" }).click();
     await expect(
-      page.getByRole("heading", { name: "Meridian Bank context is buyer-approved." }),
+      page.getByRole("heading", { name: "Meridian Bank buying priorities are approved." }),
     ).toBeVisible();
     await expect(page.getByText(/Fintech and regulated banking/).first()).toBeVisible();
 
     await page.reload();
     await expect(
-      page.getByRole("heading", { name: "Meridian Bank context is buyer-approved." }),
+      page.getByRole("heading", { name: "Meridian Bank buying priorities are approved." }),
     ).toBeVisible();
     await expect(page.getByText("Marketing operations lead, CFO, CISO, Salesforce administrator")).toBeVisible();
 
-    await page.getByRole("button", { name: "Decision" }).click();
+    await page.getByRole("button", { name: "Review decision" }).click();
     await expect(
-      page.getByRole("heading", { name: "Meridian Bank context is buyer-approved." }),
+      page.getByRole("heading", { name: "Meridian Bank buying priorities are approved." }),
     ).toBeVisible();
     await expect(page.getByText("$120,000", { exact: true }).first()).toBeVisible();
     await expect(page.getByText("12 months", { exact: true }).first()).toBeVisible();
@@ -135,17 +142,17 @@ test.describe("buyer-controlled context journey", () => {
     const baselinePackages = await dataOrder(page, "[data-package-id]", "data-package-id");
 
     await stageCanonicalDraft(page);
-    await page.getByRole("button", { name: "Reject proposal" }).click();
+    await page.getByRole("button", { name: "Reject this buyer profile" }).click();
 
     await expect(
       page
         .getByText(
-          "Rejected pcx_0001. No buyer context has ever been approved, so baseline product ordering remains in place.",
+          "Rejected pcx_0001. No buyer profile has ever been approved, so baseline product ordering remains in place.",
           { exact: true },
         )
         .first(),
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "No buyer context is approved." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "No buyer profile is approved yet." })).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(baselineHeadline ?? "");
     expect(await dataOrder(page, "[data-capability-id]", "data-capability-id")).toEqual(
       baselineCapabilities,
@@ -156,7 +163,7 @@ test.describe("buyer-controlled context journey", () => {
     expect(await dataOrder(page, "[data-package-id]", "data-package-id")).toEqual(
       baselinePackages,
     );
-    await expect(page.getByRole("button", { name: "Approve buyer context" })).toHaveCount(0);
-    await expect(page.getByRole("button", { name: "Reject proposal" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Use this buyer profile" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Reject this buyer profile" })).toHaveCount(0);
   });
 });

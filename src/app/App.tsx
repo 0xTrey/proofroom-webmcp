@@ -21,11 +21,13 @@ import { selectLastError, selectRoom } from "../state/selectors.ts";
 import { useWebMcpTools } from "../webmcp/useWebMCPTools.ts";
 import { AppShell } from "./AppShell.tsx";
 import { ErrorBoundary } from "./ErrorBoundary.tsx";
+import { LandingPage } from "./LandingPage.tsx";
 import { useRouteState } from "./navigation.ts";
 import { RecoveryPanel } from "./RecoveryPanel.tsx";
 import { ResetDialog } from "./ResetDialog.tsx";
 import { ResetResultPanel } from "./ResetResultPanel.tsx";
-import { findRoute } from "./routes.ts";
+import { RoomGuide } from "./RoomGuide.tsx";
+import { findRoute, type RoomRouteId } from "./routes.ts";
 
 export function App() {
   const [route, navigate] = useRouteState();
@@ -73,6 +75,23 @@ export function App() {
     setBoundaryKey((key) => key + 1);
   }
 
+  function navigateToTask(nextRoute: RoomRouteId, targetId: string): void {
+    navigate(nextRoute);
+    globalThis.setTimeout(() => {
+      const target = globalThis.document?.getElementById(targetId);
+      if (!target) {
+        return;
+      }
+      target.focus({ preventScroll: true });
+      target.scrollIntoView?.({
+        behavior: globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+        block: "start",
+      });
+    }, 0);
+  }
+
   return (
     <>
       <AppShell
@@ -83,47 +102,57 @@ export function App() {
         storageStatus={storageStatus}
         onRequestReset={requestReset}
       >
-        <RecoveryPanel
-          notice={room.recoveryNotice}
-          storageStatus={storageStatus}
-          storageDetail={storageDetail}
-          actions={roomActions}
-          onRetryPersist={roomStoreHandle.retryPersist}
-        />
-
-        {resetResult ? (
-          <ResetResultPanel
-            result={resetResult.result}
-            persistenceFailed={resetResult.persistenceFailed}
-            onRetryPersist={roomStoreHandle.retryPersist}
-            onDismiss={() => setResetResult(null)}
-          />
-        ) : null}
-
         <ErrorBoundary key={boundaryKey} onOpenReset={requestReset}>
-          <p className="visually-hidden" aria-live="polite">
-            {activeRoute.heading}. {activeRoute.purpose}
-          </p>
-
-          {route === "product" ? <ProductSurface room={room} context={contextWorkspace} /> : null}
-          {route === "evaluation" ? (
-            <EvaluationSurface
-              room={room}
-              actions={roomActions}
-              lastError={lastError}
-              context={contextWorkspace}
-              onDismissError={dismissError}
-            />
-          ) : null}
-          {route === "decision" ? (
-            <DecisionSurface
-              room={room}
-              actions={roomActions}
-              lastError={lastError}
-              context={contextWorkspace}
-              onDismissError={dismissError}
-            />
-          ) : null}
+          {route === "home" ? (
+            <LandingPage status={status} />
+          ) : (
+            <>
+              <p className="visually-hidden" aria-live="polite">
+                {activeRoute.heading}. {activeRoute.purpose}
+              </p>
+              <RoomGuide
+                room={room}
+                onNavigate={navigate}
+                onNavigateTask={navigateToTask}
+              />
+              <RecoveryPanel
+                notice={room.recoveryNotice}
+                storageStatus={storageStatus}
+                storageDetail={storageDetail}
+                actions={roomActions}
+                onRetryPersist={roomStoreHandle.retryPersist}
+              />
+              {resetResult ? (
+                <ResetResultPanel
+                  result={resetResult.result}
+                  persistenceFailed={resetResult.persistenceFailed}
+                  onRetryPersist={roomStoreHandle.retryPersist}
+                  onDismiss={() => setResetResult(null)}
+                />
+              ) : null}
+              {route === "product" ? (
+                <ProductSurface room={room} context={contextWorkspace} />
+              ) : null}
+              {route === "evaluation" ? (
+                <EvaluationSurface
+                  room={room}
+                  actions={roomActions}
+                  lastError={lastError}
+                  context={contextWorkspace}
+                  onDismissError={dismissError}
+                />
+              ) : null}
+              {route === "decision" ? (
+                <DecisionSurface
+                  room={room}
+                  actions={roomActions}
+                  lastError={lastError}
+                  context={contextWorkspace}
+                  onDismissError={dismissError}
+                />
+              ) : null}
+            </>
+          )}
         </ErrorBoundary>
       </AppShell>
 

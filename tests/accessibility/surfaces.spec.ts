@@ -23,31 +23,50 @@ async function blockingViolations(page: Page) {
 
 async function prepareApprovedDecision(page: Page): Promise<void> {
   await page.goto("/#product");
-  await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).press("Enter");
-  await page.getByRole("button", { name: "Approve buyer context" }).press("Enter");
-  await page.getByRole("button", { name: "Evaluation" }).press("Enter");
-  await page.getByRole("button", { name: "Apply fictional review set" }).press("Enter");
-  await page.getByRole("button", { name: "Decision" }).press("Enter");
-  await page.getByRole("button", { name: "Fill canonical honest CFO draft" }).press("Enter");
+  await page.getByRole("button", { name: "Review the sample buyer profile" }).press("Enter");
+  await page.getByRole("button", { name: "Use this buyer profile" }).press("Enter");
+  await page.getByRole("button", { name: "Check evidence" }).press("Enter");
+  await page.getByRole("button", { name: "Run the sample evidence check" }).press("Enter");
+  await page.getByRole("button", { name: "Review decision" }).press("Enter");
+  await page.getByRole("button", { name: "Fill the honest sample draft" }).press("Enter");
   await page.getByRole("button", { name: "Save CFO brief" }).press("Enter");
   await page.getByRole("button", { name: /CISO/ }).press("Enter");
-  await page.getByRole("button", { name: "Fill canonical honest CISO draft" }).press("Enter");
+  await page.getByRole("button", { name: "Fill the honest sample draft" }).press("Enter");
   await page.getByRole("button", { name: "Save CISO brief" }).press("Enter");
-  await page.getByRole("button", { name: "Fill canonical not-ready draft" }).press("Enter");
-  await page.getByRole("button", { name: "Stage proposal" }).press("Enter");
-  await page.getByRole("button", { name: "Approve decision" }).press("Enter");
+  await page.getByRole("button", { name: "Prepare the sample not-ready recommendation" }).press("Enter");
+  await page.getByRole("button", { name: "Prepare recommendation" }).press("Enter");
+  await page.getByRole("button", { name: "Approve recommendation" }).press("Enter");
 }
 
 async function preparePopulatedLedger(page: Page): Promise<void> {
   await page.goto("/#product");
-  await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
-  await page.getByRole("button", { name: "Approve buyer context" }).click();
-  await page.getByRole("button", { name: "Evaluation" }).click();
-  await page.getByRole("button", { name: "Apply fictional review set" }).click();
-  await page.getByRole("button", { name: "Decision" }).click();
+  await page.getByRole("button", { name: "Review the sample buyer profile" }).click();
+  await page.getByRole("button", { name: "Use this buyer profile" }).click();
+  await page.getByRole("button", { name: "Check evidence" }).click();
+  await page.getByRole("button", { name: "Run the sample evidence check" }).click();
+  await page.getByRole("button", { name: "Review decision" }).click();
 }
 
 for (const width of WIDTHS) {
+  test(`landing has no serious axe violations at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+
+    await expect(
+      page.getByRole("list", { name: /buyer requirements become a human-approved decision/i }),
+    ).toBeVisible();
+    await expect(page.getByText("Try the browser-agent path")).toBeVisible();
+
+    const dimensions = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(dimensions.scrollWidth, JSON.stringify(dimensions)).toBeLessThanOrEqual(
+      dimensions.clientWidth,
+    );
+    expect(await blockingViolations(page)).toEqual([]);
+  });
+
   for (const surface of SURFACES) {
     test(`no serious axe violations on ${surface} at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
@@ -61,15 +80,15 @@ for (const width of WIDTHS) {
     }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto("/#product");
-      await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
-      await page.getByRole("button", { name: "Approve buyer context" }).click();
+      await page.getByRole("button", { name: "Review the sample buyer profile" }).click();
+      await page.getByRole("button", { name: "Use this buyer profile" }).click();
       await page.getByRole("button", {
         name:
           surface === "#product"
-            ? "Product"
+            ? "Set priorities"
             : surface === "#evaluation"
-              ? "Evaluation"
-              : "Decision",
+              ? "Check evidence"
+              : "Review decision",
       }).click();
 
       const dimensions = await page.evaluate(() => ({
@@ -90,8 +109,8 @@ for (const width of WIDTHS) {
   }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/#evaluation");
-    await page.getByRole("button", { name: "Apply fictional review set" }).click();
-    await expect(page.getByRole("button", { name: "Fictional review set applied" })).toBeDisabled();
+    await page.getByRole("button", { name: "Run the sample evidence check" }).click();
+    await expect(page.getByRole("button", { name: "Sample evidence check applied" })).toBeDisabled();
 
     const dimensions = await page.evaluate(() => ({
       clientWidth: document.documentElement.clientWidth,
@@ -124,7 +143,7 @@ for (const width of WIDTHS) {
     await page.setViewportSize({ width, height: 900 });
     await preparePopulatedLedger(page);
     await expect(
-      page.getByRole("region", { name: "Inspect the authoritative activity register." }),
+      page.getByRole("region", { name: "Activity history" }),
     ).toBeVisible();
     expect(await blockingViolations(page)).toEqual([]);
   });
@@ -154,8 +173,8 @@ for (const width of WIDTHS) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/#product");
     await page.getByRole("button", { name: "Reset demo" }).click();
-    await page.getByRole("button", { name: "Reset to canonical fixture" }).click();
-    await expect(page.getByRole("region", { name: "The canonical fixture is active." })).toBeVisible();
+    await page.getByRole("button", { name: "Reset to the demo starting point" }).click();
+    await expect(page.getByRole("region", { name: "The demo starting point is active." })).toBeVisible();
     expect(await blockingViolations(page)).toEqual([]);
   });
 }

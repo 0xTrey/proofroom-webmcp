@@ -38,13 +38,13 @@ describe("buyer context workspace", () => {
     const handle = createTestRoom();
     render(<ProductHarness handle={handle} />);
 
-    expect(screen.getByRole("heading", { name: "No buyer context is approved." })).toBeVisible();
-    expect(screen.getByText(/Buyer details are not yet shared/)).toBeVisible();
+    expect(screen.getByRole("heading", { name: "No buyer profile is approved yet." })).toBeVisible();
+    expect(screen.getByText(/Approve the priorities that should guide this review/)).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "Stage fictional Meridian Bank draft" }),
+      screen.getByRole("button", { name: "Review the sample buyer profile" }),
     ).toBeEnabled();
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Run regulated marketing campaigns",
+    expect(screen.getByRole("heading", { level: 1, name: "Start with what Meridian Bank needs." })).toHaveTextContent(
+      "Start with what Meridian Bank needs.",
     );
   });
 
@@ -53,13 +53,13 @@ describe("buyer context workspace", () => {
     const user = userEvent.setup();
     render(<ProductHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Stage fictional Meridian Bank draft" }));
+    await user.click(screen.getByRole("button", { name: "Review the sample buyer profile" }));
 
     expect(handle.room().buyerContextProposal?.payload).toEqual(MERIDIAN_CONTEXT_DRAFT);
     expect(handle.room().buyerContextProposal?.createdBy).toBe("ui");
     expect(handle.room().approvedBuyerContext).toBeNull();
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Run regulated marketing campaigns",
+    expect(screen.getByRole("heading", { level: 1, name: "Start with what Meridian Bank needs." })).toHaveTextContent(
+      "Start with what Meridian Bank needs.",
     );
     expect(ids("[data-capability-id]", "data-capability-id")).toEqual([
       "cap_campaign_workspace",
@@ -70,7 +70,7 @@ describe("buyer context workspace", () => {
     ]);
 
     const review = screen.getByRole("article", {
-      name: "Review the exact proposed buyer context.",
+      name: "Use these buying priorities?",
     });
     expect(review).toHaveAttribute("data-proposal-status", "pending");
     for (const value of [
@@ -96,8 +96,8 @@ describe("buyer context workspace", () => {
     expect(within(review).getByText("Digest").nextElementSibling?.textContent).toMatch(
       /^[0-9a-f]{16}$/,
     );
-    expect(within(review).getByRole("button", { name: "Approve buyer context" })).toBeEnabled();
-    expect(within(review).getByRole("button", { name: "Reject proposal" })).toBeEnabled();
+    expect(within(review).getByRole("button", { name: "Use this buyer profile" })).toBeEnabled();
+    expect(within(review).getByRole("button", { name: "Reject this buyer profile" })).toBeEnabled();
   });
 
   it("stages through the real shim, then approves only through rendered UI", async () => {
@@ -112,13 +112,14 @@ describe("buyer context workspace", () => {
     const user = userEvent.setup();
     render(<ProductHarness handle={handle} />);
     expect(shim.has("approve_buyer_context")).toBe(false);
+    await user.click(screen.getByText("Technical profile details"));
     expect(screen.getByText("webmcp", { exact: true })).toBeVisible();
 
-    await user.click(screen.getByRole("button", { name: "Approve buyer context" }));
+    await user.click(screen.getByRole("button", { name: "Use this buyer profile" }));
 
     expect(handle.room().approvedBuyerContext).toEqual(MERIDIAN_CONTEXT_DRAFT);
-    expect(screen.getByRole("heading", { name: "Meridian Bank context is buyer-approved." })).toBeVisible();
-    expect(screen.getByText("Buyer-approved context applied")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Meridian Bank buying priorities are approved." })).toBeVisible();
+    expect(screen.getByText("Buying priorities approved for this review")).toBeVisible();
     expect(screen.getByText(/Approved pcx_0001/)).toBeVisible();
     expect(screen.getAllByText("rcp_0003")).not.toHaveLength(0);
     expect(screen.getAllByText("pcx_0001")).not.toHaveLength(0);
@@ -152,16 +153,16 @@ describe("buyer context workspace", () => {
     const user = userEvent.setup();
     render(<ProductHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Reject proposal" }));
+    await user.click(screen.getByRole("button", { name: "Reject this buyer profile" }));
 
     const resolution =
-      "Rejected pcx_0001. No buyer context has ever been approved, so baseline product ordering remains in place.";
+      "Rejected pcx_0001. No buyer profile has ever been approved, so baseline product ordering remains in place.";
     expect(screen.getAllByText(resolution, { exact: true })).toHaveLength(2);
     expect(handle.room().buyerContextProposal?.status).toBe("rejected");
     expect(handle.room().approvedBuyerContext).toBeNull();
     expect(handle.room().approvedBuyerContextReceipt).toBeNull();
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Run regulated marketing campaigns",
+    expect(screen.getByRole("heading", { level: 1, name: "Start with what Meridian Bank needs." })).toHaveTextContent(
+      "Start with what Meridian Bank needs.",
     );
     expect(ids("[data-capability-id]", "data-capability-id")).toEqual([
       "cap_campaign_workspace",
@@ -170,7 +171,7 @@ describe("buyer context workspace", () => {
       "cap_access_control",
       "cap_hosting",
     ]);
-    expect(screen.queryByRole("button", { name: "Reject proposal" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Reject this buyer profile" })).not.toBeInTheDocument();
   });
 
   it("rejects a new proposal without changing previously approved context or receipt", async () => {
@@ -191,14 +192,14 @@ describe("buyer context workspace", () => {
     const user = userEvent.setup();
     render(<ProductHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Reject proposal" }));
+    await user.click(screen.getByRole("button", { name: "Reject this buyer profile" }));
 
     expect(handle.room().buyerContextProposal?.status).toBe("rejected");
     expect(handle.room().approvedBuyerContext).toEqual(MERIDIAN_CONTEXT_DRAFT);
     expect(handle.room().approvedBuyerContextReceipt).toEqual(approved.value.receipt);
     expect(buyerContextReceipt(handle.room())).toEqual(approved.value.receipt);
     const resolution =
-      "Rejected pcx_0003. The previously approved buyer context remains authoritative, and its personalization remains in place.";
+      "Rejected pcx_0003. The previously approved buyer profile remains in place, and its personalization remains in place.";
     expect(screen.getAllByText(resolution, { exact: true })).toHaveLength(2);
     expect(ids("[data-capability-id]", "data-capability-id").slice(0, 3)).toEqual([
       "cap_salesforce_bridge",
@@ -206,7 +207,7 @@ describe("buyer context workspace", () => {
       "cap_access_control",
     ]);
     expect(ids("[data-package-id]", "data-package-id")[0]).toBe("pkg_enterprise");
-    expect(screen.queryByRole("button", { name: "Reject proposal" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Reject this buyer profile" })).not.toBeInTheDocument();
   });
 
   it("surfaces a stale approval failure and leaves the room atomic", async () => {
@@ -222,7 +223,7 @@ describe("buyer context workspace", () => {
     const user = userEvent.setup();
     render(<ProductHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Approve buyer context" }));
+    await user.click(screen.getByRole("button", { name: "Use this buyer profile" }));
 
     expect(screen.getByText(/PROPOSAL_STALE/)).toBeVisible();
     expect(handle.room()).toEqual(before);
@@ -242,14 +243,14 @@ describe("buyer context workspace", () => {
     const user = userEvent.setup();
     render(<ProductHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Approve buyer context" }));
+    await user.click(screen.getByRole("button", { name: "Use this buyer profile" }));
     expect(screen.getByText(/PROPOSAL_STALE/)).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Dismiss error" }));
 
     expect(screen.queryByText(/PROPOSAL_STALE/)).not.toBeInTheDocument();
     expect(handle.room()).toEqual(beforeFailure);
     expect(handle.room().buyerContextProposal?.payload).toEqual(MERIDIAN_CONTEXT_DRAFT);
-    expect(screen.getByRole("button", { name: "Approve buyer context" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Use this buyer profile" })).toBeEnabled();
   });
 
   it("surfaces an expired approval failure and leaves the room atomic", async () => {
@@ -260,7 +261,7 @@ describe("buyer context workspace", () => {
     const user = userEvent.setup();
     render(<ProductHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Approve buyer context" }));
+    await user.click(screen.getByRole("button", { name: "Use this buyer profile" }));
 
     expect(screen.getByText(/PROPOSAL_EXPIRED/)).toBeVisible();
     expect(screen.getByText(/Ask for a new one/)).toBeVisible();
@@ -299,7 +300,7 @@ describe("buyer context workspace", () => {
     const user = userEvent.setup();
     render(<ProductHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Approve buyer context" }));
+    await user.click(screen.getByRole("button", { name: "Use this buyer profile" }));
 
     expect(screen.getByText(/INVALID_INPUT/)).toBeVisible();
     expect(handle.room()).toEqual(before);
@@ -320,8 +321,8 @@ describe("buyer context workspace", () => {
 
     render(<ProductHarness handle={handle} />);
     expect(screen.getByText(/PROPOSAL_RESOLVED/)).toBeVisible();
-    expect(screen.queryByRole("button", { name: "Approve buyer context" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Reject proposal" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Use this buyer profile" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Reject this buyer profile" })).not.toBeInTheDocument();
     expect(handle.room()).toEqual(before);
   });
 });

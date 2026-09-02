@@ -2,16 +2,82 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "no
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { ASSERTION_REGISTRY, CASE_EXECUTORS } from "../../evals/cases.ts";
+import { applySetup, ASSERTION_REGISTRY, CASE_EXECUTORS, FIXED_EVAL_NOW } from "../../evals/cases.ts";
 import {
   DETERMINISTIC_REPORT_FILENAME,
   runEvalSuite,
+  type RunEvalSuiteOptions,
 } from "../../evals/runner.ts";
-import { TOOL_NAMES } from "../../src/webmcp/toolDefinitions.ts";
+import { proposeBuyerContextInputSchema } from "../../src/domain/actions/inputs.ts";
+import { inputDigest } from "../../src/domain/hash.ts";
+import { createRoomStore } from "../../src/state/createRoomStore.ts";
+import { createMemoryRoomStorage } from "../../src/state/persistence.ts";
+import { registerRoomTools } from "../../src/webmcp/registerTools.ts";
+import { createModelContextShim } from "../../src/webmcp/testShim.ts";
+import { createToolDefinitions, TOOL_NAMES } from "../../src/webmcp/toolDefinitions.ts";
+import { MERIDIAN_CONTEXT_DRAFT } from "../../src/fixtures/buyer.ts";
 
 const temporaryDirectories: string[] = [];
 const manifestPath = resolve(process.cwd(), "evals", "manifest.json");
 const sequencesPath = resolve(process.cwd(), "evals", "expected-sequences.json");
+const TRANSFORMED_BUDGET_CEILING = 115000;
+
+function record(value: unknown): Record<string, unknown> {
+  return value !== null && typeof value === "object" ? (value as Record<string, unknown>) : {};
+}
+
+function transformEval006TemplateInput(
+  toolResult: WebMcpToolResult,
+  mutator: (input: Record<string, unknown>) => Record<string, unknown>,
+): WebMcpToolResult {
+  const content = record(toolResult.structuredContent);
+  const template = record(content.buyerContextStagingTemplate);
+  const input = record(template.input);
+  return {
+    ...toolResult,
+    structuredContent: {
+      ...content,
+      buyerContextStagingTemplate: {
+        ...template,
+        input: mutator(input),
+      },
+    },
+  };
+}
+
+async function runEval006RoomState(
+  transformToolResult: RunEvalSuiteOptions["transformToolResult"],
+) {
+  const handle = createRoomStore({
+    storage: createMemoryRoomStorage(),
+    now: () => FIXED_EVAL_NOW,
+    persist: false,
+  });
+  await applySetup("canonical_reset", handle);
+  const shim = createModelContextShim();
+  const abortController = new AbortController();
+  await registerRoomTools(createToolDefinitions(handle.agentActions), {
+    modelContext: shim.modelContext,
+    signal: abortController.signal,
+  });
+  await CASE_EXECUTORS.eval_006_make_this_relevant!({
+    handle,
+    shim,
+    async call(tool, args, expectation = {}) {
+      const originalResult = await shim.callTool(tool, args);
+      const toolResult =
+        transformToolResult?.("eval_006_make_this_relevant", tool, originalResult) ?? originalResult;
+      const outcome = toolResult.isError ? "error" : "success";
+      const expectedOutcome = expectation.outcome ?? "success";
+      if (outcome !== expectedOutcome) {
+        throw new Error(`Unexpected tool outcome for ${tool}.`);
+      }
+      return toolResult;
+    },
+  });
+  abortController.abort();
+  return handle.store.getState().room;
+}
 
 function copiedContract(mutator: (manifest: any, sequences: any) => void) {
   const directory = mkdtempSync(join(tmpdir(), "proofroom-evals-"));
@@ -61,7 +127,7 @@ describe("deterministic executable eval suite", () => {
       ambiguous: 4,
       safety: 4,
       toolCalls: 41,
-      assertions: 58,
+      assertions: 60,
     });
     expect(first.report.liveAgentSelection).toEqual({
       status: "not_run",
@@ -311,6 +377,126 @@ describe("deterministic executable eval suite", () => {
     expect(tampered?.assertions).toContainEqual(
       expect.objectContaining({ id: "force_eu_returns_unknown", outcome: "fail" }),
     );
+  });
+
+  it("fails the provenance assertion when propose_buyer_context diverges from the read template", async () => {
+    const result = await runEvalSuite({
+      writeArtifacts: false,
+      transformCallReceipt(caseId, receipt) {
+        if (
+          caseId === "eval_006_make_this_relevant" &&
+          receipt.tool === "propose_buyer_context"
+        ) {
+          return { ...receipt, inputDigest: "0000000000000000" };
+        }
+        return receipt;
+      },
+    });
+
+    const relevance = result.report.cases.find((entry) => entry.id === "eval_006_make_this_relevant");
+    expect(result.passed).toBe(false);
+    expect(relevance?.outcome).toBe("fail");
+    expect(relevance?.assertions).toContainEqual(
+      expect.objectContaining({
+        id: "relevance_context_uses_read_template",
+        outcome: "fail",
+      }),
+    );
+  });
+
+  it("proves eval_006 follows a controlled transformed template from get_room_state", async () => {
+    const transformToolResult: RunEvalSuiteOptions["transformToolResult"] = (caseId, tool, toolResult) => {
+      if (caseId !== "eval_006_make_this_relevant" || tool !== "get_room_state") {
+        return toolResult;
+      }
+      return transformEval006TemplateInput(toolResult, (input) => ({
+        ...input,
+        budgetCeiling: TRANSFORMED_BUDGET_CEILING,
+      }));
+    };
+
+    const result = await runEvalSuite({ writeArtifacts: false, transformToolResult });
+    const relevance = result.report.cases.find((entry) => entry.id === "eval_006_make_this_relevant");
+
+    expect(relevance).toMatchObject({
+      outcome: "pass",
+      executionCompleted: true,
+      sequenceMatches: true,
+      observedSequence: ["get_room_state", "propose_buyer_context"],
+    });
+    expect(relevance?.assertions).toContainEqual(
+      expect.objectContaining({
+        id: "relevance_context_uses_read_template",
+        outcome: "pass",
+      }),
+    );
+    expect(relevance?.assertions).toContainEqual(
+      expect.objectContaining({
+        id: "context_authority_null",
+        outcome: "pass",
+      }),
+    );
+
+    const proposeCall = relevance?.calls.find((call) => call.tool === "propose_buyer_context");
+    const transformedInput = proposeBuyerContextInputSchema.parse({
+      ...MERIDIAN_CONTEXT_DRAFT,
+      budgetCeiling: TRANSFORMED_BUDGET_CEILING,
+    });
+    expect(proposeCall?.inputDigest).toBe(inputDigest(transformedInput));
+
+    const room = await runEval006RoomState(transformToolResult);
+    expect(room.buyerContextProposal?.payload.budgetCeiling).toBe(TRANSFORMED_BUDGET_CEILING);
+    expect(room.approvedBuyerContext).toBeNull();
+  });
+
+  it("rejects an added template field before propose_buyer_context runs", async () => {
+    const result = await runEvalSuite({
+      writeArtifacts: false,
+      transformToolResult(caseId, tool, toolResult) {
+        if (caseId !== "eval_006_make_this_relevant" || tool !== "get_room_state") {
+          return toolResult;
+        }
+        return transformEval006TemplateInput(toolResult, (input) => ({
+          ...input,
+          extraStagingKey: "unauthorized",
+        }));
+      },
+    });
+
+    const relevance = result.report.cases.find((entry) => entry.id === "eval_006_make_this_relevant");
+    expect(result.passed).toBe(false);
+    expect(relevance).toMatchObject({
+      outcome: "fail",
+      executionCompleted: false,
+      observedSequence: ["get_room_state"],
+    });
+    expect(relevance?.calls).toHaveLength(1);
+    expect(relevance?.terminal.buyerContextProposalStatus).toBeNull();
+  });
+
+  it("rejects a missing template field before propose_buyer_context runs", async () => {
+    const result = await runEvalSuite({
+      writeArtifacts: false,
+      transformToolResult(caseId, tool, toolResult) {
+        if (caseId !== "eval_006_make_this_relevant" || tool !== "get_room_state") {
+          return toolResult;
+        }
+        return transformEval006TemplateInput(toolResult, (input) => {
+          const { companyName: _removed, ...rest } = input;
+          return rest;
+        });
+      },
+    });
+
+    const relevance = result.report.cases.find((entry) => entry.id === "eval_006_make_this_relevant");
+    expect(result.passed).toBe(false);
+    expect(relevance).toMatchObject({
+      outcome: "fail",
+      executionCompleted: false,
+      observedSequence: ["get_room_state"],
+    });
+    expect(relevance?.calls).toHaveLength(1);
+    expect(relevance?.terminal.buyerContextProposalStatus).toBeNull();
   });
 
   it("keeps the machine receipt bounded and free of raw sensitive payloads", async () => {

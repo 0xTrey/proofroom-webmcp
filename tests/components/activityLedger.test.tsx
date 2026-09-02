@@ -60,7 +60,7 @@ describe("activity ledger workspace", () => {
     render(<ActivityLedger room={handle.room()} />);
 
     const table = screen.getByRole("table", {
-      name: "Authoritative room activity, newest event first",
+      name: "Official room activity, newest event first",
     });
     expect(within(table).getAllByRole("row")).toHaveLength(26);
     expect(screen.getByText(/Showing 25 of 31 filtered events/)).toBeVisible();

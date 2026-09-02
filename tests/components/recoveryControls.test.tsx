@@ -74,7 +74,7 @@ describe("global reset flow", () => {
     const dialog = screen.getByRole("dialog", { name: "Reset this fictional demonstration?" });
     expect(handle.room()).toEqual(before);
     expect(screen.getByRole("button", { name: "Cancel" })).toHaveFocus();
-    expect(dialog).toHaveTextContent("Approved buyer context and its receipt");
+    expect(dialog).toHaveTextContent("Approved buyer profile and its receipt");
     expect(dialog).toHaveTextContent("Requirement attachments and buyer notes");
     expect(dialog).toHaveTextContent("ROI changes");
     expect(dialog).toHaveTextContent("CFO and CISO briefs");
@@ -82,12 +82,12 @@ describe("global reset flow", () => {
     expect(dialog).toHaveTextContent("Prior activity ledger history");
     expect(dialog).toHaveTextContent("Six fictional requirements");
     expect(dialog).toHaveTextContent("Twelve fictional evidence records");
-    expect(dialog).toHaveTextContent("Canonical commercial assumptions");
+    expect(dialog).toHaveTextContent("Sample commercial assumptions");
     expect(dialog).toHaveTextContent("Schema version 1");
-    expect(dialog).toHaveTextContent("One new canonical System event");
+    expect(dialog).toHaveTextContent("One new System event");
 
     await user.keyboard("{Shift>}{Tab}{/Shift}");
-    expect(screen.getByRole("button", { name: "Reset to canonical fixture" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Reset to the demo starting point" })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("button", { name: "Cancel" })).toHaveFocus();
     await user.keyboard("{Escape}");
@@ -110,12 +110,12 @@ describe("global reset flow", () => {
     render(<ResetHarness handle={handle} />);
 
     await user.click(screen.getByRole("button", { name: "Reset demo" }));
-    await user.click(screen.getByRole("button", { name: "Reset to canonical fixture" }));
+    await user.click(screen.getByRole("button", { name: "Reset to the demo starting point" }));
 
     expect(reset).toHaveBeenCalledTimes(1);
     expect(handle.room().revision).toBe(0);
     expect(handle.room().activityLedger).toHaveLength(1);
-    const panel = screen.getByRole("region", { name: "The canonical fixture is active." });
+    const panel = screen.getByRole("region", { name: "The demo starting point is active." });
     expect(panel).toHaveTextContent("rcp_0001");
     expect(panel).toHaveTextContent("reset");
     expect(panel).toHaveTextContent("6");
@@ -132,7 +132,7 @@ describe("global reset flow", () => {
     render(<ResetHarness handle={handle} />);
 
     await user.click(screen.getByRole("button", { name: "Reset demo" }));
-    await user.click(screen.getByRole("button", { name: "Reset to canonical fixture" }));
+    await user.click(screen.getByRole("button", { name: "Reset to the demo starting point" }));
 
     expect(screen.getByText(/current tab reset succeeded/i)).toBeVisible();
     expect(screen.getByText(/Reload may restore old or empty state/)).toBeVisible();
@@ -140,9 +140,9 @@ describe("global reset flow", () => {
     await user.click(screen.getByRole("button", { name: "Try saving again" }));
 
     expect(screen.queryByText(/Reload may restore old or empty state/)).not.toBeInTheDocument();
-    expect(screen.getByText("The canonical fixture is now saved in this browser.")).toBeVisible();
+    expect(screen.getByText("The demo starting point is now saved in this browser.")).toBeVisible();
     expect(
-      screen.getByRole("region", { name: "The canonical fixture is active." }),
+      screen.getByRole("region", { name: "The demo starting point is active." }),
     ).toHaveTextContent("rcp_0001");
   });
 });
@@ -153,13 +153,13 @@ describe("recovery panels", () => {
       name: "invalid state",
       seed: { schemaVersion: 1, savedAt: "bad", room: {} },
       code: "invalid_persisted_state",
-      action: "Continue with recovered fixture",
+      action: "Continue with recovered demo",
     },
     {
       name: "unsupported version",
       seed: { schemaVersion: 99, savedAt: FIXED_NOW, room: { schemaVersion: 99 } },
       code: "unsupported_schema_version",
-      action: "Continue with recovered fixture",
+      action: "Continue with recovered demo",
     },
   ])("renders and resolves $name explicitly", async ({ seed, code, action }) => {
     const handle = createTestRoom({ storage: createMemoryRoomStorage({ seed }) });
@@ -318,7 +318,7 @@ describe("render failure privacy", () => {
     render(<Harness />);
     await user.click(screen.getByRole("button", { name: "Open reset confirmation" }));
     expect(screen.getByRole("dialog", { name: "Reset this fictional demonstration?" })).toBeVisible();
-    await user.click(screen.getByRole("button", { name: "Reset to canonical fixture" }));
+    await user.click(screen.getByRole("button", { name: "Reset to the demo starting point" }));
 
     expect(screen.getByText("Product surface restored")).toBeVisible();
     expect(handle.room().revision).toBe(0);

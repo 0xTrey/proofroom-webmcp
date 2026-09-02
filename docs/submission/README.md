@@ -1,9 +1,22 @@
 # ProofRoom submission package
 
-> Local preparation only. No official Devpost draft exists locally, and nothing has been submitted.
+> Local preparation only. Authenticated Devpost project `1402028` exists as an Untitled, empty
+> pre-draft shell. It has no video and has not been submitted.
 
-This index covers the local challenge materials. It does not represent an official form, uploaded
-video, or submitted entry.
+This index covers the local challenge materials. It does not represent a populated form, uploaded
+video, or submitted entry. The repository has no local Devpost journey-state file.
+
+## Current lifecycle snapshot
+
+| Area | Status | Next required proof |
+| --- | --- | --- |
+| Public baseline | verified | None for the recorded deployment; public counts stay tied to the release receipt |
+| Local candidate | prepared | Commit, push, deploy, and rerun public verification after authorization |
+| Devpost shell | empty | Populate project `1402028` with approved copy, URLs, screenshots, and video |
+| Video | empty | Record, review, upload, and confirm playback |
+| Live natural-language agent | not_run | Run an eligible browser agent against a compatible deployed build |
+| Release-candidate gate | blocked | Run `npm run qa:receipt`, `npm run release:rc:refresh`, and `npm run release:rc:validate` |
+| Final submission | incomplete | Complete Devpost population and submit after video and copy review |
 
 | Artifact | Use |
 | --- | --- |

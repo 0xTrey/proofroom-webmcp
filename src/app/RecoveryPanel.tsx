@@ -21,24 +21,24 @@ function recoveryCopy(notice: RecoveryNotice): {
   switch (notice.code) {
     case "invalid_persisted_state":
       return {
-        heading: "The canonical fixture is active.",
+        heading: "The demo starting point is active.",
         message:
           "Untrusted saved data failed strict validation. It was not merged or partially repaired.",
-        action: "Continue with recovered fixture",
+        action: "Continue with recovered demo",
       };
     case "unsupported_schema_version": {
       const version = notice.message.match(/schema version (\d+)/i)?.[1] ?? "unknown";
       return {
-        heading: "The canonical fixture is active.",
+        heading: "The demo starting point is active.",
         message: `Saved schema version ${version} is not supported by this build. The saved room was not trusted.`,
-        action: "Continue with recovered fixture",
+        action: "Continue with recovered demo",
       };
     }
     case "persisted_state_migrated":
       return {
         heading: "The saved room was upgraded in place.",
         message:
-          "An older schema-version-1 room kept its authoritative state while the missing buyer-context receipt was reconstructed from its existing approval event.",
+          "An older schema-version-1 room kept its official room state while the missing buyer-profile receipt was reconstructed from its existing approval event.",
         action: "Continue with upgraded room",
       };
     case "storage_unavailable":

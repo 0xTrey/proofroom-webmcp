@@ -5,37 +5,52 @@
  * transformation the demo has to land.
  */
 
+export const HOME_ROUTE = {
+  id: "home",
+  label: "How it works",
+  hash: "",
+  heading: "Check a software vendor's claims before you buy.",
+  purpose: "See how ProofRoom checks vendor claims against buying requirements.",
+} as const;
+
 export const ROUTES = [
   {
     id: "product",
-    label: "Product",
+    label: "Set priorities",
     hash: "#product",
-    heading: "Northstar, the fictional campaign operations platform",
-    purpose: "Understand the product and its documented proof before any agent runs.",
+    heading: "Start with what Meridian Bank needs.",
+    purpose: "Confirm the budget, payback target, and buying priorities before checking evidence.",
   },
   {
     id: "evaluation",
-    label: "Evaluation",
+    label: "Check evidence",
     hash: "#evaluation",
-    heading: "Requirements and evidence",
-    purpose: "See how each requirement is proven, partially proven, or still open.",
+    heading: "Check six buying requirements against the vendor's evidence.",
+    purpose: "See what each requirement proves, partly proves, contradicts, or leaves unknown.",
   },
   {
     id: "decision",
-    label: "Decision",
+    label: "Review decision",
     hash: "#decision",
-    heading: "Commercial model and decision",
-    purpose: "Review the assumptions, the blockers, and the recorded decision trail.",
+    heading: "Review the recommendation, then make the final call.",
+    purpose: "Review the business case, briefs, and recommendation before you approve or reject it.",
   },
 ] as const;
 
-export type RouteId = (typeof ROUTES)[number]["id"];
+export type RoomRouteId = (typeof ROUTES)[number]["id"];
 
 export type Route = (typeof ROUTES)[number];
 
-export const DEFAULT_ROUTE: RouteId = "product";
+export type RouteId = typeof HOME_ROUTE.id | RoomRouteId;
 
-export function findRoute(id: RouteId): Route {
+export type AppRoute = typeof HOME_ROUTE | Route;
+
+export const DEFAULT_ROUTE: RouteId = "home";
+
+export function findRoute(id: RouteId): AppRoute {
+  if (id === HOME_ROUTE.id) {
+    return HOME_ROUTE;
+  }
   const route = ROUTES.find((entry) => entry.id === id);
   // ROUTES is exhaustive for RouteId, so this fallback is unreachable in practice.
   return route ?? ROUTES[0];

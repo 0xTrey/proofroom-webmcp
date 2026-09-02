@@ -16,10 +16,10 @@ export function ResetResultPanel(props: ResetResultPanelProps) {
   return (
     <section className="reset-result" aria-labelledby="reset-result-heading">
       <div>
-        <h2 id="reset-result-heading">The canonical fixture is active.</h2>
+        <h2 id="reset-result-heading">The demo starting point is active.</h2>
         <p>
-          This confirmation is a page readback, not authoritative room state. The prior ledger was
-          replaced by one new canonical System event.
+          This confirmation is a page readback, not official room state. The prior ledger was
+          replaced by one new System event.
         </p>
       </div>
 
@@ -37,7 +37,7 @@ export function ResetResultPanel(props: ResetResultPanelProps) {
               setRetrySucceeded(retried.ok);
               setRetryMessage(
                 retried.ok
-                  ? "The canonical fixture is now saved in this browser."
+                  ? "The demo starting point is now saved in this browser."
                   : `${retried.error.code}: ${retried.error.issues[0]?.message ?? retried.error.message}`,
               );
             }}

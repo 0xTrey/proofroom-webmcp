@@ -1,6 +1,8 @@
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
+import { callTool, installBrowserToolShim } from "./support/browserToolShim.ts";
+import { captureSubmissionGallery } from "./support/submissionGallery.ts";
 
 const AUDIT_DIRECTORY = path.resolve("artifacts/visual-audit/006-decision");
 const UPDATE_VISUAL_AUDIT = process.env.UPDATE_VISUAL_AUDIT === "1";
@@ -9,23 +11,33 @@ const VIEWPORTS = [
   { width: 1600, height: 900 },
 ] as const;
 
+const RECEIPT_FIELD_TERMS = [
+  "Receipt ID",
+  "Kind",
+  "Proposal ID",
+  "Payload digest",
+  "Approved revision",
+  "Issued timestamp",
+  "Safe summary",
+] as const;
+
 async function applyCanonicalReview(page: Page): Promise<void> {
   await page.goto("/#product");
-  await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
-  await page.getByRole("button", { name: "Approve buyer context" }).click();
-  await page.getByRole("button", { name: "Evaluation" }).click();
-  await page.getByRole("button", { name: "Apply fictional review set" }).click();
-  await page.getByRole("button", { name: "Decision" }).click();
+  await page.getByRole("button", { name: "Review the sample buyer profile" }).click();
+  await page.getByRole("button", { name: "Use this buyer profile" }).click();
+  await page.getByRole("button", { name: "Check evidence" }).click();
+  await page.getByRole("button", { name: "Run the sample evidence check" }).click();
+  await page.getByRole("button", { name: "Review decision" }).click();
 }
 
 async function stageCanonicalDecision(page: Page): Promise<void> {
-  await page.getByRole("button", { name: "Fill canonical honest CFO draft" }).click();
+  await page.getByRole("button", { name: "Fill the honest sample draft" }).click();
   await page.getByRole("button", { name: "Save CFO brief" }).click();
   await page.getByRole("button", { name: /CISO/ }).click();
-  await page.getByRole("button", { name: "Fill canonical honest CISO draft" }).click();
+  await page.getByRole("button", { name: "Fill the honest sample draft" }).click();
   await page.getByRole("button", { name: "Save CISO brief" }).click();
-  await page.getByRole("button", { name: "Fill canonical not-ready draft" }).click();
-  await page.getByRole("button", { name: "Stage proposal" }).click();
+  await page.getByRole("button", { name: "Prepare the sample not-ready recommendation" }).click();
+  await page.getByRole("button", { name: "Prepare recommendation" }).click();
 }
 
 async function settlePage(page: Page): Promise<void> {
@@ -86,7 +98,7 @@ function boxesOverlap(first: ViewportBox, second: ViewportBox): boolean {
 }
 
 async function expectProposalBlockersInViewport(page: Page): Promise<void> {
-  const review = page.getByRole("article", { name: "Staged proposal" });
+  const review = page.getByRole("article", { name: "Recommendation prepared for your review" });
   const payloadFields = review.locator(".proposal-payload dl > div");
   const statusField = payloadFields.filter({ hasText: /^Decision status/ });
   const blockingField = payloadFields.filter({ hasText: /^Blocking requirements/ });
@@ -112,7 +124,7 @@ async function expectProposalBlockersInViewport(page: Page): Promise<void> {
     });
   } else {
     await review
-      .getByRole("heading", { name: "Staged proposal" })
+      .getByRole("heading", { name: "Recommendation prepared for your review" })
       .evaluate((element) => element.scrollIntoView({ block: "start" }));
   }
 
@@ -191,12 +203,128 @@ async function expectReceiptMetadataLayout(page: Page): Promise<void> {
   }
 }
 
+async function positionSubmissionGalleryCapture(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const guide = document.querySelector(".room-guide");
+    const receipt = document.querySelector(".approved-decision__receipt");
+    const summary = document.querySelector(".activity-summary");
+    if (!(guide instanceof HTMLElement) || !(receipt instanceof HTMLElement) || !(summary instanceof HTMLElement)) {
+      throw new Error("Gallery capture targets were not found.");
+    }
+
+    const guideHeight = guide.getBoundingClientRect().height;
+    const viewportHeight = window.innerHeight;
+    const receiptTopDoc = receipt.getBoundingClientRect().top + window.scrollY;
+    const summaryBottomDoc = summary.getBoundingClientRect().bottom + window.scrollY;
+    const minScroll = Math.max(0, receiptTopDoc - guideHeight);
+    const maxScroll = Math.max(0, summaryBottomDoc - viewportHeight);
+
+    if (maxScroll > minScroll) {
+      throw new Error(
+        `Gallery capture layout does not fit: minScroll=${minScroll}, maxScroll=${maxScroll}`,
+      );
+    }
+
+    window.scrollTo({ top: maxScroll, behavior: "instant" });
+
+    const receiptViewportTop = receipt.getBoundingClientRect().top;
+    const summaryViewportBottom = summary.getBoundingClientRect().bottom;
+    if (receiptViewportTop < guideHeight - 1 || summaryViewportBottom > viewportHeight + 0.5) {
+      throw new Error(
+        `Gallery capture layout does not fit: receiptTop=${receiptViewportTop}, guideHeight=${guideHeight}, summaryBottom=${summaryViewportBottom}, viewportHeight=${viewportHeight}`,
+      );
+    }
+  });
+}
+
+async function expectReceiptClearOfRoomGuide(page: Page): Promise<void> {
+  const overlap = await page.evaluate((terms) => {
+    const guide = document.querySelector(".room-guide");
+    if (!(guide instanceof HTMLElement)) {
+      throw new Error("Room guide was not found.");
+    }
+    const guideBox = guide.getBoundingClientRect();
+    const guideViewport = {
+      top: guideBox.top,
+      right: guideBox.right,
+      bottom: guideBox.bottom,
+      left: guideBox.left,
+    };
+
+    const receipt = document.querySelector(".approved-decision__receipt");
+    if (!(receipt instanceof HTMLElement)) {
+      throw new Error("Decision receipt was not found.");
+    }
+    const heading = receipt.querySelector("h3");
+    if (!(heading instanceof HTMLElement)) {
+      throw new Error("Decision receipt heading was not found.");
+    }
+
+    const targets: Array<{ label: string; box: DOMRect }> = [
+      { label: "Decision receipt heading", box: heading.getBoundingClientRect() },
+    ];
+
+    for (const term of terms) {
+      const field = Array.from(receipt.querySelectorAll("dl > div")).find(
+        (candidate) => candidate.querySelector("dt")?.textContent === term,
+      );
+      if (!(field instanceof HTMLElement)) {
+        throw new Error(`Receipt field ${term} was not found.`);
+      }
+      targets.push({ label: term, box: field.getBoundingClientRect() });
+    }
+
+    const overlapsGuide = (box: DOMRect) =>
+      !(
+        box.right <= guideViewport.left ||
+        guideViewport.right <= box.left ||
+        box.bottom <= guideViewport.top ||
+        guideViewport.bottom <= box.top
+      );
+
+    return {
+      guideViewport,
+      overlapping: targets
+        .filter(({ box }) => overlapsGuide(box))
+        .map(({ label, box }) => ({
+          label,
+          top: box.top,
+          bottom: box.bottom,
+        })),
+    };
+  }, [...RECEIPT_FIELD_TERMS]);
+
+  expect(
+    overlap.overlapping,
+    `Receipt overlaps room guide: ${JSON.stringify(overlap)}`,
+  ).toEqual([]);
+}
+
+async function expectActivitySummaryInViewport(page: Page): Promise<void> {
+  const viewportHeight = page.viewportSize()?.height ?? 900;
+  const box = await page.locator(".activity-summary").boundingBox();
+  expect(box, "Activity summary bounding box").not.toBeNull();
+  expect(box!.y, "Activity summary top").toBeGreaterThanOrEqual(0);
+  expect(box!.y + box!.height, "Activity summary bottom").toBeLessThanOrEqual(viewportHeight + 1);
+}
+
+async function expectSharedActivityTotals(page: Page): Promise<void> {
+  const activitySummary = page.locator(".activity-summary");
+  const agentTotal = activitySummary.locator("dt", { hasText: "Agent" }).locator("xpath=following-sibling::dd[1]");
+  const personTotal = activitySummary.locator("dt", { hasText: "Person" }).locator("xpath=following-sibling::dd[1]");
+  await expect(agentTotal).not.toHaveText("0");
+  await expect(personTotal).not.toHaveText("0");
+}
+
 for (const viewport of VIEWPORTS) {
   test(`asserts and optionally captures four item 8 states at ${viewport.width}px`, async ({
     page,
   }) => {
     if (UPDATE_VISUAL_AUDIT) {
       await mkdir(AUDIT_DIRECTORY, { recursive: true });
+    }
+    if (viewport.width === 1600) {
+      await installBrowserToolShim(page);
     }
     await page.setViewportSize(viewport);
 
@@ -213,7 +341,7 @@ for (const viewport of VIEWPORTS) {
     const warning = page.getByText("Annual subscription exceeds the budget ceiling.");
     await expect(warning).toBeVisible();
     await expect(page.locator(".roi-workspace__preview").getByText("Payback target")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Apply reviewed assumptions" })).toBeEnabled();
+    await expect(page.getByRole("button", { name: "Use these reviewed numbers" })).toBeEnabled();
     expect(
       await page.evaluate(() => {
         const persisted = JSON.parse(localStorage.getItem("proofroom.room.v1") ?? "null") as {
@@ -229,12 +357,15 @@ for (const viewport of VIEWPORTS) {
 
     await stageCanonicalDecision(page);
 
-    const review = page.getByRole("article", { name: "Staged proposal" });
+    const review = page.getByRole("article", { name: "Recommendation prepared for your review" });
     await expectProposalBlockersInViewport(page);
     await expectNoOverflow(page);
     await capture(page, `proposal-review-${viewport.width}.png`);
 
-    await review.getByRole("button", { name: "Approve decision" }).click();
+    await review.getByRole("button", { name: "Approve recommendation" }).click();
+    if (viewport.width === 1600) {
+      await callTool(page, "get_room_state", { detail: "summary" });
+    }
     const receipt = page.getByRole("region", { name: "Decision receipt" });
     await expect(receipt).toContainText("decision");
     await expect(receipt).toContainText("pdc_");
@@ -245,5 +376,15 @@ for (const viewport of VIEWPORTS) {
     await expectReceiptMetadataLayout(page);
     await expectNoOverflow(page);
     await capture(page, `approved-receipt-${viewport.width}.png`);
+    if (viewport.width === 1600) {
+      await expectSharedActivityTotals(page);
+      await positionSubmissionGalleryCapture(page);
+      await settlePage(page);
+      await expectReceiptClearOfRoomGuide(page);
+      await expectActivitySummaryInViewport(page);
+      await expectReceiptMetadataLayout(page);
+      await expectNoOverflow(page);
+      await captureSubmissionGallery(page, "03-approved-decision-1600.png");
+    }
   });
 }

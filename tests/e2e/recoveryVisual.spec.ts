@@ -59,13 +59,13 @@ for (const viewport of VIEWPORTS) {
     await page.setViewportSize(viewport);
     await page.goto("/#product");
 
-    await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
-    await page.getByRole("button", { name: "Approve buyer context" }).click();
-    await page.getByRole("button", { name: "Evaluation" }).click();
-    await page.getByRole("button", { name: "Apply fictional review set" }).click();
-    await page.getByRole("button", { name: "Decision" }).click();
+    await page.getByRole("button", { name: "Review the sample buyer profile" }).click();
+    await page.getByRole("button", { name: "Use this buyer profile" }).click();
+    await page.getByRole("button", { name: "Check evidence" }).click();
+    await page.getByRole("button", { name: "Run the sample evidence check" }).click();
+    await page.getByRole("button", { name: "Review decision" }).click();
     const ledger = page.getByRole("region", {
-      name: "Inspect the authoritative activity register.",
+      name: "Activity history",
     });
     await expect(ledger.locator("tbody tr")).toHaveCount(9);
     await settlePage(page);
@@ -76,7 +76,7 @@ for (const viewport of VIEWPORTS) {
     await page.getByRole("button", { name: "Reset demo" }).click();
     const dialog = page.getByRole("dialog", { name: "Reset this fictional demonstration?" });
     await expect(dialog).toContainText("Prior activity ledger history");
-    await expect(dialog).toContainText("One new canonical System event");
+    await expect(dialog).toContainText("One new System event");
     await settlePage(page);
     await capture(page, `reset-confirmation-${viewport.width}.png`);
 
@@ -88,17 +88,17 @@ for (const viewport of VIEWPORTS) {
       );
     });
     await page.reload();
-    const recovery = page.getByRole("region", { name: "The canonical fixture is active." });
+    const recovery = page.getByRole("region", { name: "The demo starting point is active." });
     await expect(recovery).toContainText("invalid_persisted_state");
     await settlePage(page);
     await placeAtViewportTop(page, ".global-recovery");
     await expectNoOverflow(page);
     await capture(page, `invalid-state-recovery-${viewport.width}.png`);
 
-    await page.getByRole("button", { name: "Continue with recovered fixture" }).click();
+    await page.getByRole("button", { name: "Continue with recovered demo" }).click();
     await page.getByRole("button", { name: "Reset demo" }).click();
-    await page.getByRole("button", { name: "Reset to canonical fixture" }).click();
-    const receipt = page.getByRole("region", { name: "The canonical fixture is active." });
+    await page.getByRole("button", { name: "Reset to the demo starting point" }).click();
+    const receipt = page.getByRole("region", { name: "The demo starting point is active." });
     await expect(receipt).toContainText("rcp_0001");
     await expect(receipt).toContainText("Evidence records12");
     await settlePage(page);

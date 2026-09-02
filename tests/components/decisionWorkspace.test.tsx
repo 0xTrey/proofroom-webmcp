@@ -46,7 +46,7 @@ describe("ROI workspace", () => {
     const handle = createTestRoom();
     render(<DecisionHarness handle={handle} />);
 
-    expect(screen.getByRole("heading", { name: "Commercial model" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Check the business case" })).toBeVisible();
     expect(screen.getByLabelText("Campaigns per month")).toBeVisible();
     expect(screen.getByLabelText("Budget ceiling")).toBeVisible();
     expect(screen.getByRole("button", { name: "Preview calculation" })).toBeEnabled();
@@ -72,7 +72,7 @@ describe("ROI workspace", () => {
 
     await user.click(screen.getByRole("button", { name: "Preview calculation" }));
 
-    expect(screen.getByRole("button", { name: "Apply reviewed assumptions" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Use these reviewed numbers" })).toBeDisabled();
     expect(
       screen.getByText(
         "No ROI assumptions changed. Edit and preview a different value before applying.",
@@ -91,7 +91,7 @@ describe("ROI workspace", () => {
     await user.type(budgetInput, "90000");
 
     expect(screen.getByText(/draft changed after the last preview/i)).toBeVisible();
-    expect(screen.getByRole("button", { name: "Apply reviewed assumptions" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Use these reviewed numbers" })).toBeDisabled();
   });
 
   it("applies reviewed assumptions and increments revision", async () => {
@@ -104,7 +104,7 @@ describe("ROI workspace", () => {
     await user.clear(budgetInput);
     await user.type(budgetInput, "90000");
     await user.click(screen.getByRole("button", { name: "Preview calculation" }));
-    await user.click(screen.getByRole("button", { name: "Apply reviewed assumptions" }));
+    await user.click(screen.getByRole("button", { name: "Use these reviewed numbers" }));
 
     expect(handle.room().revision).toBe(revisionBefore + 1);
     expect(handle.room().roiAssumptions.budgetCeiling).toBe(90000);
@@ -189,19 +189,19 @@ describe("brief workspace", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical honest CFO draft" }));
+    await user.click(screen.getByRole("button", { name: "Fill the honest sample draft" }));
     expect(
-      screen.getByText(/Apply the complete fictional review set on the Evaluation route/),
+      screen.getByText(/Run the sample evidence check on the Evaluation route/),
     ).toBeVisible();
     expect(screen.getByLabelText("Summary")).toHaveValue("");
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
     expect(
       screen.getByText(
-        "Apply the complete fictional review set on the Evaluation route before filling the canonical decision draft.",
+        "Run the sample evidence check on the Evaluation route before filling the honest sample decision draft.",
       ),
     ).toBeVisible();
-    expect(screen.queryByRole("button", { name: "Stage proposal" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Prepare recommendation" })).not.toBeInTheDocument();
   });
 
   it("saves a CFO brief through the page", async () => {
@@ -210,7 +210,7 @@ describe("brief workspace", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical honest CFO draft" }));
+    await user.click(screen.getByRole("button", { name: "Fill the honest sample draft" }));
     await user.click(screen.getByRole("button", { name: "Save CFO brief" }));
 
     expect(handle.room().stakeholderBriefs.cfo).toBeDefined();
@@ -223,11 +223,11 @@ describe("brief workspace", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical honest CFO draft" }));
+    await user.click(screen.getByRole("button", { name: "Fill the honest sample draft" }));
     await user.click(screen.getByRole("button", { name: "Save CFO brief" }));
 
     await user.click(screen.getByRole("button", { name: /CISO/ }));
-    await user.click(screen.getByRole("button", { name: "Fill canonical honest CISO draft" }));
+    await user.click(screen.getByRole("button", { name: "Fill the honest sample draft" }));
     await user.click(screen.getByRole("button", { name: "Save CISO brief" }));
 
     expect(handle.room().stakeholderBriefs.cfo).toBeDefined();
@@ -256,7 +256,7 @@ describe("brief workspace", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical honest CFO draft" }));
+    await user.click(screen.getByRole("button", { name: "Fill the honest sample draft" }));
     await user.click(screen.getByRole("button", { name: "Save CFO brief" }));
 
     const saved = document.querySelector('[data-brief-role="cfo"]') as HTMLElement | null;
@@ -273,8 +273,8 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
 
     expect(handle.room().decisionProposal).not.toBeNull();
     expect(handle.room().decisionProposal?.payload.status).toBe("not_ready");
@@ -287,15 +287,15 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
 
-    const review = screen.getByRole("article", { name: "Staged proposal" });
+    const review = screen.getByRole("article", { name: "Recommendation prepared for your review" });
     expect(within(review).getAllByText(/not ready/).length).toBeGreaterThan(0);
     expect(within(review).getAllByText(/req_eu_residency/).length).toBeGreaterThan(0);
     expect(within(review).getAllByText(/req_sso/).length).toBeGreaterThan(0);
-    expect(within(review).getByRole("button", { name: "Approve decision" })).toBeEnabled();
-    expect(within(review).getByRole("button", { name: "Reject proposal" })).toBeEnabled();
+    expect(within(review).getByRole("button", { name: "Approve recommendation" })).toBeEnabled();
+    expect(within(review).getByRole("button", { name: "Reject recommendation" })).toBeEnabled();
   });
 
   it("refuses a ready proposal while blockers exist", async () => {
@@ -304,12 +304,12 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Open proposal editor" }));
+    await user.click(screen.getByRole("button", { name: "Edit recommendation" }));
     const statusSelect = screen.getByLabelText("Decision status");
     await user.selectOptions(statusSelect, "ready");
     await user.type(screen.getByLabelText("Rationale"), "Everything is documented.");
     await user.type(screen.getByLabelText("Next step"), "Proceed to contract.");
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
 
     expect(screen.getByText(/DECISION_BLOCKED/)).toBeVisible();
     expect(handle.room().decisionProposal).toBeNull();
@@ -322,9 +322,9 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
-    await user.click(screen.getByRole("button", { name: "Approve decision" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Approve recommendation" }));
 
     expect(handle.room().approvedDecision).not.toBeNull();
     expect(handle.room().approvedDecision?.status).toBe("not_ready");
@@ -337,9 +337,9 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
-    await user.click(screen.getByRole("button", { name: "Reject proposal" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Reject recommendation" }));
 
     expect(handle.room().decisionProposal?.status).toBe("rejected");
     expect(handle.room().approvedDecision).toBeNull();
@@ -353,19 +353,19 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
-    await user.click(screen.getByRole("button", { name: "Approve decision" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Approve recommendation" }));
     expect(handle.room().approvedDecision).not.toBeNull();
     const firstReceipt = handle.room().approvedDecision?.receipt;
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
-    await user.click(screen.getByRole("button", { name: "Reject proposal" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Reject recommendation" }));
 
     expect(handle.room().decisionProposal?.status).toBe("rejected");
     expect(handle.room().approvedDecision?.receipt).toEqual(firstReceipt);
-    expect(screen.getAllByText(/previously approved decision remains authoritative/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/previously approved decision remains in place/).length).toBeGreaterThan(0);
   });
 
   it("fails stale approval without mutation", async () => {
@@ -375,8 +375,8 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
 
     handle.actions.applyRoiAssumptions({
       ...handle.room().roiAssumptions,
@@ -384,7 +384,7 @@ describe("proposal desk", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getAllByText(/proposal is stale/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/recommendation is stale/i).length).toBeGreaterThan(0);
     });
 
     const proposalId = handle.room().decisionProposal?.id ?? "";
@@ -402,11 +402,11 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
     handle.clock.advance(PROPOSAL_TTL_MS + 1);
 
-    await user.click(screen.getByRole("button", { name: "Approve decision" }));
+    await user.click(screen.getByRole("button", { name: "Approve recommendation" }));
 
     expect(screen.getAllByText(/PROPOSAL_EXPIRED/).length).toBeGreaterThan(0);
     expect(handle.room().approvedDecision).toBeNull();
@@ -419,9 +419,9 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
-    await user.click(screen.getByRole("button", { name: "Approve decision" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Approve recommendation" }));
 
     expect(screen.getByText("Decision receipt")).toBeVisible();
     expect(screen.getAllByText(/rcp_/).length).toBeGreaterThan(0);
@@ -434,9 +434,9 @@ describe("proposal desk", () => {
     const user = userEvent.setup();
     render(<DecisionHarness handle={handle} />);
 
-    await user.click(screen.getByRole("button", { name: "Fill canonical not-ready draft" }));
-    await user.click(screen.getByRole("button", { name: "Stage proposal" }));
-    await user.click(screen.getByRole("button", { name: "Approve decision" }));
+    await user.click(screen.getByRole("button", { name: "Prepare the sample not-ready recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Prepare recommendation" }));
+    await user.click(screen.getByRole("button", { name: "Approve recommendation" }));
 
     handle.actions.applyRoiAssumptions({
       ...handle.room().roiAssumptions,
@@ -470,9 +470,11 @@ describe("WebMCP-staged proposal appears in the page", () => {
 
     render(<DecisionHarness handle={handle} />);
 
-    const review = screen.getByRole("article", { name: "Staged proposal" });
+    const review = screen.getByRole("article", { name: "Recommendation prepared for your review" });
+    const user = userEvent.setup();
+    await user.click(within(review).getByText("Technical recommendation details"));
     expect(within(review).getByText("webmcp")).toBeVisible();
-    expect(screen.getByRole("button", { name: "Approve decision" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Approve recommendation" })).toBeEnabled();
   });
 });
 

@@ -45,19 +45,19 @@ test("public UI-only canonical journey is clean, persistent, and resettable", as
     page.getByRole("complementary", { name: "Fictional demo disclosure" }),
   ).toContainText("Fictional demonstration");
 
-  await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
-  await page.getByRole("button", { name: "Approve buyer context" }).click();
-  await expect(page.getByText("Buyer-approved context applied")).toBeVisible();
+  await page.getByRole("button", { name: "Review the sample buyer profile" }).click();
+  await page.getByRole("button", { name: "Use this buyer profile" }).click();
+  await expect(page.getByText("Buying priorities approved for this review")).toBeVisible();
   await expectSurfaceIntegrity(page);
 
-  await page.getByRole("button", { name: "Evaluation" }).click();
+  await page.getByRole("button", { name: "Check evidence" }).click();
   await expectSurfaceIntegrity(page);
-  await page.getByRole("button", { name: "Apply fictional review set" }).click();
+  await page.getByRole("button", { name: "Run the sample evidence check" }).click();
   await expect(page.locator("[data-requirement-status='supported']")).toHaveCount(3);
   await expect(page.locator("[data-requirement-status='partially_supported']")).toHaveCount(2);
   await expect(page.locator("[data-requirement-status='unknown']")).toHaveCount(1);
 
-  await page.getByRole("button", { name: "Decision" }).click();
+  await page.getByRole("button", { name: "Review decision" }).click();
   await expectSurfaceIntegrity(page);
   const toolManifest = page.locator(".tool-manifest");
   await expect(toolManifest.locator("li")).toHaveCount(9);
@@ -69,19 +69,19 @@ test("public UI-only canonical journey is clean, persistent, and resettable", as
   await page.getByRole("button", { name: "Apply reviewed assumptions" }).click();
   await expect(page.getByText(/Applied 1 assumption change/)).toBeVisible();
 
-  await page.getByRole("button", { name: "Fill canonical honest CFO draft" }).click();
+  await page.getByRole("button", { name: "Fill the honest sample draft" }).click();
   await page.getByRole("button", { name: "Save CFO brief" }).click();
   await page.getByRole("button", { name: /CISO/ }).click();
-  await page.getByRole("button", { name: "Fill canonical honest CISO draft" }).click();
+  await page.getByRole("button", { name: "Fill the honest sample draft" }).click();
   await page.getByRole("button", { name: "Save CISO brief" }).click();
-  await page.getByRole("button", { name: "Fill canonical not-ready draft" }).click();
-  await page.getByRole("button", { name: "Stage proposal" }).click();
-  await expect(page.getByRole("article", { name: "Staged proposal" })).toContainText("not ready");
-  await page.getByRole("button", { name: "Approve decision" }).click();
+  await page.getByRole("button", { name: "Prepare the sample not-ready recommendation" }).click();
+  await page.getByRole("button", { name: "Prepare recommendation" }).click();
+  await expect(page.getByRole("article", { name: "Recommendation prepared for your review" })).toContainText("not ready");
+  await page.getByRole("button", { name: "Approve recommendation" }).click();
   await expect(page.getByRole("region", { name: "Decision receipt" })).toBeVisible();
 
   const ledger = page.getByRole("region", {
-    name: "Inspect the authoritative activity register.",
+    name: "Activity history",
   });
   await expect(ledger).toContainText("approve_decision");
   await expect(ledger).toContainText("Person");
@@ -91,21 +91,21 @@ test("public UI-only canonical journey is clean, persistent, and resettable", as
   await expect(page.getByLabel("Budget ceiling")).toHaveValue("119000");
   await expectSurfaceIntegrity(page);
 
-  await page.getByRole("button", { name: "Product" }).click();
+  await page.getByRole("button", { name: "Set priorities" }).click();
   await expectSurfaceIntegrity(page);
-  await page.getByRole("button", { name: "Evaluation" }).click();
+  await page.getByRole("button", { name: "Check evidence" }).click();
   await expectSurfaceIntegrity(page);
-  await page.getByRole("button", { name: "Decision" }).click();
+  await page.getByRole("button", { name: "Review decision" }).click();
   await expectSurfaceIntegrity(page);
 
   await page.getByRole("button", { name: "Reset demo" }).click();
-  await page.getByRole("button", { name: "Reset to canonical fixture" }).click();
-  await expect(page.getByRole("region", { name: "The canonical fixture is active." })).toContainText(
+  await page.getByRole("button", { name: "Reset to the demo starting point" }).click();
+  await expect(page.getByRole("region", { name: "The demo starting point is active." })).toContainText(
     "Revision0",
   );
   await page.reload();
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-  await expect(page.getByRole("heading", { name: "No buyer context is approved." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "No buyer profile is approved yet." })).toBeVisible();
 
   expect(pageErrors).toEqual([]);
   expect(consoleErrors).toEqual([]);

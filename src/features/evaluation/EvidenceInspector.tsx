@@ -124,7 +124,7 @@ export function EvidenceInspector(props: EvidenceInspectorProps) {
           </section>
         ) : (
           <section className="evidence-inspector__summary" aria-labelledby="summary-heading">
-            <h3 id="summary-heading">Complete summary</h3>
+            <h3 id="summary-heading">Full source record</h3>
             <p id="evidence-inspector-summary">{props.record.summary}</p>
           </section>
         )}
@@ -173,7 +173,7 @@ export function EvidenceInspector(props: EvidenceInspectorProps) {
           </div>
           <div>
             <dt>Content annotation</dt>
-            <dd>{props.record.untrustedContent ? "untrusted text" : "canonical demo document"}</dd>
+            <dd>{props.record.untrustedContent ? "untrusted text" : "demo source record"}</dd>
           </div>
         </dl>
 

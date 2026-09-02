@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../../src/app/App.tsx";
@@ -6,57 +6,73 @@ import { AppShell } from "../../src/app/AppShell.tsx";
 import { initialStatus } from "../../src/webmcp/useWebMCPTools.ts";
 
 describe("application shell", () => {
+  beforeEach(() => {
+    globalThis.history.replaceState(null, "", "/");
+  });
+
   it("starts with one primary headline and no eyebrow stack", () => {
     render(<App />);
     const headings = screen.getAllByRole("heading", { level: 1 });
     expect(headings).toHaveLength(1);
-    expect(headings[0]?.textContent).toContain("regulated marketing campaigns");
+    expect(headings[0]).toHaveTextContent("Check a software vendor's claims before you buy.");
   });
 
-  it("labels the demo content as fictional", () => {
+  it("defines the product and labels browser-local fictional content", () => {
     render(<App />);
-    expect(screen.getByText("Fictional demonstration")).toBeInTheDocument();
-    expect(screen.getByText(/Northstar is a fictional vendor/)).toBeInTheDocument();
+    expect(screen.getByText(/workspace for teams buying business software/)).toBeInTheDocument();
+    expect(screen.getByText(/nine built-in actions/)).toBeInTheDocument();
+    expect(screen.getByText(/Northstar, Meridian Bank/)).toBeInTheDocument();
+    expect(screen.getByText(/There is no account, database, telemetry/)).toBeInTheDocument();
   });
 
-  it("explains the unavailable agent tool state without hiding controls", () => {
+  it("explains unavailable agent actions while keeping the room accessible", () => {
     render(<App />);
     expect(screen.getByText(/Agent tools are not available in this browser/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Evaluation" })).toBeEnabled();
+    expect(screen.getAllByRole("link", { name: /Open the fictional review/ })[0]).toHaveAttribute(
+      "href",
+      "#product",
+    );
     expect(screen.queryByRole("button", { name: "Retry agent tools" })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Reset demo" })).toBeEnabled();
+    expect(screen.queryByRole("button", { name: "Reset demo" })).not.toBeInTheDocument();
   });
 
   it("moves between the three surfaces", async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole("button", { name: "Evaluation" }));
+    await user.click(screen.getAllByRole("link", { name: /Open the fictional review/ })[0]!);
+    expect(screen.getByRole("heading", { level: 2, name: "Room guide" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Reset demo" })[0]).toBeEnabled();
+
+    await user.click(screen.getByRole("button", { name: "Check evidence" }));
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Six requirements. Evidence must earn the answer.",
+        name: "Check six buying requirements against the vendor's evidence.",
       }),
     ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Decision" }));
+    await user.click(screen.getByRole("button", { name: "Review decision" }));
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "The agent can stage the case. Only a person can decide.",
+        name: "Review the recommendation, then make the final call.",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("get_room_state")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Product" }));
-    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Set priorities" }));
+    expect(screen.getByRole("heading", { level: 1, name: "Start with what Meridian Bank needs." })).toBeInTheDocument();
   });
 
   it("renders one primary headline on every surface", async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    for (const route of ["Product", "Evaluation", "Decision"]) {
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    await user.click(screen.getAllByRole("link", { name: /Open the fictional review/ })[0]!);
+
+    for (const route of ["Set priorities", "Check evidence", "Review decision"]) {
       await user.click(screen.getByRole("button", { name: route }));
       expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     }
@@ -65,17 +81,22 @@ describe("application shell", () => {
   it("shows every requirement with a word, not color alone", async () => {
     const user = userEvent.setup();
     render(<App />);
-    await user.click(screen.getByRole("button", { name: "Evaluation" }));
+    await user.click(screen.getAllByRole("link", { name: /Open the fictional review/ })[0]!);
+    await user.click(screen.getByRole("button", { name: "Check evidence" }));
 
     const register = screen.getByRole("list", { name: "Six requirement records" });
     expect(within(register).getAllByText("unknown")).toHaveLength(6);
-    expect(screen.getByText("EU data residency")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "EU data residency" })).toBeVisible();
+    expect(
+      within(register).getByRole("button", { name: /EU data residency/ }),
+    ).toHaveAttribute("aria-pressed", "true");
   });
 
   it("shows all twelve evidence records with provenance labels", async () => {
     const user = userEvent.setup();
     render(<App />);
-    await user.click(screen.getByRole("button", { name: "Evaluation" }));
+    await user.click(screen.getAllByRole("link", { name: /Open the fictional review/ })[0]!);
+    await user.click(screen.getByRole("button", { name: "Check evidence" }));
 
     expect(screen.getAllByText(/^ev_0/)).toHaveLength(12);
     expect(screen.getAllByText("Untrusted text")).toHaveLength(2);
@@ -103,9 +124,10 @@ describe("application shell", () => {
       </AppShell>,
     );
 
-    expect(screen.getByText(/1 of 9 agent tools registered/)).toBeInTheDocument();
-    expect(screen.getByText("agent tools partial")).toBeInTheDocument();
-    expect(screen.getByText(/revision 004/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Retry agent tools" })).toBeEnabled();
+    expect(screen.getAllByText(/1 of 9 agent tools registered/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText("agent tools partial").length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/revision 004/).length).toBeGreaterThan(0);
+    expect(screen.getByText(/browser-agent actions/)).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Retry agent tools" })[0]).toBeEnabled();
   });
 });

@@ -81,11 +81,16 @@
   Spec ref: `prd.md > Submission Proof Points`
   What to build: Finish README, architecture explanation, exact tool table, test instructions, limitations, screenshots, demo script, video shot list, project description, and submission checklist.
   Acceptance: A judge can understand and test ProofRoom without private context; all claims match verified behavior; public repo shows MIT license; demo script fits under three minutes.
-  Verify: Fresh-clone setup, link check, claim/source review, timed demo rehearsal, public repo and live URL readback.
+  Verify: Fresh-clone setup, link check, claim/source review, timed demo rehearsal, public repo and live URL readback, and `scripts/check-readme-parity.mjs` in `npm run lint`.
   Acceptance evidence: The public repository contains the judge-first README and complete local
-  challenge package. A fresh public clone passed `npm ci`, lint, typecheck, all 423 unit and
-  component tests, and the production build. Independent review resolved all 38 local documentation
-  links and three screenshot paths. The 272-word script rendered at 126.4 seconds in the measured
-  narration rehearsal, leaving 38.6 seconds before the 2:45 stop for live actions and proof holds.
-  The public app and repository both passed readback. Video recording, upload, Devpost registration,
-  official form work, and submission remain separate external steps.
+  challenge package at the verified public baseline. A fresh public clone passed `npm ci`, lint,
+  typecheck, all 423 unit and component tests, and the production build. Independent review resolved
+  all 38 local documentation links and three screenshot paths. The 262-word script rendered at 129.0
+  seconds in the measured macOS `say -r 135` narration rehearsal for the current spoken block,
+  leaving 36.0 seconds before the 2:45 stop for live actions and proof holds. The public app and
+  repository both passed readback at that baseline. The current local candidate passed 483 unit and
+  component tests, 45 end-to-end tests, 52 accessibility checks, and 12 deterministic eval cases with
+  60 assertions locally, but it is not committed, pushed, deployed, or reflected in Devpost.
+  Authenticated Devpost project `1402028` exists as an Untitled, empty pre-draft shell with no
+  video. Video recording, upload, Devpost population, and final submission remain separate external
+  steps.

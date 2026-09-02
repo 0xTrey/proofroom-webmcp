@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { approveSampleBuyerProfile } from "./support/context.ts";
 
 type PersistedSummary = {
   revision: number;
@@ -98,13 +99,12 @@ test("item 9 ledger, reset, and reload journey preserves the trust boundary", as
 
   await page.getByRole("button", { name: "Reset demo" }).press("Enter");
   await expect(page.getByRole("dialog", { name: "Reset this fictional demonstration?" })).toBeVisible();
-  await page.getByRole("button", { name: "Reset to canonical fixture" }).press("Enter");
-  await expect(page.getByRole("region", { name: "The canonical fixture is active." })).toContainText(
+  await page.getByRole("button", { name: "Reset to the demo starting point" }).press("Enter");
+  await expect(page.getByRole("region", { name: "The demo starting point is active." })).toContainText(
     "rcp_0001",
   );
 
-  await page.getByRole("button", { name: "Stage fictional Meridian Bank draft" }).click();
-  await page.getByRole("button", { name: "Approve buyer context" }).click();
+  await approveSampleBuyerProfile(page);
   await callTool(page, "get_room_state", { detail: "requirements" });
   await callTool(page, "search_product_evidence", {
     query: "testimonial program review",
@@ -122,10 +122,10 @@ test("item 9 ledger, reset, and reload journey preserves the trust boundary", as
     paybackTargetMonths: 12,
   });
 
-  await page.getByRole("button", { name: "Decision" }).click();
+  await page.getByRole("button", { name: "Review decision" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   const ledger = page.getByRole("region", {
-    name: "Inspect the authoritative activity register.",
+    name: "Activity history",
   });
   await expect(ledger.locator('[data-event-id="evt_0006"]')).toContainText(
     "propose_buyer_context",
@@ -175,8 +175,8 @@ test("item 9 ledger, reset, and reload journey preserves the trust boundary", as
   expect(await persistedSummary(page)).toEqual(beforeCancel);
 
   await resetTrigger.click();
-  await page.getByRole("button", { name: "Reset to canonical fixture" }).click();
-  const receipt = page.getByRole("region", { name: "The canonical fixture is active." });
+  await page.getByRole("button", { name: "Reset to the demo starting point" }).click();
+  const receipt = page.getByRole("region", { name: "The demo starting point is active." });
   await expect(receipt).toContainText("rcp_0001");
   await expect(receipt).toContainText("reset");
   await expect(receipt).toContainText("Requirements6");
@@ -203,12 +203,12 @@ test("item 9 ledger, reset, and reload journey preserves the trust boundary", as
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   const reloaded = await persistedSummary(page);
   expect(reloaded).toEqual(resetState);
-  await page.getByRole("button", { name: "Decision" }).press("Enter");
+  await page.getByRole("button", { name: "Review decision" }).press("Enter");
   await expect(
-    page.getByRole("region", { name: "Inspect the authoritative activity register." }),
+    page.getByRole("region", { name: "Activity history" }),
   ).toContainText("evt_0001");
   await expect(
-    page.getByRole("region", { name: "Inspect the authoritative activity register." }),
+    page.getByRole("region", { name: "Activity history" }),
   ).not.toContainText("evt_0006");
 
   expect(runtimeErrors).toEqual([]);
@@ -242,7 +242,7 @@ for (const recovery of [
     await page.goto("/#product");
 
     await expect(page.getByText(new RegExp(`Notice code: ${recovery.code}`))).toBeVisible();
-    await page.getByRole("button", { name: "Continue with recovered fixture" }).click();
+    await page.getByRole("button", { name: "Continue with recovered demo" }).click();
     await expect(page.getByText(new RegExp(`Notice code: ${recovery.code}`))).toHaveCount(0);
 
     await page.reload();

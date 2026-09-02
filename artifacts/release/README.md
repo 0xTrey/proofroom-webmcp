@@ -27,6 +27,17 @@ Validate the final verified receipt and every referenced evidence file:
 PROOFROOM_RELEASE_RECEIPT=artifacts/release/release-receipt.json npm run release:receipt:validate
 ```
 
+Validate the local release-candidate gate after refreshing evidence:
+
+```text
+npm run qa:receipt
+npm run release:rc:refresh
+npm run release:rc:validate
+```
+
+Use `npm run release:rc:gate` as the hard pre-recording and pre-submission technical gate. A `ready`
+technical receipt still does not authorize recording, upload, Devpost population, or submission.
+
 This command runs the handwritten TypeScript contract and the committed JSON Schema with date-time format validation. Ajv and ajv-formats are development dependencies because this release command executes them directly, not only because tests import them.
 
 For a `verified` receipt, the same command resolves the referenced HTTP and native evidence paths inside the repository, verifies each file's SHA-256 digest, validates each receipt independently, and cross-checks both origins against the public URL. It also requires the public response headers and the complete native Chrome summary to match the final release receipt. A `prepared` receipt does not require public evidence files or deployment claims.

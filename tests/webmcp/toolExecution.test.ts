@@ -5,10 +5,11 @@
  * the shipped tools and the shared action layer, not a stand in.
  */
 import { beforeEach, describe, expect, it } from "vitest";
-import { MERIDIAN_CONTEXT_DRAFT } from "../../src/fixtures/buyer.ts";
+import { proposeBuyerContextInputSchema } from "../../src/domain/actions/inputs.ts";
+import { MERIDIAN_BANK, MERIDIAN_CONTEXT_DRAFT } from "../../src/fixtures/buyer.ts";
 import { CANONICAL_ROI_ASSUMPTIONS } from "../../src/fixtures/demoScenario.ts";
 import { registerRoomTools } from "../../src/webmcp/registerTools.ts";
-import { createToolDefinitions } from "../../src/webmcp/toolDefinitions.ts";
+import { createToolDefinitions, MAX_TOOL_TEXT_LENGTH } from "../../src/webmcp/toolDefinitions.ts";
 import { createModelContextShim, structuredOf } from "../../src/webmcp/testShim.ts";
 import { attachCanonicalEvidence, createTestRoom, type TestRoom } from "../support/room.ts";
 
@@ -37,7 +38,9 @@ describe("read only tools", () => {
 
   it("never returns the activity ledger", async () => {
     const result = await shim.callTool("get_room_state", { detail: "decision" });
-    expect(Object.keys(structuredOf(result))).not.toContain("activityLedger");
+    const payload = structuredOf(result);
+    expect(Object.keys(payload)).not.toContain("activityLedger");
+    expect(Object.keys(payload)).not.toContain("canonicalBuyer");
     expect(structuredOf<{ activityEventCount: number }>(result).activityEventCount).toBe(1);
   });
 
@@ -130,6 +133,77 @@ describe("read only tools", () => {
 
     expect(handle.room().revision).toBe(0);
     expect(handle.room().activityLedger).toHaveLength(5);
+  });
+});
+
+describe("buyer context staging template", () => {
+  it("returns the exact fictional template and disclosure on a clean room", async () => {
+    const result = await shim.callTool("get_room_state", {});
+    const payload = structuredOf<{
+      buyerContextStagingTemplate: {
+        source: string;
+        profileId: string;
+        fictionalDisclosure: string;
+        input: typeof MERIDIAN_CONTEXT_DRAFT;
+        instruction: string;
+      };
+    }>(result);
+
+    expect(payload.buyerContextStagingTemplate).toEqual({
+      source: "fictional_room_profile",
+      profileId: "meridian_bank",
+      fictionalDisclosure: MERIDIAN_BANK.fictionalDisclosure,
+      input: MERIDIAN_CONTEXT_DRAFT,
+      instruction: expect.stringContaining("propose_buyer_context"),
+    });
+  });
+
+  it("keeps the template input inside the strict proposal schema", async () => {
+    const result = await shim.callTool("get_room_state", { detail: "summary" });
+    const template = structuredOf<{
+      buyerContextStagingTemplate: { input: unknown };
+    }>(result).buyerContextStagingTemplate;
+
+    expect(proposeBuyerContextInputSchema.safeParse(template.input).success).toBe(true);
+  });
+
+  it("stages one pending proposal from the returned template without approving context", async () => {
+    const read = structuredOf<{
+      buyerContextStagingTemplate: { input: typeof MERIDIAN_CONTEXT_DRAFT };
+    }>(await shim.callTool("get_room_state", {}));
+    const revisionBefore = handle.room().revision;
+    const ledgerBefore = handle.room().activityLedger.length;
+
+    const staged = await shim.callTool(
+      "propose_buyer_context",
+      read.buyerContextStagingTemplate.input,
+    );
+
+    expect(staged.isError).toBe(false);
+    expect(handle.room().revision).toBe(revisionBefore + 1);
+    expect(handle.room().activityLedger).toHaveLength(ledgerBefore + 1);
+    expect(handle.room().buyerContextProposal?.status).toBe("pending");
+    expect(handle.room().approvedBuyerContext).toBeNull();
+    expect(shim.has("approve_buyer_context")).toBe(false);
+    expect(shim.has("approve_decision")).toBe(false);
+  });
+
+  it("does not store template field values in the ledger input summary", async () => {
+    const read = structuredOf<{
+      buyerContextStagingTemplate: { input: typeof MERIDIAN_CONTEXT_DRAFT };
+    }>(await shim.callTool("get_room_state", {}));
+    await shim.callTool("propose_buyer_context", read.buyerContextStagingTemplate.input);
+
+    const event = handle.room().activityLedger.at(-1);
+    expect(event?.toolName).toBe("propose_buyer_context");
+    expect(event?.inputSummary).not.toContain(MERIDIAN_CONTEXT_DRAFT.companyName);
+    expect(event?.inputSummary).not.toContain(MERIDIAN_CONTEXT_DRAFT.employeeBand);
+    expect(event?.inputSummary).not.toContain("buyerContextStagingTemplate");
+  });
+
+  it("keeps get_room_state output within the tool text cap", async () => {
+    const result = await shim.callTool("get_room_state", { detail: "requirements" });
+    expect(result.content[0]?.text.length ?? 0).toBeLessThanOrEqual(MAX_TOOL_TEXT_LENGTH);
   });
 });
 

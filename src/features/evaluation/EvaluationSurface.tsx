@@ -56,7 +56,10 @@ export function EvaluationSurface({
 }: EvaluationSurfaceProps) {
   const requirements = selectRequirementSummaries(room);
   const totals = selectRequirementTotals(room);
-  const [selectedId, setSelectedId] = useState(room.requirements[0]?.id ?? "");
+  const euRequirement = room.requirements.find((requirement) => requirement.id === "req_eu_residency");
+  const [selectedId, setSelectedId] = useState(
+    euRequirement?.id ?? room.requirements[0]?.id ?? "",
+  );
   const [feedback, setFeedback] = useState<RevisionedEvaluationFeedback | null>(null);
   const [inspector, setInspector] = useState<{
     record: EvidenceRecord;
@@ -95,7 +98,7 @@ export function EvaluationSurface({
       if (!result.ok) {
         reportFeedback({
           kind: "error",
-          message: `Fictional review set stopped at ${attachment.requirementId}. ${result.error.code}: ${result.error.message} Completed before failure: ${reports.join("; ") || "none"}.`,
+          message: `Sample evidence check stopped at ${attachment.requirementId}. ${result.error.code}: ${result.error.message} Completed before failure: ${reports.join("; ") || "none"}.`,
         });
         return;
       }
@@ -106,7 +109,7 @@ export function EvaluationSurface({
 
     reportFeedback({
       kind: "success",
-      message: `Applied the fictional review set through shared attach actions. ${reports.join("; ")}.`,
+      message: `Applied the sample evidence check through shared attach actions. ${reports.join("; ")}.`,
     });
   }
 
@@ -122,10 +125,10 @@ export function EvaluationSurface({
     <article className="surface surface--evaluation motion-rise">
       <header className="surface-intro surface-intro--evaluation">
         <div>
-          <h1>Six requirements. Evidence must earn the answer.</h1>
+          <h1>Check six buying requirements against the vendor&apos;s evidence.</h1>
           <p>
-            ProofRoom starts at unknown, then derives status only from eligible attached records.
-            Empty evidence is a truthful starting state, not a broken one.
+            Every answer starts as Unknown. A requirement changes only when an eligible source record
+            proves or contradicts it.
           </p>
           <p className="evaluation-invariant">
             <span aria-hidden="true">◇</span>
@@ -161,28 +164,32 @@ export function EvaluationSurface({
         <span>{room.canonicalBuyer.fictionalDisclosure}</span>
       </aside>
 
-      <section className="evaluation-dossier" aria-labelledby="requirements-heading">
+      <section
+        id="requirements-proof-task"
+        className="evaluation-dossier"
+        aria-labelledby="requirements-heading"
+        tabIndex={-1}
+      >
         <header className="evaluation-dossier__head">
           <div>
-            <h2 id="requirements-heading">Requirement dossier</h2>
+            <h2 id="requirements-heading">Your buying questions and the proof</h2>
             <p>
-              Select a record to open its detail, proof search, and buyer notes without leaving the
-              route.
+              Select a requirement to review its proof, open questions, and buyer notes without
+              leaving this page.
             </p>
           </div>
           <div className="evaluation-dossier__tools">
-            <StatusMark tone="gap" glyph="?" label="unknown means not yet proven" />
+            <StatusMark tone="gap" glyph="?" label="unknown means not proven by the available records" />
             <button
               className="button"
               type="button"
               disabled={reviewSetApplied}
               onClick={applyFictionalReviewSet}
             >
-              {reviewSetApplied ? "Fictional review set applied" : "Apply fictional review set"}
+              {reviewSetApplied ? "Sample evidence check applied" : "Run the sample evidence check"}
             </button>
             <p>
-              Demo convenience only. This attaches evidence and never approves context or a
-              decision.
+              The sample check attaches the demo records. It does not approve a profile or decision.
             </p>
           </div>
         </header>
@@ -283,8 +290,8 @@ export function EvaluationSurface({
           <div>
             <h2 id="catalog-index-heading">Complete evidence catalog index</h2>
             <p>
-              Twelve fictional records remain inspectable. Search above applies deterministic
-              matching and requirement filters before any attachment is offered.
+              Twelve fictional records remain inspectable. Search above applies the same evidence
+              rules every time and requirement filters before any attachment is offered.
             </p>
           </div>
           <p className="mono">catalog / inspectable / 12 records</p>

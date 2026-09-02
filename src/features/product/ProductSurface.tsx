@@ -26,24 +26,16 @@ export function ProductSurface({ room, context }: { room: RoomState; context?: R
     <article className="surface surface--product motion-rise">
       <section className="product-opening" aria-labelledby="product-headline">
         <div className="product-opening__story">
-          <h1 id="product-headline">
-            {approved
-              ? `${approved.companyName}'s priorities now lead the Northstar diligence story.`
-              : vendor.headline}
-          </h1>
+          <h1 id="product-headline">Start with what Meridian Bank needs.</h1>
           {approved ? (
             <p className="approved-story-mark">
-              <span aria-hidden="true">✓</span> Buyer-approved context applied
+              <span aria-hidden="true">✓</span> Buying priorities approved for this review
             </p>
           ) : null}
           <p className="product-standfirst">
-            {approved
-              ? `${approved.priorities[0]} comes first${
-                  approved.priorities[1]
-                    ? `, followed by ${approved.priorities[1].toLowerCase()}`
-                    : ""
-                }. Northstar's existing product claims remain separate from the proof record.`
-              : vendor.primaryValue}
+            Meridian Bank is considering the fictional Northstar platform. Before checking the
+            vendor&apos;s claims, confirm the budget, payback target, and six requirements that
+            should guide the review.
           </p>
           <dl className="product-facts" aria-label="Northstar product facts">
             <div>
@@ -68,7 +60,7 @@ export function ProductSurface({ room, context }: { room: RoomState; context?: R
         <aside className="proof-rail" aria-labelledby="proof-rail-heading">
           <div className="proof-rail__line" aria-hidden="true" />
           <div className="proof-rail__content">
-            <h2 id="proof-rail-heading">Open the diligence file</h2>
+            <h2 id="proof-rail-heading">See the proof behind the pitch</h2>
             <p>
               ProofRoom sits on this product page so a buyer and browser agent can test the pitch
               against structured evidence before a decision is approved.
@@ -76,17 +68,17 @@ export function ProductSurface({ room, context }: { room: RoomState; context?: R
             <ol className="proof-rail__index">
               <li>
                 <span className="proof-rail__number">01</span>
-                <strong>9 agent tools</strong>
-                <span>Research, calculate, and stage work</span>
+                <strong>9 browser-agent actions</strong>
+                <span>Find proof, test fit, and prepare a recommendation</span>
               </li>
               <li>
                 <span className="proof-rail__number">02</span>
-                <strong>2 human boundaries</strong>
-                <span>Context and final decision stay with the person</span>
+                <strong>2 decisions only you can make</strong>
+                <span>Buying priorities and the final recommendation stay with you</span>
               </li>
               <li>
                 <span className="proof-rail__number">03</span>
-                <strong>6 requirements, 12 records</strong>
+                <strong>6 buying questions checked against 12 records</strong>
                 <span>Gaps remain visible when the catalog cannot prove a claim</span>
               </li>
             </ol>
@@ -107,7 +99,7 @@ export function ProductSurface({ room, context }: { room: RoomState; context?: R
           <h2 id="workflow-heading">A campaign operating system with the audit trail built in.</h2>
           <p>
             Briefs, approvals, access, and audience handoffs stay in one operational record. The
-            story is persuasive; the adjacent diligence file shows which parts are actually proven.
+            story is persuasive; the adjacent proof check shows which parts are actually proven.
           </p>
         </header>
         <ol className="capability-ledger">
@@ -131,7 +123,7 @@ export function ProductSurface({ room, context }: { room: RoomState; context?: R
 
       <section className="proof-desk" aria-labelledby="proof-desk-heading">
         <div className="proof-desk__intro">
-          <h2 id="proof-desk-heading">The product claim and the proof record stay separate.</h2>
+          <h2 id="proof-desk-heading">A vendor claim is not proof.</h2>
           <p>
             Integration and security statements below point to fictional source records. A source
             can support a condition, carry a limitation, or leave the answer open.
@@ -174,7 +166,7 @@ export function ProductSurface({ room, context }: { room: RoomState; context?: R
 
       <section className="editorial-section" aria-labelledby="packaging-heading">
         <header className="editorial-section__head editorial-section__head--narrow">
-          <h2 id="packaging-heading">Packaging is legible before the buying work begins.</h2>
+          <h2 id="packaging-heading">See price and implementation details before deciding.</h2>
           <p>
             List pricing and implementation timing are fictional demo inputs. They remain visible
             so the commercial model can be challenged later.

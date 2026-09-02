@@ -1,0 +1,112 @@
+{
+  "url": "http://127.0.0.1:4175/artifacts/brand-lab/",
+  "desktop": {
+    "chain": {
+      "activeButtonCount": 1,
+      "activeTheme": "chain",
+      "previewClass": "brand-preview brand-preview--chain",
+      "bodyScrollWidth": 1600,
+      "viewportWidth": 1600,
+      "expectedTheme": "chain",
+      "accessibilityViolations": []
+    },
+    "dual": {
+      "activeButtonCount": 1,
+      "activeTheme": "dual",
+      "previewClass": "brand-preview brand-preview--dual",
+      "bodyScrollWidth": 1600,
+      "viewportWidth": 1600,
+      "expectedTheme": "dual",
+      "accessibilityViolations": []
+    },
+    "redline": {
+      "activeButtonCount": 1,
+      "activeTheme": "redline",
+      "previewClass": "brand-preview brand-preview--redline",
+      "bodyScrollWidth": 1600,
+      "viewportWidth": 1600,
+      "expectedTheme": "redline",
+      "accessibilityViolations": []
+    },
+    "mission": {
+      "activeButtonCount": 1,
+      "activeTheme": "mission",
+      "previewClass": "brand-preview brand-preview--mission",
+      "bodyScrollWidth": 1600,
+      "viewportWidth": 1600,
+      "expectedTheme": "mission",
+      "accessibilityViolations": []
+    },
+    "quiet": {
+      "activeButtonCount": 1,
+      "activeTheme": "quiet",
+      "previewClass": "brand-preview brand-preview--quiet",
+      "bodyScrollWidth": 1600,
+      "viewportWidth": 1600,
+      "expectedTheme": "quiet",
+      "accessibilityViolations": []
+    },
+    "spectrum": {
+      "activeButtonCount": 1,
+      "activeTheme": "spectrum",
+      "previewClass": "brand-preview brand-preview--spectrum",
+      "bodyScrollWidth": 1600,
+      "viewportWidth": 1600,
+      "expectedTheme": "spectrum",
+      "accessibilityViolations": []
+    },
+    "industrial": {
+      "activeButtonCount": 1,
+      "activeTheme": "industrial",
+      "previewClass": "brand-preview brand-preview--industrial",
+      "bodyScrollWidth": 1600,
+      "viewportWidth": 1600,
+      "expectedTheme": "industrial",
+      "accessibilityViolations": []
+    }
+  },
+  "mobile": {
+    "chain": {
+      "activeTheme": "chain",
+      "bodyScrollWidth": 390,
+      "viewportWidth": 390,
+      "buttonsUnder44Pixels": 0
+    },
+    "dual": {
+      "activeTheme": "dual",
+      "bodyScrollWidth": 390,
+      "viewportWidth": 390,
+      "buttonsUnder44Pixels": 0
+    },
+    "redline": {
+      "activeTheme": "redline",
+      "bodyScrollWidth": 390,
+      "viewportWidth": 390,
+      "buttonsUnder44Pixels": 0
+    },
+    "mission": {
+      "activeTheme": "mission",
+      "bodyScrollWidth": 390,
+      "viewportWidth": 390,
+      "buttonsUnder44Pixels": 0
+    },
+    "quiet": {
+      "activeTheme": "quiet",
+      "bodyScrollWidth": 390,
+      "viewportWidth": 390,
+      "buttonsUnder44Pixels": 0
+    },
+    "spectrum": {
+      "activeTheme": "spectrum",
+      "bodyScrollWidth": 390,
+      "viewportWidth": 390,
+      "buttonsUnder44Pixels": 0
+    },
+    "industrial": {
+      "activeTheme": "industrial",
+      "bodyScrollWidth": 390,
+      "viewportWidth": 390,
+      "buttonsUnder44Pixels": 0
+    }
+  }
+}

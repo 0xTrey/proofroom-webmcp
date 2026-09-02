@@ -79,7 +79,7 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
     }
     onFeedback({
       kind: "success",
-      message: `Staged ${result.value.proposedStatus} proposal ${result.value.proposalId} with ${result.value.blockers.length} blocking requirements. ${result.value.approvalInstruction}`,
+      message: `Prepared ${result.value.proposedStatus} recommendation ${result.value.proposalId} with ${result.value.blockers.length} blocking requirements. ${result.value.approvalInstruction}`,
     });
     setShowEditor(false);
   }
@@ -89,13 +89,13 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
       onFeedback({
         kind: "error",
         message:
-          "Apply the complete fictional review set on the Evaluation route before filling the canonical decision draft.",
+          "Run the sample evidence check on the Evaluation route before filling the honest sample decision draft.",
       });
       return;
     }
     setDraft(canonicalProposalDraft(room));
     setShowEditor(true);
-    onFeedback({ kind: "success", message: "Filled the canonical not-ready draft from current room state." });
+    onFeedback({ kind: "success", message: "Filled the sample not-ready recommendation from current room state." });
   }
 
   function handleApprove(): void {
@@ -125,7 +125,7 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
     onFeedback({
       kind: "success",
       message: hadPrior
-        ? `Rejected ${proposal.id}. The previously approved decision remains authoritative.`
+        ? `Rejected ${proposal.id}. The previously approved decision remains in place.`
         : `Rejected ${proposal.id}. No decision has ever been approved.`,
     });
   }
@@ -149,13 +149,17 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
   }
 
   return (
-    <section className="proposal-desk" aria-labelledby="proposal-heading">
+    <section
+      id="decision-review-task"
+      className="proposal-desk"
+      aria-labelledby="proposal-heading"
+      tabIndex={-1}
+    >
       <header className="proposal-desk__head">
         <div>
-          <h2 id="proposal-heading">Decision proposal and approval desk</h2>
+          <h2 id="proposal-heading">Recommendation prepared for your review</h2>
           <p>
-            A browser agent or page fallback can stage a proposal. Only the person can approve or
-            reject it through visible page controls. No WebMCP approval or rejection tool exists.
+            The browser agent can prepare a recommendation. Only you can approve or reject it here.
           </p>
         </div>
         {proposal ? (
@@ -175,15 +179,17 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
         >
           <header className="proposal-review__head">
             <div>
-              <h3 id="proposal-review-heading">Staged proposal</h3>
+              <h3 id="proposal-review-heading">Recommendation prepared for your review</h3>
               <p>
-                Inspect the exact payload before you act. The action will re-check revision, expiry,
-                digest, and requirement consistency.
+                Inspect every proposed detail before you act. The page will re-check revision,
+                expiry, the local input digest, and requirement consistency.
               </p>
             </div>
           </header>
 
-          <dl className="proposal-envelope" aria-label="Decision proposal envelope">
+          <details className="proposal-envelope-details">
+            <summary>Technical recommendation details</summary>
+            <dl className="proposal-envelope" aria-label="Decision recommendation details">
             <div>
               <dt>Proposal ID</dt>
               <dd className="mono">{proposal.id}</dd>
@@ -217,6 +223,7 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
               <dd className="mono">{proposal.status}</dd>
             </div>
           </dl>
+          </details>
 
           <div className="proposal-payload">
             <h4>Proposed decision</h4>
@@ -283,27 +290,27 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
           {proposal.status === "pending" ? (
             <div className="proposal-review__actions" aria-label="Human decision controls">
               <button className="button" type="button" onClick={handleApprove}>
-                Approve decision
+                Approve recommendation
               </button>
               <button className="button button--danger" type="button" onClick={handleReject}>
-                Reject proposal
+                Reject recommendation
               </button>
-              <p>These are page-only controls. No WebMCP approval or rejection tool exists.</p>
+              <p>Only you can use these approval buttons. The agent cannot approve or reject.</p>
             </div>
           ) : null}
 
           {proposal.status === "pending" && isStale ? (
             <p className="proposal-review__stale-notice" role="alert">
-              This proposal is stale. It was staged at revision {proposal.baseRevision}, but the room
-              is now at revision {currentRevision}. Approval and rejection will fail atomically.
-              Stage a fresh proposal.
+              This recommendation is stale. It was prepared at revision {proposal.baseRevision}, but the
+              room is now at revision {currentRevision}. Approval and rejection will fail atomically.
+              Prepare a fresh recommendation.
             </p>
           ) : null}
 
           {proposal.status === "rejected" ? (
             <p className="proposal-review__resolution">
               {approved
-                ? `Rejected ${proposal.id}. The previously approved decision remains authoritative.`
+                ? `Rejected ${proposal.id}. The previously approved decision remains in place.`
                 : `Rejected ${proposal.id}. No decision has ever been approved.`}
             </p>
           ) : null}
@@ -319,7 +326,7 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
         <div className="proposal-desk__empty">
           <span aria-hidden="true">{"\u2205"}</span>
           <div>
-            <h3>No proposal staged</h3>
+            <h3>No recommendation prepared yet</h3>
             <p>
               A ready decision requires every hard requirement to be fully supported. The current
               room has {blockers.length} hard blocker{blockers.length === 1 ? "" : "s"}.
@@ -342,17 +349,17 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
         <p className="proposal-desk__prior-notice">
           A prior decision was approved at revision {approved.approvedAtRevision}. The pending
           proposal above is separate. If approved, it replaces the prior decision. If rejected, the
-          prior decision remains authoritative.
+          prior decision remains in place.
         </p>
       ) : null}
 
       <div className="proposal-desk__editor-toggle">
         {showEditor ? (
           <div className="proposal-desk__editor">
-            <h3>Stage a proposal</h3>
+            <h3>Edit a recommendation</h3>
             <p>
-              Stage through the shared action. The UI can suggest an honest canonical not-ready
-              draft based on current room state. It still calls the shared proposal action.
+              Prepare through the shared action. The UI can suggest an honest sample not-ready draft
+              based on current room state. It still calls the shared proposal action.
             </p>
 
             <div className="proposal-desk__field">
@@ -446,23 +453,23 @@ export function ProposalDesk({ room, actions, onFeedback }: ProposalDeskProps) {
 
             <div className="proposal-desk__actions">
               <button className="button" type="button" onClick={handleStage}>
-                Stage proposal
+                Prepare recommendation
               </button>
               <button className="button button--quiet" type="button" onClick={() => setShowEditor(false)}>
                 Cancel
               </button>
             </div>
             <p className="proposal-desk__stage-note">
-              Stage controls are shared-action controls, not human approval controls.
+              Prepare controls are shared-action controls, not human approval controls.
             </p>
           </div>
         ) : (
           <div className="proposal-desk__editor-buttons">
             <button className="button" type="button" onClick={() => setShowEditor(true)}>
-              Open proposal editor
+              Edit recommendation
             </button>
             <button className="button button--quiet" type="button" onClick={handleCanonicalDraft}>
-              Fill canonical not-ready draft
+              Prepare the sample not-ready recommendation
             </button>
           </div>
         )}
